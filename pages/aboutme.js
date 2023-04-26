@@ -6,6 +6,7 @@ import React, { useEffect, useRef } from "react";
 
 import profilePicture from "../public/Images/contact-avatar.png";
 import { useInView, useMotionValue, useSpring } from "framer-motion";
+import AboutSectionSkills from "@/src/components/AboutSectionSkills";
 
 const AnimatedNumbers = ({ value }) => {
   const spanRef = useRef(null);
@@ -96,8 +97,8 @@ const aboutme = () => {
                   <AnimatedNumbers value={5} />+
                 </span>
 
-                <h2 className="text-lg font-medium capitalize text-dark/75">
-                  Project&#39;s Completed
+                <h2 className="text-lg font-medium capitalize text-dark/75 text-right">
+                  Major Project&#39;s Completed
                 </h2>
               </div>
 
@@ -106,12 +107,14 @@ const aboutme = () => {
                   <AnimatedNumbers value={7} />+
                 </span>
 
-                <h2 className="text-lg font-medium capitalize text-dark/75">
-                  Techstack&#39;s Used
+                <h2 className="text-lg font-medium capitalize text-dark/75 text-right">
+                  Techstack&#39;s Used in that projects
                 </h2>
               </div>
             </div>
           </div>
+
+          <AboutSectionSkills />
         </Layout>
       </main>
     </>
