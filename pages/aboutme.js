@@ -7,6 +7,8 @@ import React, { useEffect, useRef } from "react";
 import profilePicture from "../public/Images/contact-avatar.png";
 import { useInView, useMotionValue, useSpring } from "framer-motion";
 import AboutSectionSkills from "@/src/components/AboutSectionSkills";
+import Timeline from "@/src/components/Timeline";
+import Education from "@/src/components/Education";
 
 const AnimatedNumbers = ({ value }) => {
   const spanRef = useRef(null);
@@ -108,13 +110,17 @@ const aboutme = () => {
                 </span>
 
                 <h2 className="text-lg font-medium capitalize text-dark/75 text-right">
-                  Techstack&#39;s Used in that projects
+                  Combinations of Techstack&#39;s Used in that projects
                 </h2>
               </div>
             </div>
           </div>
 
           <AboutSectionSkills />
+
+          <Timeline />
+
+          <Education />
         </Layout>
       </main>
     </>
