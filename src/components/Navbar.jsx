@@ -2,7 +2,7 @@ import Link from "next/link";
 import React from "react";
 import Logo from "./Logo";
 import { useRouter } from "next/router";
-import { GithubIcon, GithubIconAlt, LinkedInIcon } from "./Icons";
+import GmailIcon, { GithubIcon, GithubIconAlt, LinkedInIcon } from "./Icons";
 import { motion } from "framer-motion";
 
 const CustomLink = ({ href, title, classname }) => {
@@ -60,9 +60,18 @@ const Navbar = () => {
           target={"_blank"}
           whileHover={{ y: -2 }}
           whileTap={{ scale: 0.9 }}
-          className="w-6 ml-3"
+          className="w-6 mx-3"
         >
           <GithubIconAlt />
+        </motion.a>
+        <motion.a
+          href="mailto:shreyas.misra03@gmail.com"
+          target={"_blank"}
+          whileHover={{ y: -2 }}
+          whileTap={{ scale: 0.9 }}
+          className="w-6 ml-3"
+        >
+          <GmailIcon />
         </motion.a>
       </nav>
 
