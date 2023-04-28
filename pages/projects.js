@@ -12,6 +12,9 @@ import ShowFinder from "../public/Images/Projects/ShowFinder.PNG";
 import BloggerJs from "../public/Images/Projects/BloggerJs.PNG";
 import TrakerTask from "../public/Images/Projects/TrakerTask.PNG";
 import Connecting from "../public/Images/Projects/Connecting.PNG";
+import { motion } from "framer-motion";
+
+const FramerImage = motion(Image);
 
 const FeauredProject = ({ type, title, img, summary, link, github }) => {
   return (
@@ -23,10 +26,12 @@ const FeauredProject = ({ type, title, img, summary, link, github }) => {
         target="_blank"
         className="w-1/2 cursor-pointer overflow-hidden rounded-2xl"
       >
-        <Image
+        <FramerImage
+          whileHover={{ scale: 1.05 }}
+          transition={{ duration: 0.2 }}
           src={img}
           alt={title}
-          className="w-full h-auto transition hover:scale-[1.05]"
+          className="w-full h-auto"
         />
       </Link>
 
@@ -69,10 +74,12 @@ const Project = ({ title, img, github, link }) => {
         target="_blank"
         className="w-full cursor-pointer overflow-hidden rounded-2xl"
       >
-        <Image
+        <FramerImage
+          whileHover={{ scale: 1.05 }}
+          transition={{ duration: 0.2 }}
           src={img}
           alt={title}
-          className="w-full h-auto transition hover:scale-[1.05]"
+          className="w-full h-auto"
         />
       </Link>
 

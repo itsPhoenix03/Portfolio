@@ -21,7 +21,8 @@ const Card = ({ title, desc, link, iconComponent }) => {
   return (
     <motion.div
       initial={{ y: 150 }}
-      whileInView={{ y: 0 }}
+      whileInView={{ y: 0, transition: { duration: 0.5 } }}
+      viewport={{ once: true }}
       className="
               col-span-1 p-10 rounded-2xl
               w-full flex flex-col items-center justify-between gap-8
