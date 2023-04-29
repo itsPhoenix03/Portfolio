@@ -4,6 +4,8 @@ import LiIcons from "./LiIcons";
 
 const Details = ({ type, time, place, info }) => {
   const liRef = useRef(null);
+  const wordArr = type.split(" ");
+  const firstWord = wordArr.shift(0);
 
   return (
     <li
@@ -16,9 +18,14 @@ const Details = ({ type, time, place, info }) => {
         whileInView={{ y: 0 }}
         transition={{ duration: 0.5, type: "spring" }}
       >
-        <h3 className="capitalize font-bold text-3xl">{type}</h3>
+        <h3 className="capitalize font-bold text-3xl">
+          <span className="text-primary dark:text-primaryDark capitalize">
+            {firstWord}
+          </span>
+          &nbsp;{wordArr.join(" ")}
+        </h3>
 
-        <span className="capitalize font-medium text-dark/75">
+        <span className="capitalize font-medium text-dark/75 dark:text-light/75">
           {time} | {place}
         </span>
 
@@ -43,7 +50,7 @@ const Education = () => {
         <motion.div
           ref={lineRef}
           style={{ scaleY: scrollYProgress }}
-          className="absolute left-9 top-0 w-[4px] h-full bg-dark origin-top"
+          className="absolute left-9 top-0 w-[4px] h-full bg-dark dark:bg-light origin-top"
         />
 
         <ul className="w-full flex flex-col items-center justify-between ml-4">

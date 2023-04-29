@@ -42,13 +42,13 @@ const aboutme = () => {
         />
       </Head>
 
-      <main className="flex w-full flex-col items-center justify-center">
+      <main className="flex w-full flex-col items-center justify-center dark:text-light">
         <Layout className="pt-16">
           <AnimatedText text="Passion Fuels Purpose!" className="mb-24" />
 
           <div className="grid w-full grid-cols-8 gap-16">
             <div className="col-span-3 flex flex-col items-start justify-start">
-              <h2 className="mb-4 text-2xl font-bold text-dark/75 uppercase">
+              <h2 className="mb-4 text-2xl font-bold text-dark/75 dark:text-light/75 uppercase">
                 Biography
               </h2>
 
@@ -73,13 +73,19 @@ const aboutme = () => {
               </p>
             </div>
 
-            <div className="col-span-3 relative h-[35rem] rounded-2xl border-2 border-solid border-dark bg-light p-8">
-              <div className="absolute top-0 -right-3 -z-10 w-[102%] h-[103%] rounded-[2rem] bg-dark" />
+            <div className="col-span-3 relative h-[35rem] rounded-2xl border-2 border-solid border-dark bg-light dark:border-light dark:bg-dark p-8">
+              <div className="absolute top-0 -right-3 -z-10 w-[102%] h-[103%] rounded-[2rem] bg-dark dark:bg-light" />
 
               <Image
                 src={profilePicture}
                 alt="My pic using a comic filter"
                 className="object-contain h-[30rem]"
+                priority
+                sizes="
+                  (max-width: 728px) 100vw
+                  (max-width: 1200px) 50vw
+                  33vw
+                "
               />
             </div>
 
@@ -89,7 +95,7 @@ const aboutme = () => {
                   <AnimatedNumbers value={18} />+
                 </span>
 
-                <h2 className="text-lg font-medium capitalize text-dark/75 text-right">
+                <h2 className="text-lg font-medium capitalize text-dark/75 text-right dark:text-light/75">
                   Months Working with relative technologies
                 </h2>
               </div>
@@ -99,7 +105,7 @@ const aboutme = () => {
                   <AnimatedNumbers value={5} />+
                 </span>
 
-                <h2 className="text-lg font-medium capitalize text-dark/75 text-right">
+                <h2 className="text-lg font-medium capitalize text-dark/75 text-right dark:text-light/75">
                   Major Project&#39;s Completed
                 </h2>
               </div>
@@ -109,7 +115,7 @@ const aboutme = () => {
                   <AnimatedNumbers value={7} />+
                 </span>
 
-                <h2 className="text-lg font-medium capitalize text-dark/75 text-right">
+                <h2 className="text-lg font-medium capitalize text-dark/75 text-right dark:text-light/75">
                   Combinations of Techstack&#39;s Used in that projects
                 </h2>
               </div>

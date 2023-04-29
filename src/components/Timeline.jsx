@@ -20,10 +20,12 @@ const Details = ({ title, fromTime, toTime, desc }) => {
       >
         <h3 className="capitalize font-bold text-3xl">
           {wordArr.join(" ")}&nbsp;
-          <span className="text-primary capitalize">{lastWord}</span>
+          <span className="text-primary dark:text-primaryDark capitalize">
+            {lastWord}
+          </span>
         </h3>
 
-        <span className="capitalize font-medium text-dark/75">
+        <span className="capitalize font-medium text-dark/75 dark:text-light/75">
           {fromTime} - {toTime}
         </span>
 
@@ -50,7 +52,7 @@ const Timeline = () => {
         <motion.div
           ref={lineRef}
           style={{ scaleY: scrollYProgress }}
-          className="absolute left-9 top-0 w-[4px] h-full bg-dark origin-top"
+          className="absolute left-9 top-0 w-[4px] h-full bg-dark dark:bg-light origin-top"
         />
 
         <ul className="w-full flex flex-col items-center justify-between ml-4">

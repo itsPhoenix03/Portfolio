@@ -18,8 +18,8 @@ const FramerImage = motion(Image);
 
 const FeauredProject = ({ type, title, img, summary, link, github }) => {
   return (
-    <article className="relative w-full p-6 flex items-center justify-between rounded-2xl border border-solid border-dark bg-light shadow-2xl">
-      <div className="absolute top-0 -right-3 -z-10 w-[101%] h-[103%] rounded-[2rem] rounded-br-2xl bg-dark" />
+    <article className="relative w-full p-6 flex items-center justify-between rounded-2xl border border-solid border-dark bg-light dark:border-light dark:bg-dark shadow-2xl">
+      <div className="absolute top-0 -right-3 -z-10 w-[101%] h-[103%] rounded-[2rem] rounded-br-2xl bg-dark dark:bg-light" />
 
       <Link
         href={link}
@@ -32,29 +32,39 @@ const FeauredProject = ({ type, title, img, summary, link, github }) => {
           src={img}
           alt={title}
           className="w-full h-auto"
+          priority
+          sizes="
+                  (max-width: 728px) 100vw
+                  (max-width: 1200px) 50vw
+                  50vw
+                "
         />
       </Link>
 
       <div className="w-1/2 flex flex-col items-start justify-between pl-6">
-        <span className="text-primary font-medium text-xl">{type}</span>
+        <span className="text-primary dark:text-primaryDark font-medium text-xl">
+          {type}
+        </span>
         <Link
           href={link}
           target="_blank"
           className="hover:underline underline-offset-2"
         >
-          <h2 className="my-2 w-full text-left text-3xl font-bold text-dark">
+          <h2 className="my-2 w-full text-left text-3xl font-bold text-dark dark:text-light">
             {title}
           </h2>
         </Link>
 
-        <p className="my-2 font-medium text-dark/75">{summary}</p>
-        <div className="mt-2 flex items-center">
+        <p className="my-2 font-medium text-dark/75 dark:text-light/75">
+          {summary}
+        </p>
+        <div className="mt-2 flex items-center dark:text-light">
           <Link href={github} className="w-10">
             <GithubIcon />
           </Link>
           <Link
             href={link}
-            className="ml-4 p-2 px-6 rounded-lg font-semibold bg-dark text-light"
+            className="ml-4 p-2 px-6 rounded-lg font-semibold bg-dark text-light dark:bg-light dark:text-dark"
           >
             Visit Project
           </Link>
@@ -66,8 +76,8 @@ const FeauredProject = ({ type, title, img, summary, link, github }) => {
 
 const Project = ({ title, img, github, link }) => {
   return (
-    <article className="relative w-full p-6 flex flex-col items-center justify-between rounded-2xl border border-solid border-dark bg-light shadow-2xl">
-      <div className="absolute top-0 -right-3 -z-10 w-[102%] h-[103%] rounded-[2rem] rounded-br-2xl bg-dark" />
+    <article className="relative w-full p-6 flex flex-col items-center justify-between rounded-2xl border border-solid border-dark bg-light dark:border-light dark:bg-dark shadow-2xl">
+      <div className="absolute top-0 -right-3 -z-10 w-[102%] h-[103%] rounded-[2rem] rounded-br-2xl bg-dark dark:bg-light" />
 
       <Link
         href={link}
@@ -89,18 +99,18 @@ const Project = ({ title, img, github, link }) => {
           target="_blank"
           className="hover:underline underline-offset-2"
         >
-          <h2 className="my-2 w-full text-left text-3xl font-bold text-dark">
+          <h2 className="my-2 w-full text-left text-3xl font-bold text-dark dark:text-light">
             {title}
           </h2>
         </Link>
 
-        <div className="w-full mt-2 flex items-center justify-between">
+        <div className="w-full mt-2 flex items-center justify-between dark:text-light">
           <Link href={github} className="w-10">
             <GithubIcon />
           </Link>
           <Link
             href={link}
-            className="p-2 px-6 rounded-lg font-semibold bg-dark text-light"
+            className="p-2 px-6 rounded-lg font-semibold bg-dark text-light dark:bg-light dark:text-dark"
           >
             Visit
           </Link>

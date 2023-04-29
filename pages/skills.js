@@ -27,21 +27,21 @@ const Card = ({ title, desc, link, iconComponent }) => {
               col-span-1 p-10 rounded-2xl
               w-full flex flex-col items-center justify-between gap-8
               border border-solid border-dark/25
-              bg-light text-dark
+              bg-light text-dark dark:border-light/25 dark:bg-dark
             "
     >
       <div className="w-full flex items-center justify-between">
-        <h2 className="font-bold text-5xl first-letter:text-primary capitalize">
+        <h2 className="font-bold text-5xl dark:text-light first-letter:text-primary dark:first-letter:text-primaryDark capitalize">
           {title}
         </h2>
         {iconComponent}
       </div>
-      <p className="font-medium text-dark/75">{desc}</p>
+      <p className="font-medium text-dark/75 dark:text-light/75">{desc}</p>
 
       <Link
         href={link}
         target="_blank"
-        className="self-end bg-light text-dark border border-solid border-dark/25 font-medium transition hover:border-dark/75 p-3 px-6 rounded-xl"
+        className="self-end bg-light text-dark dark:bg-dark dark:text-light border border-solid border-dark/25 dark:border-light/25 font-medium transition hover:border-dark/75 dark:hover:border-light/75 p-3 px-6 rounded-xl"
       >
         Know More
       </Link>

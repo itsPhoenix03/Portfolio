@@ -15,7 +15,7 @@ export default function Home() {
         <title>Shreyas Misra</title>
         <meta name="description" content="Welcome to my portfolio website!" />
       </Head>
-      <main className="flex item-center text-dark min-h-screen">
+      <main className="flex item-center text-dark min-h-screen dark:text-light">
         <Layout>
           <div className="relative flex justify-between items-center w-full">
             <div className="absolute -top-[10rem] left-0">
@@ -23,6 +23,12 @@ export default function Home() {
                 src={profilePicture}
                 alt="Shreyas Misra"
                 className="w-full h-[45rem]"
+                priority
+                sizes="
+                  (max-width: 728px) 100vw
+                  (max-width: 1200px) 50vw
+                  50vw
+                "
               />
             </div>
 
@@ -53,7 +59,7 @@ export default function Home() {
                 <Link
                   href="/Resume.pdf"
                   target={"_blank"}
-                  className="flex items-center bg-dark text-light p-2 px-6 rounded-lg text-lg font-semibold border-2 border-solid border-transparent hover:bg-light hover:text-dark hover:border-dark"
+                  className="flex items-center bg-dark text-light dark:bg-light dark:text-dark p-2 px-6 rounded-lg text-lg font-semibold border-2 border-solid border-transparent hover:bg-light hover:text-dark hover:border-dark dark:hover:bg-dark dark:hover:text-light dark:hover:border-light"
                   download={true}
                 >
                   Resume <LinkArrow className="w-6 ml-1" />
@@ -61,7 +67,7 @@ export default function Home() {
                 <Link
                   href="mailto:shreyas.misra03@gmail.com"
                   target={"_blank"}
-                  className="ml-4 p-2 px-6 capitalize border-2 border-solid border-dark text-dark rounded-lg text-lg font-semibold"
+                  className="ml-4 p-2 px-6 capitalize border-2 border-solid border-dark text-dark rounded-lg text-lg font-semibold dark:border-light dark:text-light"
                 >
                   Contact Me
                 </Link>
@@ -70,8 +76,15 @@ export default function Home() {
           </div>
         </Layout>
 
-        <div className="absolute right-12 -bottom-16 inline-block w-28 -rotate-[32deg] rounded-[5rem] hover:shadow-[0px_-80px_90px_-25px_#eacf70] group">
-          <Image src={lightBulb} alt="light-bulb" className="w-full h-auto  " />
+        <div
+          className="absolute right-12 -bottom-16 inline-block w-28 -rotate-[32deg]  rounded-[5rem]
+        hover:shadow-[0px_-80px_90px_-25px_#eacf70] group"
+        >
+          <Image
+            src={lightBulb}
+            alt="light-bulb"
+            className="w-full h-auto rounded-[5rem] hover:shadow-[inset_0px_80px_102px_-95px_#eacf70]"
+          />
         </div>
       </main>
     </>
