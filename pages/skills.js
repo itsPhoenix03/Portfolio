@@ -28,20 +28,25 @@ const Card = ({ title, desc, link, iconComponent }) => {
               w-full flex flex-col items-center justify-between gap-8
               border border-solid border-dark/25
               bg-light text-dark dark:border-light/25 dark:bg-dark
+              lg:p-6
             "
     >
       <div className="w-full flex items-center justify-between">
-        <h2 className="font-bold text-5xl dark:text-light first-letter:text-primary dark:first-letter:text-primaryDark capitalize">
+        <h2 className="font-bold text-5xl dark:text-light first-letter:text-primary dark:first-letter:text-primaryDark capitalize lg:text-4xl">
           {title}
         </h2>
         {iconComponent}
       </div>
-      <p className="font-medium text-dark/75 dark:text-light/75">{desc}</p>
+      <p className="font-medium text-dark/75 dark:text-light/75 lg:text-sm">
+        {desc}
+      </p>
 
       <Link
         href={link}
         target="_blank"
-        className="self-end bg-light text-dark dark:bg-dark dark:text-light border border-solid border-dark/25 dark:border-light/25 font-medium transition hover:border-dark/75 dark:hover:border-light/75 p-3 px-6 rounded-xl"
+        className="self-end bg-light text-dark dark:bg-dark dark:text-light border border-solid border-dark/25 dark:border-light/25 font-medium transition hover:border-dark/75 dark:hover:border-light/75 p-3 px-6 rounded-xl
+        lg:text-sm
+        "
       >
         Know More
       </Link>
@@ -58,10 +63,13 @@ const skills = () => {
       </Head>
 
       <main className="w-full flex flex-col items-center justify-between mb-16">
-        <Layout className="pt-16">
-          <AnimatedText text={"Dynamic Arsenal of Skills"} className="pb-2" />
+        <Layout className="pt-16 lg:pt-10">
+          <AnimatedText
+            text={"Dynamic Arsenal of Skills"}
+            className="pb-2 lg:text-6xl"
+          />
 
-          <div className="mt-16 w-full h-auto grid grid-cols-2 gap-10">
+          <div className="mt-16 w-full h-auto grid grid-cols-2 gap-10 lg:grid-cols-1">
             <Card
               title="ReactJs"
               desc={

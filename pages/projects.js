@@ -18,7 +18,11 @@ const FramerImage = motion(Image);
 
 const FeauredProject = ({ type, title, img, summary, link, github }) => {
   return (
-    <article className="relative w-full p-6 flex items-center justify-between rounded-2xl border border-solid border-dark bg-light dark:border-light dark:bg-dark shadow-2xl">
+    <article
+      className="relative w-full p-6 flex items-center justify-between rounded-2xl border border-solid border-dark bg-light dark:border-light dark:bg-dark shadow-2xl
+      
+    "
+    >
       <div className="absolute top-0 -right-3 -z-10 w-[101%] h-[103%] rounded-[2rem] rounded-br-2xl bg-dark dark:bg-light" />
 
       <Link
@@ -130,7 +134,10 @@ const projects = () => {
 
       <main className="w-full mb-16 flex flex-col items-center justify-center">
         <Layout className="pt-16">
-          <AnimatedText text="Imagination Trumps Knowledge!" className="pb-2" />
+          <AnimatedText
+            text="Imagination Trumps Knowledge!"
+            className="pb-2 lg:text-6xl"
+          />
 
           <div className="grid grid-cols-12 gap-24 my-16">
             <div className="col-span-12">
