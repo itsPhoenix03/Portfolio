@@ -4,12 +4,13 @@ import Head from "next/head";
 import Image from "next/image";
 import React, { useEffect, useRef } from "react";
 
-import profilePicture from "../public/Images/contact-avatar.png";
 import { useInView, useMotionValue, useSpring } from "framer-motion";
 import AboutSectionSkills from "@/src/components/AboutSectionSkills";
 import Timeline from "@/src/components/Timeline";
 import Education from "@/src/components/Education";
 import TransitionsEffects from "@/src/components/TransitionsEffects";
+
+const profilePicture = "../public/Images/contact-avatar.png";
 
 const AnimatedNumbers = ({ value }) => {
   const spanRef = useRef(null);

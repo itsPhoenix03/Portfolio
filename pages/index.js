@@ -3,11 +3,12 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 
-import profilePicture from "../public/Images/pixton-avatar-full-body.png";
 import AnimatedText from "@/src/components/AnimatedText";
 import { LinkArrow } from "@/src/components/Icons";
 import lightBulb from "../public/lightbulb.svg";
 import TransitionsEffects from "@/src/components/TransitionsEffects";
+
+const profilePicture = "../public/Images/pixton-avatar-full-body.png";
 
 export default function Home() {
   return (
