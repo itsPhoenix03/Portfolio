@@ -9,6 +9,7 @@ import { useInView, useMotionValue, useSpring } from "framer-motion";
 import AboutSectionSkills from "@/src/components/AboutSectionSkills";
 import Timeline from "@/src/components/Timeline";
 import Education from "@/src/components/Education";
+import TransitionsEffects from "@/src/components/TransitionsEffects";
 
 const AnimatedNumbers = ({ value }) => {
   const spanRef = useRef(null);
@@ -42,11 +43,13 @@ const aboutme = () => {
         />
       </Head>
 
+      <TransitionsEffects />
+
       <main className="flex w-full flex-col items-center justify-center dark:text-light">
         <Layout className="pt-16">
           <AnimatedText
             text="Passion Fuels Purpose!"
-            className="mb-24 lg:!text-7xl"
+            className="mb-24 lg:!text-7xl md:!text-6xl sm:!text-5xl"
           />
 
           <div className="grid w-full grid-cols-8 gap-16 sm:gap-10">
@@ -55,20 +58,20 @@ const aboutme = () => {
                 Biography
               </h2>
 
-              <p className="font-medium">
+              <p className="font-medium xs:text-sm">
                 Hi, I&#39;m Shreyas, a Fullstack Web Developer with a passion
                 for creating beautiful, functional, and user-centered digital
                 experiences. I am always looking for new and innovative ways to
                 bring my clients&#39; visions to life.
               </p>
 
-              <p className="font-medium my-6">
+              <p className="font-medium xs:text-sm my-6">
                 I believe that design is about more than just making things look
                 pretty – it&#39;s about solving problems and creating intuitive,
                 enjoyable experiences for users.
               </p>
 
-              <p className="font-medium">
+              <p className="font-medium xs:text-sm">
                 Whether I&#39;m working on any website, I bring my commitment to
                 design excellence and user-centered thinking to every project I
                 work on. I look forward to the opportunity to bring my skills
@@ -77,11 +80,11 @@ const aboutme = () => {
             </div>
 
             <div
-              className="col-span-3 relative h-[35rem] rounded-2xl border-2 border-solid border-dark bg-light dark:border-light dark:bg-dark p-8
+              className="col-span-3 relative h-[35rem] rounded-2xl border-2 border-solid border-dark bg-light dark:border-light dark:bg-dark p-8 xs:px-2
             xl:col-span-4 md:order-1 md:col-span-8
             "
             >
-              <div className="absolute top-0 -right-3 -z-10 w-[102%] h-[103%] rounded-[2rem] bg-dark dark:bg-light" />
+              <div className="absolute top-0 -right-3 -z-10 w-[102%] h-[103%] rounded-[2rem] bg-dark dark:bg-light xxs:-right-1 xxs:h-[102%] xxs:rounded-[1.5rem]" />
 
               <Image
                 src={profilePicture}
@@ -104,7 +107,7 @@ const aboutme = () => {
 
                 <h2
                   className="text-lg font-medium capitalize text-dark/75 text-right xl:text-center xl:text-base dark:text-light/75
-                  sm:text-sm
+                  sm:text-sm xs:text-xs
                 "
                 >
                   Months Working with relative technologies
@@ -116,7 +119,7 @@ const aboutme = () => {
                   <AnimatedNumbers value={5} />+
                 </span>
 
-                <h2 className="text-lg font-medium capitalize text-dark/75 text-right xl:text-center xl:text-base dark:text-light/75 sm:text-sm">
+                <h2 className="text-lg font-medium capitalize text-dark/75 text-right xl:text-center xl:text-base dark:text-light/75 sm:text-sm xs:text-xs">
                   Major Project&#39;s Completed
                 </h2>
               </div>
@@ -126,7 +129,7 @@ const aboutme = () => {
                   <AnimatedNumbers value={7} />+
                 </span>
 
-                <h2 className="text-lg font-medium capitalize text-dark/75 text-right xl:text-center xl:text-base dark:text-light/75 sm:text-sm">
+                <h2 className="text-lg font-medium capitalize text-dark/75 text-right xl:text-center xl:text-base dark:text-light/75 sm:text-sm xs:text-xs">
                   Combinations of Techstack&#39;s Used in that projects
                 </h2>
               </div>

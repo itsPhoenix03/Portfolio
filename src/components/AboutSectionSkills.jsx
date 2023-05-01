@@ -46,7 +46,7 @@ const AboutSectionSkills = () => {
         <Skill name="NextJs" x="0vw" y="12vw" />
         <Skill name="CSS" x="-20vw" y="-15vw" />
         <Skill name="Tailwind CSS" x="15vw" y="-12vw" />
-        <Skill name="HTML" x="32vw" y="5vw" />
+        <Skill name="HTML" x="32vw" y="2vw" />
         <Skill name="Styled Components" x="0vw" y="-20vw" />
         <Skill name="ExpressJs" x="-25vw" y="18vw" />
         <Skill name="NodeJs" x="18vw" y="18vw" />

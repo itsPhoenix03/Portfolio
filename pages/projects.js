@@ -13,6 +13,7 @@ import BloggerJs from "../public/Images/Projects/BloggerJs.PNG";
 import TrakerTask from "../public/Images/Projects/TrakerTask.PNG";
 import Connecting from "../public/Images/Projects/Connecting.PNG";
 import { motion } from "framer-motion";
+import TransitionsEffects from "@/src/components/TransitionsEffects";
 
 const FramerImage = motion(Image);
 
@@ -20,15 +21,19 @@ const FeauredProject = ({ type, title, img, summary, link, github }) => {
   return (
     <article
       className="relative w-full p-6 flex items-center justify-between rounded-2xl border border-solid border-dark bg-light dark:border-light dark:bg-dark shadow-2xl
-      
+      lg:flex-col lg:p-8 sm:p-3 xs:rounded-xl
     "
     >
-      <div className="absolute top-0 -right-3 -z-10 w-[101%] h-[103%] rounded-[2rem] rounded-br-2xl bg-dark dark:bg-light" />
+      <div
+        className="absolute top-0 -right-3 -z-10 w-[101%] h-[103%] rounded-[2rem] rounded-br-2xl bg-dark dark:bg-light
+      xs:-right-2 sm:h-[102%] xs:w-full xs:h-[101%] xs:rounded-[1rem]
+      "
+      />
 
       <Link
         href={link}
         target="_blank"
-        className="w-1/2 cursor-pointer overflow-hidden rounded-2xl"
+        className="w-1/2 cursor-pointer overflow-hidden rounded-2xl lg:w-full"
       >
         <FramerImage
           whileHover={{ scale: 1.05 }}
@@ -45,8 +50,8 @@ const FeauredProject = ({ type, title, img, summary, link, github }) => {
         />
       </Link>
 
-      <div className="w-1/2 flex flex-col items-start justify-between pl-6">
-        <span className="text-primary dark:text-primaryDark font-medium text-xl">
+      <div className="w-1/2 flex flex-col items-start justify-between pl-6 lg:w-full lg:pl-0 lg:pt-6">
+        <span className="text-primary dark:text-primaryDark font-medium text-xl xs:text-sm">
           {type}
         </span>
         <Link
@@ -54,21 +59,21 @@ const FeauredProject = ({ type, title, img, summary, link, github }) => {
           target="_blank"
           className="hover:underline underline-offset-2"
         >
-          <h2 className="my-2 w-full text-left text-3xl font-bold text-dark dark:text-light">
+          <h2 className="my-2 w-full text-left text-3xl font-bold text-dark dark:text-light sm:text-2xl">
             {title}
           </h2>
         </Link>
 
-        <p className="my-2 font-medium text-dark/75 dark:text-light/75">
+        <p className="my-2 font-medium text-dark/75 dark:text-light/75 lg:text-sm">
           {summary}
         </p>
-        <div className="mt-2 flex items-center dark:text-light">
-          <Link href={github} className="w-10">
+        <div className="mt-2 flex items-center dark:text-light sm:w-full sm:justify-between">
+          <Link href={github} className="w-10 xxs:w-6">
             <GithubIcon />
           </Link>
           <Link
             href={link}
-            className="ml-4 p-2 px-6 rounded-lg font-semibold bg-dark text-light dark:bg-light dark:text-dark"
+            className="ml-4 p-2 px-6 rounded-lg font-semibold bg-dark text-light dark:bg-light dark:text-dark sm:px-4 sm:text-base"
           >
             Visit Project
           </Link>
@@ -80,8 +85,16 @@ const FeauredProject = ({ type, title, img, summary, link, github }) => {
 
 const Project = ({ title, img, github, link }) => {
   return (
-    <article className="relative w-full p-6 flex flex-col items-center justify-between rounded-2xl border border-solid border-dark bg-light dark:border-light dark:bg-dark shadow-2xl">
-      <div className="absolute top-0 -right-3 -z-10 w-[102%] h-[103%] rounded-[2rem] rounded-br-2xl bg-dark dark:bg-light" />
+    <article
+      className="relative w-full p-6 flex flex-col items-center justify-between rounded-2xl border border-solid border-dark bg-light dark:border-light dark:bg-dark shadow-2xl
+    sm:p-3
+    "
+    >
+      <div
+        className="absolute top-0 -right-3 -z-10 w-[102%] h-[103%] rounded-[2rem] rounded-br-2xl bg-dark dark:bg-light
+      md:-right-2 md:w-[101%] xs:h-[101%] xs:rounded-[1rem]
+      "
+      />
 
       <Link
         href={link}
@@ -103,18 +116,18 @@ const Project = ({ title, img, github, link }) => {
           target="_blank"
           className="hover:underline underline-offset-2"
         >
-          <h2 className="my-2 w-full text-left text-3xl font-bold text-dark dark:text-light">
+          <h2 className="my-2 w-full text-left text-3xl font-bold text-dark dark:text-light lg:text-2xl">
             {title}
           </h2>
         </Link>
 
         <div className="w-full mt-2 flex items-center justify-between dark:text-light">
-          <Link href={github} className="w-10">
+          <Link href={github} className="w-10 xxs:w-6">
             <GithubIcon />
           </Link>
           <Link
             href={link}
-            className="p-2 px-6 rounded-lg font-semibold bg-dark text-light dark:bg-light dark:text-dark"
+            className="p-2 px-6 rounded-lg font-semibold bg-dark text-light dark:bg-light dark:text-dark md:text-base"
           >
             Visit
           </Link>
@@ -128,18 +141,23 @@ const projects = () => {
   return (
     <>
       <Head>
-        <title>Projects</title>
-        <meta name="description" content="These are my Projects!" />
+        <title>Shreyas | Projects</title>
+        <meta
+          name="description"
+          content="These are my Projects build using my WebDev Skills!"
+        />
       </Head>
+
+      <TransitionsEffects />
 
       <main className="w-full mb-16 flex flex-col items-center justify-center">
         <Layout className="pt-16">
           <AnimatedText
             text="Imagination Trumps Knowledge!"
-            className="pb-2 lg:text-6xl"
+            className="pb-2 lg:!text-6xl md:!text-5xl sm:!text-4xl"
           />
 
-          <div className="grid grid-cols-12 gap-24 my-16">
+          <div className="grid grid-cols-12 gap-24 my-16 xl:gap-x-16 lg:gap-x-8 md:gap-y-24 sm:gap-x-0">
             <div className="col-span-12">
               <FeauredProject
                 type="Featured Project"
@@ -153,7 +171,7 @@ const projects = () => {
               />
             </div>
 
-            <div className="col-span-6">
+            <div className="col-span-6 sm:col-span-12">
               <Project
                 title={"Gericht Restaurant"}
                 img={Gericht}
@@ -163,7 +181,7 @@ const projects = () => {
                 link={"https://gericht-restaurant-sam03.netlify.app/"}
               />
             </div>
-            <div className="col-span-6">
+            <div className="col-span-6 sm:col-span-12">
               <Project
                 title={"Tracker Task"}
                 img={TrakerTask}
@@ -185,7 +203,7 @@ const projects = () => {
               />
             </div>
 
-            <div className="col-span-6">
+            <div className="col-span-6 sm:col-span-12">
               <Project
                 title={"Show Finder"}
                 img={ShowFinder}
@@ -193,7 +211,7 @@ const projects = () => {
                 link={"https://show-finder-sam03.netlify.app/"}
               />
             </div>
-            <div className="col-span-6">
+            <div className="col-span-6 sm:col-span-12">
               <Project
                 title={"Connecting"}
                 img={Connecting}

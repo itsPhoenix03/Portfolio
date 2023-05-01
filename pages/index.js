@@ -7,6 +7,7 @@ import profilePicture from "../public/Images/pixton-avatar-full-body.png";
 import AnimatedText from "@/src/components/AnimatedText";
 import { LinkArrow } from "@/src/components/Icons";
 import lightBulb from "../public/lightbulb.svg";
+import TransitionsEffects from "@/src/components/TransitionsEffects";
 
 export default function Home() {
   return (
@@ -15,6 +16,9 @@ export default function Home() {
         <title>Shreyas Misra</title>
         <meta name="description" content="Welcome to my portfolio website!" />
       </Head>
+
+      <TransitionsEffects />
+
       <main className="flex item-center text-dark min-h-screen dark:text-light">
         <Layout className="xxs:mt-[20rem] sm:mb-12">
           <div className="relative flex justify-between items-center w-full sm:text-center xxs:flex-col">
