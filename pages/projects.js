@@ -8,12 +8,12 @@ import React from "react";
 import { motion } from "framer-motion";
 import TransitionsEffects from "@/src/components/TransitionsEffects";
 
-import TheSocialScoop from "./public/images/Projects/TheSocialScoop.PNG";
-import Gericht from "./public/images/Projects/Gericht.PNG";
-import ShowFinder from "./public/images/Projects/ShowFinder.PNG";
-import BloggerJs from "./public/images/Projects/BloggerJs.PNG";
-import TrakerTask from "./public/images/Projects/TrakerTask.PNG";
-import Connecting from "./public/images/Projects/Connecting.PNG";
+import TheSocialScoop from "/images/Projects/TheSocialScoop.PNG";
+import Gericht from "/images/Projects/Gericht.PNG";
+import ShowFinder from "/images/Projects/ShowFinder.PNG";
+import BloggerJs from "/images/Projects/BloggerJs.PNG";
+import TrakerTask from "/images/Projects/TrakerTask.PNG";
+import Connecting from "/images/Projects/Connecting.PNG";
 
 const FramerImage = motion(Image);
 
