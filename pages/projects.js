@@ -164,7 +164,7 @@ const projects = () => {
               <FeauredProject
                 type="Featured Project"
                 title={`The Social Scoop`}
-                img={"../public/Images/Projects/TheSocialScoop.PNG"}
+                img={"/Images/Projects/TheSocialScoop.PNG"}
                 summary={
                   "This is a Modern Social Media Web Application which provides all te nessasary funtions of a soical media media application. With a minimal design, has a option for 'Dark' & 'Light' Themes. It use the timeline for fetching posts of the users followers. The passwords & messages are been enceypted."
                 }
@@ -176,7 +176,7 @@ const projects = () => {
             <div className="col-span-6 sm:col-span-12">
               <Project
                 title={"Gericht Restaurant"}
-                img={"../public/Images/Projects/Gericht.PNG"}
+                img={"/Images/Projects/Gericht.PNG"}
                 github={
                   "https://github.com/itsPhoenix03/Gericht-Restaurant-Landing-Page"
                 }
@@ -186,7 +186,7 @@ const projects = () => {
             <div className="col-span-6 sm:col-span-12">
               <Project
                 title={"Tracker Task"}
-                img={"../public/Images/Projects/TrakerTask.PNG"}
+                img={"/Images/Projects/TrakerTask.PNG"}
                 github={"https://github.com/itsPhoenix03/Todo-List-TS"}
                 link={"https://traker-task.netlify.app/"}
               />
@@ -196,7 +196,7 @@ const projects = () => {
               <FeauredProject
                 type="Featured Project"
                 title={`BloggerJS`}
-                img={"../public/Images/Projects/BloggerJs.PNG"}
+                img={"/Images/Projects/BloggerJs.PNG"}
                 summary={
                   "This is a Full Stack MERN website for blogging. A user can also compose and edit the blogs but after a registeration or login procedure. Users can also upload image for the blogs and also update their profile picture, name, email and passwords. The passwords are been stored in the encrypted form in the database."
                 }
@@ -208,7 +208,7 @@ const projects = () => {
             <div className="col-span-6 sm:col-span-12">
               <Project
                 title={"Show Finder"}
-                img={"../public/Images/Projects/ShowFinder.PNG"}
+                img={"/Images/Projects/ShowFinder.PNG"}
                 github={"https://github.com/itsPhoenix03/Show-Finder"}
                 link={"https://show-finder-sam03.netlify.app/"}
               />
@@ -216,7 +216,7 @@ const projects = () => {
             <div className="col-span-6 sm:col-span-12">
               <Project
                 title={"Connecting"}
-                img={"../public/Images/Projects/Connecting.PNG"}
+                img={"/Images/Projects/Connecting.PNG"}
                 github={"https://github.com/itsPhoenix03/Chat-Application"}
                 link={"https://chat-web-app-8dd66.web.app/"}
               />
