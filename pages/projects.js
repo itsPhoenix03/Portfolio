@@ -6,12 +6,12 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-import TheSocialScoop from "../public/Images/Projects/TheSocialScoop.png";
-import Gericht from "../public/Images/Projects/Gericht.png";
-import ShowFinder from "../public/Images/Projects/ShowFinder.png";
-import BloggerJs from "../public/Images/Projects/BloggerJs.png";
-import TrakerTask from "../public/Images/Projects/TrakerTask.png";
-import Connecting from "../public/Images/Projects/Connecting.png";
+import TheSocialScoop from "../public/Images/Projects/TheSocialScoop.PNG";
+import Gericht from "../public/Images/Projects/Gericht.PNG";
+import ShowFinder from "../public/Images/Projects/ShowFinder.PNG";
+import BloggerJs from "../public/Images/Projects/BloggerJs.PNG";
+import TrakerTask from "../public/Images/Projects/TrakerTask.PNG";
+import Connecting from "../public/Images/Projects/Connecting.PNG";
 import { motion } from "framer-motion";
 import TransitionsEffects from "@/src/components/TransitionsEffects";
 
