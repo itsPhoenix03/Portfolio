@@ -8,7 +8,7 @@ import { LinkArrow } from "@/src/components/Icons";
 import lightBulb from "../public/lightbulb.svg";
 import TransitionsEffects from "@/src/components/TransitionsEffects";
 
-import profilePicture from "../public/Images/pixton-avatar-full-body.png";
+import profilePicture from "../public/static/images/pixton-avatar-full-body.png";
 
 export default function Home() {
   return (
