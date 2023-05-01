@@ -25,7 +25,7 @@ export default function Home() {
           <div className="relative flex justify-between items-center w-full sm:text-center xxs:flex-col">
             <div className="absolute -top-[10rem] lg:-top-[5rem] md:top-[0rem] left-0 lg:-left-20 md:-left-[1.5rem] xxs:-top-[23rem] xxs:left-[15%]">
               <Image
-                src={profilePicture}
+                src={`../public/Images/pixton-avatar-full-body.png`}
                 alt="Shreyas Misra"
                 className="w-full h-[45rem] md:h-[23rem]"
                 priority
