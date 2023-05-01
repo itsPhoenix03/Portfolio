@@ -8,12 +8,12 @@ import React from "react";
 import { motion } from "framer-motion";
 import TransitionsEffects from "@/src/components/TransitionsEffects";
 
-const TheSocialScoop = "../public/Images/Projects/TheSocialScoop.PNG";
-const Gericht = "../public/Images/Projects/Gericht.PNG";
-const ShowFinder = "../public/Images/Projects/ShowFinder.PNG";
-const BloggerJs = "../public/Images/Projects/BloggerJs.PNG";
-const TrakerTask = "../public/Images/Projects/TrakerTask.PNG";
-const Connecting = "../public/Images/Projects/Connecting.PNG";
+import TheSocialScoop from "../public/Images/Projects/TheSocialScoop.PNG";
+import Gericht from "../public/Images/Projects/Gericht.PNG";
+import ShowFinder from "../public/Images/Projects/ShowFinder.PNG";
+import BloggerJs from "../public/Images/Projects/BloggerJs.PNG";
+import TrakerTask from "../public/Images/Projects/TrakerTask.PNG";
+import Connecting from "../public/Images/Projects/Connecting.PNG";
 
 const FramerImage = motion(Image);
 
@@ -41,6 +41,8 @@ const FeauredProject = ({ type, title, img, summary, link, github }) => {
           src={img}
           alt={title}
           className="w-full h-auto"
+          width={500}
+          height={500}
           priority
           sizes="
                   (max-width: 728px) 100vw

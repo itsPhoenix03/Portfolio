@@ -8,7 +8,7 @@ import { LinkArrow } from "@/src/components/Icons";
 import lightBulb from "../public/lightbulb.svg";
 import TransitionsEffects from "@/src/components/TransitionsEffects";
 
-const profilePicture = "../public/Images/pixton-avatar-full-body.png";
+import profilePicture from "../public/Images/pixton-avatar-full-body.png";
 
 export default function Home() {
   return (
@@ -25,9 +25,11 @@ export default function Home() {
           <div className="relative flex justify-between items-center w-full sm:text-center xxs:flex-col">
             <div className="absolute -top-[10rem] lg:-top-[5rem] md:top-[0rem] left-0 lg:-left-20 md:-left-[1.5rem] xxs:-top-[23rem] xxs:left-[15%]">
               <Image
-                src={`../public/Images/pixton-avatar-full-body.png`}
+                src={profilePicture}
                 alt="Shreyas Misra"
                 className="w-full h-[45rem] md:h-[23rem]"
+                width={500}
+                height={500}
                 priority
                 sizes="
                   (max-width: 728px) 100vw

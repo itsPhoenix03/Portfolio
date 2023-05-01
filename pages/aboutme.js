@@ -10,7 +10,7 @@ import Timeline from "@/src/components/Timeline";
 import Education from "@/src/components/Education";
 import TransitionsEffects from "@/src/components/TransitionsEffects";
 
-const profilePicture = "../public/Images/contact-avatar.png";
+import profilePicture from "../public/Images/contact-avatar.png";
 
 const AnimatedNumbers = ({ value }) => {
   const spanRef = useRef(null);
@@ -91,6 +91,8 @@ const aboutme = () => {
                 src={profilePicture}
                 alt="My pic using a comic filter"
                 className="object-contain h-[30rem]"
+                width={500}
+                height={500}
                 priority
                 sizes="
                   (max-width: 728px) 100vw
