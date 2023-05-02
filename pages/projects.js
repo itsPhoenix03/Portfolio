@@ -8,12 +8,12 @@ import React from "react";
 import { motion } from "framer-motion";
 import TransitionsEffects from "@/src/components/TransitionsEffects";
 
-import TheSocialScoop from "../public/images/TheSocialScoop.PNG";
-import Gericht from "../public/images/Gericht.PNG";
-import ShowFinder from "../public/images/ShowFinder.PNG";
-import BloggerJs from "../public/images/BloggerJs.PNG";
-// import TrakerTask from "../public/images/TrakerTask.PNG";
-// import Connecting from "../public/images/Connecting.PNG";
+import TheSocialScoop from "../public/images/TheSocialScoop.png";
+import Gericht from "../public/images/Gericht.png";
+import ShowFinder from "../public/images/ShowFinder.png";
+import BloggerJs from "../public/images/BloggerJs.png";
+import TrakerTask from "../public/images/TrakerTask.png";
+import Connecting from "../public/images/Connecting.png";
 
 const FramerImage = motion(Image);
 
@@ -183,14 +183,14 @@ const projects = () => {
                 link={"https://gericht-restaurant-sam03.netlify.app/"}
               />
             </div>
-            {/* <div className="col-span-6 sm:col-span-12">
+            <div className="col-span-6 sm:col-span-12">
               <Project
                 title={"Tracker Task"}
                 img={TrakerTask}
                 github={"https://github.com/itsPhoenix03/Todo-List-TS"}
                 link={"https://traker-task.netlify.app/"}
               />
-            </div> */}
+            </div>
 
             <div className="col-span-12">
               <FeauredProject
@@ -213,14 +213,14 @@ const projects = () => {
                 link={"https://show-finder-sam03.netlify.app/"}
               />
             </div>
-            {/* <div className="col-span-6 sm:col-span-12">
+            <div className="col-span-6 sm:col-span-12">
               <Project
                 title={"Connecting"}
                 img={Connecting}
                 github={"https://github.com/itsPhoenix03/Chat-Application"}
                 link={"https://chat-web-app-8dd66.web.app/"}
               />
-            </div> */}
+            </div>
           </div>
         </Layout>
       </main>
