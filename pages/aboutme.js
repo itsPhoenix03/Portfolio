@@ -91,8 +91,6 @@ const aboutme = () => {
                 src={profilePicture}
                 alt="My pic using a comic filter"
                 className="object-contain h-[30rem]"
-                width={500}
-                height={500}
                 priority
                 sizes="
                   (max-width: 728px) 100vw

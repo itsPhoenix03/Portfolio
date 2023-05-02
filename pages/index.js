@@ -28,8 +28,6 @@ export default function Home() {
                 src={profilePicture}
                 alt="Shreyas Misra"
                 className="w-full h-[45rem] md:h-[23rem]"
-                width={500}
-                height={500}
                 priority
                 sizes="
                   (max-width: 728px) 100vw

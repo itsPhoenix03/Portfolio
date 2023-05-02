@@ -41,8 +41,6 @@ const FeauredProject = ({ type, title, img, summary, link, github }) => {
           src={img}
           alt={title}
           className="w-full h-auto"
-          width={500}
-          height={500}
           priority
           sizes="
                   (max-width: 728px) 100vw
@@ -164,7 +162,7 @@ const projects = () => {
               <FeauredProject
                 type="Featured Project"
                 title={`The Social Scoop`}
-                img="../public/images/TheSocialScoop.png"
+                img="/images/TheSocialScoop.png"
                 summary={
                   "This is a Modern Social Media Web Application which provides all te nessasary funtions of a soical media media application. With a minimal design, has a option for 'Dark' & 'Light' Themes. It use the timeline for fetching posts of the users followers. The passwords & messages are been enceypted."
                 }
