@@ -13,7 +13,7 @@ import Gericht from "../public/images/Gericht.PNG";
 import ShowFinder from "../public/images/ShowFinder.PNG";
 import BloggerJs from "../public/images/BloggerJs.PNG";
 // import TrakerTask from "../public/images/TrakerTask.PNG";
-import Connecting from "../public/images/Connecting.PNG";
+// import Connecting from "../public/images/Connecting.PNG";
 
 const FramerImage = motion(Image);
 
@@ -213,14 +213,14 @@ const projects = () => {
                 link={"https://show-finder-sam03.netlify.app/"}
               />
             </div>
-            <div className="col-span-6 sm:col-span-12">
+            {/* <div className="col-span-6 sm:col-span-12">
               <Project
                 title={"Connecting"}
                 img={Connecting}
                 github={"https://github.com/itsPhoenix03/Chat-Application"}
                 link={"https://chat-web-app-8dd66.web.app/"}
               />
-            </div>
+            </div> */}
           </div>
         </Layout>
       </main>
