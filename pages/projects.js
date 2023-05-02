@@ -8,7 +8,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import TransitionsEffects from "@/src/components/TransitionsEffects";
 
-import TheSocialScoop from "../public/images/thesocialscoop.png";
+// import TheSocialScoop from "../public/images/TheSocialScoop.png";
 // import Gericht from "../public/images/Gericht.png";
 // import ShowFinder from "../public/images/ShowFinder.png";
 // import BloggerJs from "../public/images/BloggerJs.png";
@@ -162,7 +162,7 @@ const projects = () => {
               <FeauredProject
                 type="Featured Project"
                 title={`The Social Scoop`}
-                img={TheSocialScoop}
+                img="../public/images/thesocialscoop.png"
                 summary={
                   "This is a Modern Social Media Web Application which provides all te nessasary funtions of a soical media media application. With a minimal design, has a option for 'Dark' & 'Light' Themes. It use the timeline for fetching posts of the users followers. The passwords & messages are been enceypted."
                 }
