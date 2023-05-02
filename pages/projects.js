@@ -12,7 +12,7 @@ import TheSocialScoop from "../public/images/TheSocialScoop.PNG";
 import Gericht from "../public/images/Gericht.PNG";
 import ShowFinder from "../public/images/ShowFinder.PNG";
 import BloggerJs from "../public/images/BloggerJs.PNG";
-import TrakerTask from "../public/images/TrakerTask.PNG";
+// import TrakerTask from "../public/images/TrakerTask.PNG";
 import Connecting from "../public/images/Connecting.PNG";
 
 const FramerImage = motion(Image);
