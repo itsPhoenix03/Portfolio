@@ -183,14 +183,14 @@ const projects = () => {
                 link={"https://gericht-restaurant-sam03.netlify.app/"}
               />
             </div>
-            <div className="col-span-6 sm:col-span-12">
+            {/* <div className="col-span-6 sm:col-span-12">
               <Project
                 title={"Tracker Task"}
                 img={TrakerTask}
                 github={"https://github.com/itsPhoenix03/Todo-List-TS"}
                 link={"https://traker-task.netlify.app/"}
               />
-            </div>
+            </div> */}
 
             <div className="col-span-12">
               <FeauredProject
