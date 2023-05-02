@@ -8,12 +8,12 @@ import React from "react";
 import { motion } from "framer-motion";
 import TransitionsEffects from "@/src/components/TransitionsEffects";
 
-import TheSocialScoop from "/images/Projects/TheSocialScoop.PNG";
-import Gericht from "/static/images/Projects/Gericht.PNG";
-import ShowFinder from "/static/images/Projects/ShowFinder.PNG";
-import BloggerJs from "/static/images/Projects/BloggerJs.PNG";
-import TrakerTask from "/static/images/Projects/TrakerTask.PNG";
-import Connecting from "/static/images/Projects/Connecting.PNG";
+import TheSocialScoop from "../public/images/TheSocialScoop.PNG";
+import Gericht from "../public/images/Gericht.PNG";
+import ShowFinder from "../public/images/ShowFinder.PNG";
+import BloggerJs from "../public/images/BloggerJs.PNG";
+import TrakerTask from "../public/images/TrakerTask.PNG";
+import Connecting from "../public/images/Connecting.PNG";
 
 const FramerImage = motion(Image);
 
@@ -164,7 +164,7 @@ const projects = () => {
               <FeauredProject
                 type="Featured Project"
                 title={`The Social Scoop`}
-                img={"/static/images/Projects/TheSocialScoop.PNG"}
+                img={TheSocialScoop}
                 summary={
                   "This is a Modern Social Media Web Application which provides all te nessasary funtions of a soical media media application. With a minimal design, has a option for 'Dark' & 'Light' Themes. It use the timeline for fetching posts of the users followers. The passwords & messages are been enceypted."
                 }
@@ -176,7 +176,7 @@ const projects = () => {
             <div className="col-span-6 sm:col-span-12">
               <Project
                 title={"Gericht Restaurant"}
-                img={"/static/images/Projects/Gericht.PNG"}
+                img={Gericht}
                 github={
                   "https://github.com/itsPhoenix03/Gericht-Restaurant-Landing-Page"
                 }
@@ -186,7 +186,7 @@ const projects = () => {
             <div className="col-span-6 sm:col-span-12">
               <Project
                 title={"Tracker Task"}
-                img={"/static/images/Projects/TrakerTask.PNG"}
+                img={TrakerTask}
                 github={"https://github.com/itsPhoenix03/Todo-List-TS"}
                 link={"https://traker-task.netlify.app/"}
               />
@@ -196,7 +196,7 @@ const projects = () => {
               <FeauredProject
                 type="Featured Project"
                 title={`BloggerJS`}
-                img={"/static/images/Projects/BloggerJs.PNG"}
+                img={BloggerJs}
                 summary={
                   "This is a Full Stack MERN website for blogging. A user can also compose and edit the blogs but after a registeration or login procedure. Users can also upload image for the blogs and also update their profile picture, name, email and passwords. The passwords are been stored in the encrypted form in the database."
                 }
@@ -208,7 +208,7 @@ const projects = () => {
             <div className="col-span-6 sm:col-span-12">
               <Project
                 title={"Show Finder"}
-                img={"/static/images/Projects/ShowFinder.PNG"}
+                img={ShowFinder}
                 github={"https://github.com/itsPhoenix03/Show-Finder"}
                 link={"https://show-finder-sam03.netlify.app/"}
               />
@@ -216,7 +216,7 @@ const projects = () => {
             <div className="col-span-6 sm:col-span-12">
               <Project
                 title={"Connecting"}
-                img={"/static/images/Projects/Connecting.PNG"}
+                img={Connecting}
                 github={"https://github.com/itsPhoenix03/Chat-Application"}
                 link={"https://chat-web-app-8dd66.web.app/"}
               />
