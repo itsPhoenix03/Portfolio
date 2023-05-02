@@ -8,12 +8,12 @@ import React from "react";
 import { motion } from "framer-motion";
 import TransitionsEffects from "@/src/components/TransitionsEffects";
 
-import TheSocialScoop from "../public/images/TheSocialScoop.png";
-import Gericht from "../public/images/Gericht.png";
-import ShowFinder from "../public/images/ShowFinder.png";
-import BloggerJs from "../public/images/BloggerJs.png";
-import TrakerTask from "../public/images/TrakerTask.png";
-import Connecting from "../public/images/Connecting.png";
+// import TheSocialScoop from "../public/images/TheSocialScoop.png";
+// import Gericht from "../public/images/Gericht.png";
+// import ShowFinder from "../public/images/ShowFinder.png";
+// import BloggerJs from "../public/images/BloggerJs.png";
+// import TrakerTask from "../public/images/TrakerTask.png";
+// import Connecting from "../public/images/Connecting.png";
 
 const FramerImage = motion(Image);
 
@@ -164,7 +164,7 @@ const projects = () => {
               <FeauredProject
                 type="Featured Project"
                 title={`The Social Scoop`}
-                img={TheSocialScoop}
+                img="../public/images/TheSocialScoop.png"
                 summary={
                   "This is a Modern Social Media Web Application which provides all te nessasary funtions of a soical media media application. With a minimal design, has a option for 'Dark' & 'Light' Themes. It use the timeline for fetching posts of the users followers. The passwords & messages are been enceypted."
                 }
@@ -173,7 +173,7 @@ const projects = () => {
               />
             </div>
 
-            <div className="col-span-6 sm:col-span-12">
+            {/* <div className="col-span-6 sm:col-span-12">
               <Project
                 title={"Gericht Restaurant"}
                 img={Gericht}
@@ -220,7 +220,7 @@ const projects = () => {
                 github={"https://github.com/itsPhoenix03/Chat-Application"}
                 link={"https://chat-web-app-8dd66.web.app/"}
               />
-            </div>
+            </div> */}
           </div>
         </Layout>
       </main>
