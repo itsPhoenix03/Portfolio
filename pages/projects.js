@@ -40,7 +40,7 @@ const FeauredProject = ({ type, title, img, summary, link, github }) => {
           height={500}
           // whileHover={{ scale: 1.05 }}
           // transition={{ duration: 0.2 }}
-          src={TheSocialScoop}
+          src={"/images/thesocialscoop.png"}
           alt={title}
           className="w-full h-auto"
           priority
