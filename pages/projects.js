@@ -8,7 +8,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import TransitionsEffects from "@/src/components/TransitionsEffects";
 
-const TheSocialScoop = "/images/thesocialscoop.png";
+import TheSocialScoop from "../public/images/thesocialscoop.png";
 // import Gericht from "../public/images/Gericht.png";
 // import ShowFinder from "../public/images/ShowFinder.png";
 // import BloggerJs from "../public/images/BloggerJs.png";
@@ -36,8 +36,6 @@ const FeauredProject = ({ type, title, img, summary, link, github }) => {
         className="w-1/2 cursor-pointer overflow-hidden rounded-2xl lg:w-full"
       >
         <FramerImage
-          width={500}
-          height={500}
           whileHover={{ scale: 1.05 }}
           transition={{ duration: 0.2 }}
           src={img}
@@ -104,8 +102,6 @@ const Project = ({ title, img, github, link }) => {
         className="w-full cursor-pointer overflow-hidden rounded-2xl"
       >
         <FramerImage
-          width={500}
-          height={500}
           whileHover={{ scale: 1.05 }}
           transition={{ duration: 0.2 }}
           src={img}
