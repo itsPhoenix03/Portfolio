@@ -8,7 +8,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import TransitionsEffects from "@/src/components/TransitionsEffects";
 
-import TheSocialScoop from "../public/images/thesocialscoop.png";
+import TheSocialScoop from "@/public/images/thesocialscoop.png";
 // import Gericht from "../public/images/Gericht.png";
 // import ShowFinder from "../public/images/ShowFinder.png";
 // import BloggerJs from "../public/images/BloggerJs.png";
