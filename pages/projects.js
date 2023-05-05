@@ -8,14 +8,14 @@ import React from "react";
 import { motion } from "framer-motion";
 import TransitionsEffects from "@/src/components/TransitionsEffects";
 
-import TheSocialScoop from "@/public/images/thesocialscoop.png";
+import TheSocialScoop from "../public/images/thesocialscoop.png";
 // import Gericht from "../public/images/Gericht.png";
 // import ShowFinder from "../public/images/ShowFinder.png";
 // import BloggerJs from "../public/images/BloggerJs.png";
 // import TrakerTask from "../public/images/TrakerTask.png";
 // import Connecting from "../public/images/Connecting.png";
 
-const FramerImage = motion(Image);
+// const FramerImage = motion(Image);
 
 const FeauredProject = ({ type, title, img, summary, link, github }) => {
   return (
@@ -35,9 +35,11 @@ const FeauredProject = ({ type, title, img, summary, link, github }) => {
         target="_blank"
         className="w-1/2 cursor-pointer overflow-hidden rounded-2xl lg:w-full"
       >
-        <FramerImage
-          whileHover={{ scale: 1.05 }}
-          transition={{ duration: 0.2 }}
+        <Image
+          width={500}
+          height={500}
+          // whileHover={{ scale: 1.05 }}
+          // transition={{ duration: 0.2 }}
           src={img}
           alt={title}
           className="w-full h-auto"
@@ -101,9 +103,11 @@ const Project = ({ title, img, github, link }) => {
         target="_blank"
         className="w-full cursor-pointer overflow-hidden rounded-2xl"
       >
-        <FramerImage
-          whileHover={{ scale: 1.05 }}
-          transition={{ duration: 0.2 }}
+        <Image
+          width={500}
+          height={500}
+          // whileHover={{ scale: 1.05 }}
+          // transition={{ duration: 0.2 }}
           src={img}
           alt={title}
           className="w-full h-auto"
