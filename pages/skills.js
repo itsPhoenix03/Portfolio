@@ -14,7 +14,7 @@ import {
 import Layout from "@/src/components/Layout";
 import Head from "next/head";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import TransitionsEffects from "@/src/components/TransitionsEffects";
 
