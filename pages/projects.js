@@ -8,12 +8,12 @@ import React from "react";
 import { motion } from "framer-motion";
 import TransitionsEffects from "@/src/components/TransitionsEffects";
 
-// import TheSocialScoop from "../public/images/thesocialscoop.png";
-// import Gericht from "../public/images/Gericht.png";
-// import ShowFinder from "../public/images/ShowFinder.png";
-// import BloggerJs from "../public/images/BloggerJs.png";
-// import TrakerTask from "../public/images/TrakerTask.png";
-// import Connecting from "../public/images/Connecting.png";
+import TheSocialScoop from "../public/images/thesocialscoop.png";
+import Gericht from "../public/images/gericht.png";
+import ShowFinder from "../public/images/showfinder.png";
+import BloggerJs from "../public/images/bloggerjs.png";
+import TrakerTask from "../public/images/trakertask.png";
+import Connecting from "../public/images/connecting.png";
 
 const FramerImage = motion(Image);
 
@@ -36,8 +36,6 @@ const FeauredProject = ({ type, title, img, summary, link, github }) => {
         className="w-1/2 cursor-pointer overflow-hidden rounded-2xl lg:w-full"
       >
         <FramerImage
-          width={500}
-          height={500}
           whileHover={{ scale: 1.05 }}
           transition={{ duration: 0.2 }}
           src={img}
@@ -104,8 +102,6 @@ const Project = ({ title, img, github, link }) => {
         className="w-full cursor-pointer overflow-hidden rounded-2xl"
       >
         <FramerImage
-          width={500}
-          height={500}
           whileHover={{ scale: 1.05 }}
           transition={{ duration: 0.2 }}
           src={img}
@@ -166,7 +162,7 @@ const projects = () => {
               <FeauredProject
                 type="Featured Project"
                 title={`The Social Scoop`}
-                img={""}
+                img={TheSocialScoop}
                 summary={
                   "This is a Modern Social Media Web Application which provides all te nessasary funtions of a soical media media application. With a minimal design, has a option for 'Dark' & 'Light' Themes. It use the timeline for fetching posts of the users followers. The passwords & messages are been enceypted."
                 }
@@ -175,7 +171,7 @@ const projects = () => {
               />
             </div>
 
-            {/* <div className="col-span-6 sm:col-span-12">
+            <div className="col-span-6 sm:col-span-12">
               <Project
                 title={"Gericht Restaurant"}
                 img={Gericht}
@@ -222,7 +218,7 @@ const projects = () => {
                 github={"https://github.com/itsPhoenix03/Chat-Application"}
                 link={"https://chat-web-app-8dd66.web.app/"}
               />
-            </div> */}
+            </div>
           </div>
         </Layout>
       </main>
