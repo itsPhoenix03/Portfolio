@@ -10,8 +10,7 @@ import Timeline from "@/src/components/Timeline";
 import Education from "@/src/components/Education";
 import TransitionsEffects from "@/src/components/TransitionsEffects";
 
-// import profilePicture from "../public/images/contact-avatar.png";
-import profilePicture from "../public/images/thesocialscoop.png";
+import profilePicture from "../public/images/contact-avatar.png";
 
 const AnimatedNumbers = ({ value }) => {
   const spanRef = useRef(null);
