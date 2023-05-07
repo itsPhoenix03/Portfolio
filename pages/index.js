@@ -21,9 +21,9 @@ export default function Home() {
       <TransitionsEffects />
 
       <main className="flex item-center text-dark min-h-screen dark:text-light">
-        <Layout className="xxs:mt-[20rem] sm:mb-12">
-          <div className="relative flex justify-between items-center w-full sm:text-center xxs:flex-col">
-            <div className="absolute -top-[10rem] lg:-top-[5rem] md:top-[0rem] left-0 lg:-left-20 md:-left-[1.5rem] xxs:-top-[23rem] xxs:left-[15%]">
+        <Layout className="xs:mt-[20rem] sm:mb-12">
+          <div className="relative flex justify-between items-center w-full sm:text-center xs:flex-col">
+            <div className="absolute -top-[10rem] lg:-top-[5rem] md:top-[0rem] left-0 lg:-left-20 md:-left-[1.5rem] xs:-top-[23rem] xs:left-auto">
               <Image
                 src={profilePicture}
                 alt="Shreyas Misra"
@@ -62,7 +62,7 @@ export default function Home() {
                 web development.
               </p>
 
-              <div className="flex item-center self-start mt-2">
+              <div className="flex item-center self-start mt-2 xs:w-full xs:justify-evenly">
                 <Link
                   href="/Resume.pdf"
                   target={"_blank"}
@@ -80,7 +80,7 @@ export default function Home() {
                   href="mailto:shreyas.misra03@gmail.com"
                   target={"_blank"}
                   className="ml-4 p-2 px-6 capitalize border-2 border-solid border-dark text-dark rounded-lg text-lg font-semibold dark:border-light dark:text-light
-                  md:px-4 md:text-base sm:px-2
+                  md:px-4 md:text-base
                   "
                 >
                   Contact Me
@@ -92,7 +92,7 @@ export default function Home() {
 
         <div
           className="absolute right-12 -bottom-16 inline-block w-28 -rotate-[32deg]  rounded-[5rem]
-        hover:shadow-[0px_-80px_90px_-25px_#eacf70] group lg:w-20 lg:-bottom-[10rem] md:w-14 md:-bottom-[6rem] sm:hidden"
+        hover:shadow-[0px_-80px_90px_-25px_#eacf70] group lg:w-20 lg:-bottom-[10rem] md:w-14 md:-bottom-[6rem] xs:hidden"
         >
           <Image
             src={lightBulb}
