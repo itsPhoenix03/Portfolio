@@ -189,6 +189,7 @@ const Navbar = () => {
 
           <nav className="mt-4 flex justify-center items-center flex-wrap">
             <motion.a
+              aria-label="My Github Link Button"
               href="https://github.com/itsPhoenix03"
               target={"_blank"}
               whileHover={{ y: -2 }}
@@ -198,6 +199,7 @@ const Navbar = () => {
               <GithubIcon />
             </motion.a>
             <motion.a
+              aria-label="My LinkedIn Profile Button"
               href="https://www.linkedin.com/in/shreyas-misra031/"
               target={"_blank"}
               whileHover={{ y: -2 }}
@@ -216,6 +218,7 @@ const Navbar = () => {
           <GithubIconAlt />
         </motion.a> */}
             <motion.a
+              aria-label="This is my Gmail you can mail to me using it!"
               href="mailto:shreyas.misra03@gmail.com"
               target={"_blank"}
               whileHover={{ y: -2 }}
@@ -226,6 +229,7 @@ const Navbar = () => {
             </motion.a>
 
             <button
+              aria-label="Theme Switcher Button"
               onClick={() => setMode(mode === "light" ? "dark" : "light")}
               className={`ml-3 p-1 flex items-center justify-center rounded-full 
             ${mode === "light" ? "bg-dark text-light" : "bg-light text-dark"}
