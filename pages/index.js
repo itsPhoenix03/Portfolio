@@ -92,12 +92,12 @@ export default function Home() {
 
         <div
           className="absolute right-12 -bottom-16 inline-block w-28 -rotate-[32deg]  rounded-[5rem]
-        hover:shadow-[0px_-80px_90px_-25px_#eacf70] group lg:w-20 lg:-bottom-[10rem] md:w-14 md:-bottom-[6rem] xs:hidden"
+         group lg:w-20 lg:-bottom-[10rem] md:w-14 md:-bottom-[6rem] xs:hidden"
         >
           <Image
             src={lightBulb}
             alt="light-bulb"
-            className="w-full h-auto rounded-[5rem] hover:shadow-[inset_0px_80px_102px_-95px_#eacf70] md:hover:shadow-none"
+            className="w-full h-auto rounded-[5rem] hover:drop-shadow-[0px_1px_100px_#eacf70]  md:hover:shadow-none"
           />
         </div>
       </main>
