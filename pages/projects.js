@@ -14,6 +14,7 @@ import ShowFinder from "../public/images/showfinder.png";
 import BloggerJs from "../public/images/bloggerjs.png";
 import TrakerTask from "../public/images/trakertask.png";
 import Connecting from "../public/images/connecting.png";
+import AirbnbClone from "../public/images/airbnb.png";
 
 const FramerImage = motion(Image);
 
@@ -200,6 +201,19 @@ const projects = () => {
                 }
                 github={"https://github.com/itsPhoenix03/BloggerJS"}
                 link={"https://bloggerjs.netlify.app/#/"}
+              />
+            </div>
+
+            <div className="col-span-12">
+              <FeauredProject
+                type="Featured Project"
+                title={`Airbnb Clone`}
+                img={AirbnbClone}
+                summary={
+                  "Introducing my Airbnb-inspired platform, a comprehensive clone with all essential features: seamless filtering, secure booking, effortless cancellation, property management, and personalized favorites. Experience the convenience and comfort of a familiar interface. Explore, book, and manage properties with ease. Your perfect stay awaits."
+                }
+                github={"https://github.com/itsPhoenix03/Airbnb"}
+                link={"https://booking-app-self-eight.vercel.app/"}
               />
             </div>
 
