@@ -4,10 +4,10 @@ import Logo from "./Logo";
 import { useRouter } from "next/router";
 import GmailIcon, {
   GithubIcon,
-  GithubIconAlt,
   LinkedInIcon,
   MoonIcon,
   SunIcon,
+  TwitterIcon,
 } from "./Icons";
 import { motion } from "framer-motion";
 import { useThemeSwitcher } from "./hooks/useThemeSwitcher";
@@ -101,11 +101,20 @@ const Navbar = () => {
 
         <nav className="flex justify-center items-center flex-wrap">
           <motion.a
-            href="https://github.com/itsPhoenix03"
+            href="https://twitter.com/its__Shreyas_"
             target={"_blank"}
             whileHover={{ y: -2 }}
             whileTap={{ scale: 0.9 }}
             className="w-6 mr-3"
+          >
+            <TwitterIcon />
+          </motion.a>
+          <motion.a
+            href="https://github.com/itsPhoenix03"
+            target={"_blank"}
+            whileHover={{ y: -2 }}
+            whileTap={{ scale: 0.9 }}
+            className="w-6 mx-3"
           >
             <GithubIcon />
           </motion.a>
@@ -189,6 +198,16 @@ const Navbar = () => {
 
           <nav className="mt-4 flex justify-center items-center flex-wrap">
             <motion.a
+              aria-label="My Twitter/X Account Link Button"
+              href="https://twitter.com/its__Shreyas_"
+              target={"_blank"}
+              whileHover={{ y: -2 }}
+              whileTap={{ scale: 0.9 }}
+              className="w-6 mr-3 ml-0 sm:mx-4"
+            >
+              <TwitterIcon />
+            </motion.a>
+            <motion.a
               aria-label="My Github Link Button"
               href="https://github.com/itsPhoenix03"
               target={"_blank"}
@@ -231,7 +250,7 @@ const Navbar = () => {
             <button
               aria-label="Theme Switcher Button"
               onClick={() => setMode(mode === "light" ? "dark" : "light")}
-              className={`ml-3 p-1 flex items-center justify-center rounded-full 
+              className={`mx-3 p-1 flex items-center justify-center rounded-full 
             ${mode === "light" ? "bg-dark text-light" : "bg-light text-dark"}
           `}
             >
