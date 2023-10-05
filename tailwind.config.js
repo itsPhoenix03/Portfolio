@@ -40,6 +40,18 @@ module.exports = {
         circularDarkSm:
           "repeating-radial-gradient(rgba(255,255,255,0.5) 2px,#1b1b1b 4px,#1b1b1b 40px)",
       },
+      keyframes: {
+        faultyBulb: {
+          "0%": { filter: "drop-shadow(0px 1px 100px #eacf7010)" },
+          "25%": { filter: "drop-shadow(0px 1px 100px #eacf7030)" },
+          "50%": { filter: "drop-shadow(0px 1px 100px #eacf70)" },
+          "75%": { filter: "drop-shadow(0px 1px 100px #eacf7070)" },
+          "100%": { filter: "drop-shadow(0px 1px 100px #eacf7030)" },
+        },
+      },
+      animation: {
+        faultyBulb: "faultyBulb 1s ease-in-out infinite",
+      },
     },
     screens: {
       "2xl": { max: "1535px" },

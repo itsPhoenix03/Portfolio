@@ -15,13 +15,16 @@ const Footer = () => {
             &#9825;
           </span>{" "}
           by&nbsp;
-          <Link href="/" className="underline underline-offset-2">
+          <Link
+            href="https://github.com/itsPhoenix03"
+            className="underline underline-offset-4"
+          >
             Shreyas
           </Link>
         </div>
         <Link
           href="https://www.linkedin.com/in/shreyas-misra031/"
-          className="w-full text-right underline underline-offset-2 md:text-center"
+          className="w-full text-right underline underline-offset-4 md:text-center"
         >
           Say Hello!
         </Link>

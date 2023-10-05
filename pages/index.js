@@ -8,7 +8,8 @@ import { LinkArrow } from "@/src/components/Icons";
 import lightBulb from "../public/lightbulb.svg";
 import TransitionsEffects from "@/src/components/TransitionsEffects";
 
-import profilePicture from "../public/images/pixton-avatar-full-body.png";
+// import profilePicture from "../public/images/pixton-avatar-full-body.png";
+import profilePicture from "../public/images/mainPageImage.png";
 
 export default function Home() {
   return (
@@ -23,11 +24,11 @@ export default function Home() {
       <main className="flex item-center text-dark min-h-screen dark:text-light">
         <Layout className="xs:mt-[20rem] sm:mb-12">
           <div className="relative flex justify-between items-center w-full sm:text-center xs:flex-col">
-            <div className="absolute -top-[10rem] lg:-top-[5rem] md:top-[0rem] left-0 lg:-left-20 md:-left-[1.5rem] xs:-top-[23rem] xs:left-auto">
+            <div className="absolute -top-[10rem] lg:top-[5rem] md:top-[0rem] -left-56 lg:-left-20 md:-left-[1.5rem] xs:-top-[23rem] xs:left-auto">
               <Image
                 src={profilePicture}
                 alt="Shreyas Misra"
-                className="w-full h-[45rem] md:h-[23rem]"
+                className="w-full h-full object-contain"
                 priority
                 sizes="
                   (max-width: 728px) 100vw
@@ -39,7 +40,7 @@ export default function Home() {
 
             <div className="w-1/4"></div>
 
-            <div className="w-[65%] flex flex-col item-center self-center z-10 md:w-[100%]">
+            <div className="w-[65%] lg:w-[60%] flex flex-col item-center self-center z-10 md:w-[100%]">
               <AnimatedText
                 text="Turning Vision Into Reality With Code And Design."
                 className="!text-7xl py-1 text-left 
@@ -48,18 +49,21 @@ export default function Home() {
               />
 
               <p className="my-4 text-base font-medium lg:text-sm">
-                Hi, I&#39;m Shreyas Misra, a Fullstack Developer with a passion
-                for creating beautiful, responsive, and user-friendly web
-                applications. I have been working with MERN technologies for
-                over a year now, and I am constantly learning and expanding my
-                skills to stay up-to-date with the latest web development
-                trends.
+                Hi, I&#39;m{" "}
+                <span className="text-primary dark:text-primaryDark">
+                  Shreyas Misra
+                </span>
+                , a Fullstack Developer with a passion for creating beautiful,
+                responsive, and user-friendly web applications. I have been
+                working with MERN technologies for over a year now, and I am
+                constantly learning and expanding my skills to stay up-to-date
+                with the latest web development trends.
               </p>
               <p className="my-4 text-base font-medium lg:text-sm">
                 As a skilled full-stack developer, I am dedicated to turning
                 ideas into innovative web applications. Explore my latest
-                projects and articles, showcasing my expertise in React.js and
-                web development.
+                projects and skills, showcasing my expertise in React.js and web
+                development.
               </p>
 
               <div className="flex item-center self-start mt-2 xs:w-full xs:justify-evenly">
@@ -97,7 +101,7 @@ export default function Home() {
           <Image
             src={lightBulb}
             alt="light-bulb"
-            className="w-full h-auto rounded-[5rem] hover:drop-shadow-[0px_1px_100px_#eacf70]  md:hover:shadow-none"
+            className="w-full h-auto rounded-[5rem] dark:animate-faultyBulb hover:drop-shadow-[0px_1px_100px_#eacf70]  md:hover:shadow-none"
           />
         </div>
       </main>

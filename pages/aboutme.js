@@ -10,7 +10,7 @@ import Timeline from "@/src/components/Timeline";
 import Education from "@/src/components/Education";
 import TransitionsEffects from "@/src/components/TransitionsEffects";
 
-import profilePicture from "../public/images/contact-avatar.png";
+import profilePicture from "../public/images/aboutPageImage.png";
 
 const AnimatedNumbers = ({ value }) => {
   const spanRef = useRef(null);
@@ -90,7 +90,7 @@ const aboutme = () => {
               <Image
                 src={profilePicture}
                 alt="My pic using a comic filter"
-                className="object-contain h-[30rem]"
+                className="object-contain h-full"
                 priority
                 sizes="
                   (max-width: 728px) 100vw
@@ -103,7 +103,7 @@ const aboutme = () => {
             <div className="col-span-2 flex flex-col items-end justify-between xl:col-span-8 xl:flex-row xl:items-center md:order-3">
               <div className="flex flex-col items-end justify-center xl:items-center">
                 <span className="inline-block text-7xl font-bold md:text-6xl sm:text-5xl xs:text-4xl">
-                  <AnimatedNumbers value={18} />+
+                  <AnimatedNumbers value={21} />+
                 </span>
 
                 <h2
