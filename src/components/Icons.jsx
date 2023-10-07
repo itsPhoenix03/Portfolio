@@ -474,8 +474,10 @@ export const LinkArrow = ({ className, ...props }) => (
 export const ReactIcon = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="1em"
-    height="1em"
+    // width="1em"
+    // height="1em"
+    width={56}
+    height={56}
     viewBox="0 0 32 32"
     {...props}
   >
@@ -498,8 +500,10 @@ export const ReactIcon = (props) => (
 export const JavaScriptIcon = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="1em"
-    height="1em"
+    // width="1em"
+    // height="1em"
+    width={45}
+    height={45}
     viewBox="0 0 128 128"
     {...props}
   >
@@ -514,8 +518,10 @@ export const JavaScriptIcon = (props) => (
 export const NodeJsIcon = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width=".89em"
-    height="1em"
+    // width=".89em"
+    // height="1em"
+    width={45}
+    height={45}
     viewBox="0 0 256 289"
     {...props}
   >
@@ -529,8 +535,10 @@ export const NodeJsIcon = (props) => (
 export const CSSIcon = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="1em"
-    height="1em"
+    // width="1em"
+    // height="1em"
+    width={45}
+    height={45}
     viewBox="0 0 32 32"
     {...props}
   >
@@ -561,8 +569,10 @@ export const CSSIcon = (props) => (
 export const ExpressJsIcon = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="1em"
-    height="1em"
+    // width="1em"
+    // height="1em"
+    width={45}
+    height={45}
     viewBox="0 0 256 256"
     {...props}
   >
@@ -579,8 +589,10 @@ export const ExpressJsIcon = (props) => (
 export const HtmlIcon = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="1em"
-    height="1em"
+    // width="1em"
+    // height="1em"
+    width={45}
+    height={45}
     viewBox="0 0 32 32"
     {...props}
   >
@@ -603,8 +615,10 @@ export const HtmlIcon = (props) => (
 export const MongoDbIcon = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="1em"
-    height="1em"
+    // width="1em"
+    // height="1em"
+    width={56}
+    height={56}
     viewBox="0 0 128 128"
     {...props}
   >
@@ -746,8 +760,10 @@ export const MongoDbIcon = (props) => (
 export const TypeScriptIcon = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="1em"
-    height="1em"
+    // width="1em"
+    // height="1em"
+    width={45}
+    height={45}
     viewBox="0 0 128 128"
     {...props}
   >
@@ -763,7 +779,7 @@ export const NextJsIcon = (props) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width={128}
+      width={120}
       height={24}
       viewBox="0 0 512 104"
       {...props}

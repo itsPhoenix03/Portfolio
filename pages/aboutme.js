@@ -63,7 +63,7 @@ const aboutme = () => {
                 Hi, I&#39;m Shreyas, a Fullstack Web Developer with a passion
                 for creating beautiful, functional, and user-centered digital
                 experiences. I am always looking for new and innovative ways to
-                bring my clients&#39; visions to life.
+                bring my client&#39;s visions to life.
               </p>
 
               <p className="font-medium xs:text-sm my-6">

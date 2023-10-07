@@ -80,7 +80,7 @@ const Timeline = () => {
             title="Building Bridges through Code"
             fromTime="April(2022)"
             toTime="May(2022)"
-            desc="In April and May 2021, I and a friend built a secure and engaging social media platform for our final year graduation project. We designed features such as chat, post sharing, and user profiles, incorporating a focus on user experience and privacy. Despite the challenges, we worked closely together, leveraging our strengths and complementing each other's weaknesses. Our hard work paid off, and we were proud to launch the platform to the public, learning invaluable lessons in teamwork, project management, and software development."
+            desc="In April and May 2022, I and a friend built a secure and engaging social media platform for our final year graduation project. We designed features such as chat, post sharing, and user profiles, incorporating a focus on user experience and privacy. Despite the challenges, we worked closely together, leveraging our strengths and complementing each other's weaknesses. Our hard work paid off, and we were proud to launch the platform to the public, learning invaluable lessons in teamwork, project management, and software development."
           />
           <Details
             title="Endless Horizons: Journey Through the Dynamic Seas of Web Development"
