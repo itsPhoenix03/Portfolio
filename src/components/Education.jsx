@@ -29,7 +29,7 @@ const Details = ({ type, time, place, info }) => {
           {time} | {place}
         </span>
 
-        <p className="font-medium w-full sm:text-sm">{info}</p>
+        <p className="font-medium w-full sm:text-sm xxs:text-xs">{info}</p>
       </motion.div>
     </li>
   );

@@ -52,7 +52,7 @@ const FeauredProject = ({ type, title, img, summary, link, github }) => {
       </Link>
 
       <div className="w-1/2 flex flex-col items-start justify-between pl-6 lg:w-full lg:pl-0 lg:pt-6">
-        <span className="text-primary dark:text-primaryDark font-medium text-xl xs:text-sm">
+        <span className="text-primary dark:text-primaryDark font-medium text-xl xs:text-sm xxs:text-xs">
           {type}
         </span>
         <Link
@@ -60,12 +60,12 @@ const FeauredProject = ({ type, title, img, summary, link, github }) => {
           target="_blank"
           className="hover:underline underline-offset-2"
         >
-          <h2 className="my-2 w-full text-left text-3xl font-bold text-dark dark:text-light sm:text-2xl">
+          <h2 className="my-2 w-full text-left text-3xl font-bold text-dark dark:text-light sm:text-2xl xxs:text-xl">
             {title}
           </h2>
         </Link>
 
-        <p className="my-2 font-medium text-dark/75 dark:text-light/75 lg:text-sm">
+        <p className="my-2 font-medium text-dark/75 dark:text-light/75 lg:text-sm xxs:text-xs">
           {summary}
         </p>
         <div className="mt-2 flex items-center dark:text-light sm:w-full sm:justify-between">
@@ -74,7 +74,7 @@ const FeauredProject = ({ type, title, img, summary, link, github }) => {
           </Link>
           <Link
             href={link}
-            className="ml-4 p-2 px-6 rounded-lg font-semibold bg-dark text-light dark:bg-light dark:text-dark sm:px-4 sm:text-base"
+            className="ml-4 p-2 px-6 rounded-lg font-semibold bg-dark text-light dark:bg-light dark:text-dark sm:px-4 sm:text-base xxs:text-xs"
           >
             Visit Project
           </Link>
@@ -117,7 +117,7 @@ const Project = ({ title, img, github, link }) => {
           target="_blank"
           className="hover:underline underline-offset-2"
         >
-          <h2 className="my-2 w-full text-left text-3xl font-bold text-dark dark:text-light lg:text-2xl">
+          <h2 className="my-2 w-full text-left text-3xl font-bold text-dark dark:text-light lg:text-2xl xxs:text-xl">
             {title}
           </h2>
         </Link>
@@ -128,7 +128,7 @@ const Project = ({ title, img, github, link }) => {
           </Link>
           <Link
             href={link}
-            className="p-2 px-6 rounded-lg font-semibold bg-dark text-light dark:bg-light dark:text-dark md:text-base"
+            className="p-2 px-6 rounded-lg font-semibold bg-dark text-light dark:bg-light dark:text-dark md:text-base xxs:text-xs"
           >
             Visit
           </Link>

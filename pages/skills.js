@@ -5,34 +5,28 @@ import React from "react";
 import { motion } from "framer-motion";
 import TransitionsEffects from "@/src/components/TransitionsEffects";
 
-const card = {
-  initial: {
-    y: 150,
-    opacity: 0,
-    skewX: 5,
-  },
-  whileInView: {
-    y: 0,
-    opacity: 1,
-    skewX: 0,
-    transition: { delay: 1, duration: 1 },
-  },
-};
-
 const Card = ({ wrapperObject, delay }) => {
   // Desrtucturing the recevied object
   const { heading, dataArray } = wrapperObject;
 
   return (
     <motion.div
-      variants={card}
-      initial="initial"
-      whileInView="whileInView"
+      initial={{
+        y: 150,
+        opacity: 0,
+        skewX: 5,
+      }}
+      whileInView={{
+        y: 0,
+        opacity: 1,
+        skewX: 0,
+        transition: { delay: delay, duration: 1 },
+      }}
       viewport={{ once: true }}
       className="row-span-1 mb-auto "
     >
       <div className="flex flex-col justify-start items-start gap-2">
-        <h2 className="flex justify-start items-center gap-2 text-2xl font-bold">
+        <h2 className="flex justify-start items-center gap-2 text-2xl font-bold xxs:text-xl">
           <span className="bg-gradient-to-t from-primary to-transparent dark:from-primaryDark inline-block text-transparent bg-clip-text">
             &#35;
           </span>
@@ -40,7 +34,7 @@ const Card = ({ wrapperObject, delay }) => {
         </h2>
 
         <ul
-          className="relative w-full px-6 py-3 font-normal text-md text-dark/75 dark:text-light/75 grid grid-cols-4 gap-4 before:absolute before:-top-3 before:left-2 before:w-[1px] before:h-[150%] before:bg-gradient-to-b before:from-primary before:to-light/75 dark:before:bg-gradient-to-b dark:before:from-primaryDark dark:before:to-dark/75 sm:before:h-[100%]
+          className="relative w-full px-6 py-3 font-normal text-md xxs:text-xs text-dark/75 dark:text-light/75 grid grid-cols-4 gap-4 before:absolute before:-top-3 before:left-2 before:w-[1px] before:h-[150%] before:bg-gradient-to-b before:from-primary before:to-light/75 dark:before:bg-gradient-to-b dark:before:from-primaryDark dark:before:to-dark/75 sm:before:h-[100%]
         "
         >
           {dataArray.map((data) => (
@@ -108,9 +102,9 @@ const skills = () => {
           <div className="mt-16 w-full h-auto grid grid-cols-1 gap-20 text-dark dark:text-light">
             <Card wrapperObject={developmentSkills} delay={1} />
 
-            <Card wrapperObject={softSkills} delay={1} />
+            <Card wrapperObject={softSkills} delay={1.5} />
 
-            <Card wrapperObject={languageProficency} delay={0.2} />
+            <Card wrapperObject={languageProficency} delay={0} />
           </div>
         </Layout>
       </main>

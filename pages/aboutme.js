@@ -54,25 +54,25 @@ const aboutme = () => {
           />
 
           <div className="grid w-full grid-cols-8 gap-16 sm:gap-10">
-            <div className="col-span-3 flex flex-col items-start justify-start xl:col-span-4 md:order-2 md:col-span-8">
+            <div className="col-span-3 flex flex-col items-start justify-start xl:col-span-4 md:order-2 md:col-span-8 xxs:w-[90%]">
               <h2 className="mb-4 text-2xl font-bold text-dark/75 dark:text-light/75 uppercase">
                 Biography
               </h2>
 
-              <p className="font-medium xs:text-sm">
+              <p className="font-medium xs:text-sm xxs:text-xs">
                 Hi, I&#39;m Shreyas, a Fullstack Web Developer with a passion
                 for creating beautiful, functional, and user-centered digital
                 experiences. I am always looking for new and innovative ways to
                 bring my client&#39;s visions to life.
               </p>
 
-              <p className="font-medium xs:text-sm my-6">
+              <p className="font-medium xs:text-sm xxs:text-xs my-6">
                 I believe that design is about more than just making things look
                 pretty – it&#39;s about solving problems and creating intuitive,
                 enjoyable experiences for users.
               </p>
 
-              <p className="font-medium xs:text-sm">
+              <p className="font-medium xs:text-sm xxs:text-xs">
                 Whether I&#39;m working on any website, I bring my commitment to
                 design excellence and user-centered thinking to every project I
                 work on. I look forward to the opportunity to bring my skills
@@ -81,7 +81,7 @@ const aboutme = () => {
             </div>
 
             <div
-              className="col-span-3 relative h-[35rem] rounded-2xl border-2 border-solid border-dark bg-light dark:border-light dark:bg-dark p-8 xs:px-2
+              className="col-span-3 relative h-[35rem] rounded-2xl border-2 border-solid border-dark bg-light dark:border-light dark:bg-dark p-8 xs:px-2 xxs:px-0 xxs:h-[25rem] xxs:w-[90%]
             xl:col-span-4 md:order-1 md:col-span-8
             "
             >
@@ -100,15 +100,15 @@ const aboutme = () => {
               />
             </div>
 
-            <div className="col-span-2 flex flex-col items-end justify-between xl:col-span-8 xl:flex-row xl:items-center md:order-3">
+            <div className="col-span-2 flex flex-col items-end justify-between xl:col-span-8 xl:flex-row xl:items-center md:order-3 xxs:w-[90%]">
               <div className="flex flex-col items-end justify-center xl:items-center">
-                <span className="inline-block text-7xl font-bold md:text-6xl sm:text-5xl xs:text-4xl">
+                <span className="inline-block text-7xl font-bold md:text-6xl sm:text-5xl xs:text-4xl xxs:text-3xl">
                   <AnimatedNumbers value={21} />+
                 </span>
 
                 <h2
                   className="text-lg font-medium capitalize text-dark/75 text-right xl:text-center xl:text-base dark:text-light/75
-                  sm:text-sm xs:text-xs
+                  sm:text-sm xs:text-xs xxs:text-[0.6rem]
                 "
                 >
                   Months Working with relative technologies
@@ -116,21 +116,21 @@ const aboutme = () => {
               </div>
 
               <div className="flex flex-col items-end justify-center xl:items-center">
-                <span className="inline-block text-7xl font-bold md:text-6xl sm:text-5xl xs:text-4xl">
+                <span className="inline-block text-7xl font-bold md:text-6xl sm:text-5xl xs:text-4xl xxs:text-3xl">
                   <AnimatedNumbers value={5} />+
                 </span>
 
-                <h2 className="text-lg font-medium capitalize text-dark/75 text-right xl:text-center xl:text-base dark:text-light/75 sm:text-sm xs:text-xs">
+                <h2 className="text-lg font-medium capitalize text-dark/75 text-right xl:text-center xl:text-base dark:text-light/75 sm:text-sm xs:text-xs xxs:text-[0.6rem]">
                   Major Project&#39;s Completed
                 </h2>
               </div>
 
               <div className="flex flex-col items-end justify-center xl:items-center">
-                <span className="inline-block text-7xl font-bold md:text-6xl sm:text-5xl xs:text-4xl">
+                <span className="inline-block text-7xl font-bold md:text-6xl sm:text-5xl xs:text-4xl xxs:text-3xl">
                   <AnimatedNumbers value={7} />+
                 </span>
 
-                <h2 className="text-lg font-medium capitalize text-dark/75 text-right xl:text-center xl:text-base dark:text-light/75 sm:text-sm xs:text-xs">
+                <h2 className="text-lg font-medium capitalize text-dark/75 text-right xl:text-center xl:text-base dark:text-light/75 sm:text-sm xs:text-xs xxs:text-[0.6rem]">
                   Combinations of Techstack&#39;s Used in that projects
                 </h2>
               </div>

@@ -24,9 +24,10 @@ const Skill = ({ name, icon: Icon, x, y }) => {
       initial={{ x: 0, y: 0 }}
       whileInView={{ x, y, transition: { duration: 1.5 } }}
     >
-      {Icon && !name && <Icon />}
-      {Icon && name && <Icon />}
-      {!Icon && name && name}
+      {((Icon && name) || (Icon && !name)) && (
+        <Icon className="sm:w-8 sm:h-8" />
+      )}
+      {/* {Icon && name && name} */}
     </motion.div>
   );
 };
