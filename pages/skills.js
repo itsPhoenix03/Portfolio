@@ -5,7 +5,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import TransitionsEffects from "@/src/components/TransitionsEffects";
 
-const Card = ({ wrapperObject, delay }) => {
+const Card = ({ wrapperObject }) => {
   // Desrtucturing the recevied object
   const { heading, dataArray } = wrapperObject;
 
@@ -16,11 +16,11 @@ const Card = ({ wrapperObject, delay }) => {
         opacity: 0,
         skewX: 5,
       }}
-      whileInView={{
+      animate={{
         y: 0,
         opacity: 1,
         skewX: 0,
-        transition: { delay: delay, duration: 1 },
+        transition: { delay: 1, duration: 1 },
       }}
       viewport={{ once: true }}
       className="row-span-1 mb-auto "
@@ -72,8 +72,8 @@ const skills = () => {
     ],
   };
 
-  const languageProficency = {
-    heading: "Language Proficency",
+  const languageProficiency = {
+    heading: "Language Proficiency",
     dataArray: [
       "English (Professional Level)",
       "Hindi (Professional Level and Native Language)",
@@ -100,11 +100,11 @@ const skills = () => {
           />
 
           <div className="mt-16 w-full h-auto grid grid-cols-1 gap-20 text-dark dark:text-light">
-            <Card wrapperObject={developmentSkills} delay={1} />
+            <Card wrapperObject={developmentSkills} />
 
-            <Card wrapperObject={softSkills} delay={1.5} />
+            <Card wrapperObject={softSkills} />
 
-            <Card wrapperObject={languageProficency} delay={0} />
+            <Card wrapperObject={languageProficiency} />
           </div>
         </Layout>
       </main>
