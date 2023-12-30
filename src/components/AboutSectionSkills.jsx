@@ -4,13 +4,22 @@ import Link from "next/link";
 import {
   CSSIcon,
   ExpressJsIcon,
+  FigmaIcon,
+  FirebaseIcon,
+  FramerMotionIcon,
   HtmlIcon,
   JavaScriptIcon,
   MongoDbIcon,
+  MongooseIcon,
   NextJsIcon,
   NodeJsIcon,
+  NpmIcon,
+  PrismaIcon,
   ReactIcon,
+  ReactRouterDomIcon,
+  ReduxIcon,
   StarIcon,
+  StyledComponentIcon,
   TailwindCSSIcon,
   TypeScriptIcon,
 } from "@/src/components/Icons";
@@ -27,7 +36,6 @@ const Skill = ({ name, icon: Icon, x, y }) => {
       {((Icon && name) || (Icon && !name)) && (
         <Icon className="sm:w-8 sm:h-8" />
       )}
-      {/* {Icon && name && name} */}
     </motion.div>
   );
 };
@@ -64,9 +72,32 @@ const AboutSectionSkills = () => {
         <Skill icon={TailwindCSSIcon} name="Tailwind CSS" x="15vw" y="-12vw" />
         <Skill icon={HtmlIcon} name="HTML" x="32vw" y="2vw" />
         <Skill icon={MongoDbIcon} name="MongoDb" x="0vw" y="-20vw" />
-        {/* <Skill name="Styled Components" x="0vw" y="-20vw" /> */}
+        <Skill icon={MongooseIcon} name="Mongoose" x="17vw" y="-20vw" />
         <Skill icon={ExpressJsIcon} name="ExpressJs" x="-25vw" y="18vw" />
         <Skill icon={NodeJsIcon} name="NodeJs" x="18vw" y="18vw" />
+        <Skill icon={ReduxIcon} name="Redux" x="-34vw" y="-4vw" />
+        <Skill icon={FirebaseIcon} name="Firebase" x="24vw" y="-9vw" />
+        <Skill icon={NpmIcon} name="Npm" x="-8vw" y="5vw" />
+        <Skill icon={FigmaIcon} name="Figma" x="38vw" y="-6vw" />
+        <Skill
+          icon={ReactRouterDomIcon}
+          name="React Router Dom"
+          x="-38vw"
+          y="6vw"
+        />
+        <Skill
+          icon={FramerMotionIcon}
+          name="Framer Motion"
+          x="-32vw"
+          y="-16vw"
+        />
+        <Skill icon={PrismaIcon} name="Prisma" x="-8vw" y="18vw" />
+        <Skill
+          icon={StyledComponentIcon}
+          name="Styled Component"
+          x="16vw"
+          y="-4vw"
+        />
       </div>
     </>
   );
