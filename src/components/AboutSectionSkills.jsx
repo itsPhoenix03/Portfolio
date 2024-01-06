@@ -48,8 +48,13 @@ const SkillMobileView = ({ name, icon: Icon, x, y }) => {
       whileInView={{
         x,
         y,
-        transition: { type: "spring", duration: 1.5, stiffness: 50 },
+        transition: {
+          type: "spring",
+          duration: 1.5,
+          stiffness: 50,
+        },
       }}
+      viewport={{ once: true }}
     >
       {((Icon && name) || (Icon && !name)) && <Icon className="w-fit h-fit" />}
     </motion.div>
@@ -65,7 +70,7 @@ const AboutSectionSkills = () => {
 
       <div
         className="w-full h-screen relative flex items-center justify-center rounded-full bg-circularLight dark:bg-circularDark
-      lg:h-[80vh] sm:hidden xs:h-[50vh]
+      lg:h-[80vh] md:hidden xs:h-[50vh]
       lg:bg-circularLightLg dark:lg:bg-circularDarkLg
       md:bg-circularLightMd dark:md:bg-circularDarkMd
       sm:bg-circularLightSm dark:sm:bg-circularDarkSm
@@ -117,7 +122,8 @@ const AboutSectionSkills = () => {
       </div>
 
       {/* Mobile View */}
-      <div className="hidden w-full h-screen relative sm:flex items-center justify-center mt-14">
+
+      <div className="hidden w-full h-screen relative md:flex items-center justify-center mt-14">
         <motion.div className="flex items-center justify-center rounded-full font-semibold text-sm bg-dark text-light dark:bg-light dark:text-dark p-4 shadow-dark dark:shadow-light">
           <Link href="/skills">Web</Link>
         </motion.div>
@@ -136,11 +142,11 @@ const AboutSectionSkills = () => {
           y="23vw"
         />
         <SkillMobileView icon={NextJsIcon} name="NextJs" x="25vw" y="52vw" />
-        <SkillMobileView icon={CSSIcon} name="CSS" x="-29vw" y="-40vw" />
+        <SkillMobileView icon={CSSIcon} name="CSS" x="-40vw" y="-46vw" />
         <SkillMobileView
           icon={TailwindCSSIcon}
           name="Tailwind CSS"
-          x="34vw"
+          x="38vw"
           y="-47vw"
         />
         <SkillMobileView icon={HtmlIcon} name="HTML" x="0vw" y="78vw" />
@@ -157,7 +163,7 @@ const AboutSectionSkills = () => {
           x="-2vw"
           y="-80vw"
         />
-        <SkillMobileView icon={NodeJsIcon} name="NodeJs" x="-13vw" y="46vw" />
+        <SkillMobileView icon={NodeJsIcon} name="NodeJs" x="-38vw" y="52vw" />
         <SkillMobileView icon={ReduxIcon} name="Redux" x="-9vw" y="-50vw" />
         <SkillMobileView
           icon={FirebaseIcon}
@@ -166,7 +172,7 @@ const AboutSectionSkills = () => {
           y="-88vw"
         />
         <SkillMobileView icon={NpmIcon} name="Npm" x="-28vw" y="80vw" />
-        <SkillMobileView icon={FigmaIcon} name="Figma" x="32vw" y="-17vw" />
+        <SkillMobileView icon={FigmaIcon} name="Figma" x="33vw" y="-7vw" />
         <SkillMobileView
           icon={ReactRouterDomIcon}
           name="React Router Dom"
@@ -183,7 +189,7 @@ const AboutSectionSkills = () => {
         <SkillMobileView
           icon={StyledComponentIcon}
           name="Styled Component"
-          x="-22vw"
+          x="-12vw"
           y="32vw"
         />
       </div>
