@@ -4,12 +4,20 @@ import Image from "next/image";
 import Link from "next/link";
 
 import AnimatedText from "@/src/components/AnimatedText";
-import { LinkArrow } from "@/src/components/Icons";
+// import { LinkArrow } from "@/src/components/Icons";
 import lightBulb from "../public/lightbulb.svg";
 import TransitionsEffects from "@/src/components/TransitionsEffects";
 
 // import profilePicture from "../public/images/pixton-avatar-full-body.png";
 import profilePicture from "../public/images/mainPageImage.png";
+import dynamic from "next/dynamic";
+
+const LinkArrow = dynamic(
+  () => import("@/src/components/Icons").then((mod) => mod.LinkArrow),
+  {
+    ssr: false,
+  }
+);
 
 export default function Home() {
   return (
@@ -75,9 +83,9 @@ export default function Home() {
                   "
                   download={true}
                 >
-                  Resume{" "}
+                  Resume
                   {/* <Link id="overview" href="/Resume.pdf" target="_blank"> */}
-                  <LinkArrow className="w-6 sm:w-4 xxs:" />
+                  <LinkArrow className="w-6 hover:text-primary dark:hover:text-primaryDark sm:w-4 xxs:" />
                   {/* </Link> */}
                 </Link>
                 <Link
