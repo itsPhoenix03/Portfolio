@@ -15,6 +15,7 @@ import BloggerJs from "../public/images/bloggerjs.png";
 import TrakerTask from "../public/images/trakertask.png";
 import Connecting from "../public/images/connecting.png";
 import AirbnbClone from "../public/images/airbnb.png";
+import PondicherryUniversityNSSPortal from "../public/images/pondicherryuniversitynssportal.png";
 
 const FramerImage = motion(Image);
 
@@ -184,10 +185,12 @@ const projects = () => {
             </div>
             <div className="col-span-6 sm:col-span-12">
               <Project
-                title={"Tracker Task"}
-                img={TrakerTask}
-                github={"https://github.com/itsPhoenix03/Todo-List-TS"}
-                link={"https://traker-task.netlify.app/"}
+                title={"Pondicherry University NSS Portal"}
+                img={PondicherryUniversityNSSPortal}
+                github={
+                  "https://github.com/itsPhoenix03/Pondicherry-University-NSS-Portal"
+                }
+                link={"https://pondicherryuniversitynss.netlify.app/"}
               />
             </div>
 
@@ -231,6 +234,14 @@ const projects = () => {
                 img={Connecting}
                 github={"https://github.com/itsPhoenix03/Chat-Application"}
                 link={"https://chat-web-app-8dd66.web.app/"}
+              />
+            </div>
+            <div className="col-span-6 sm:col-span-12">
+              <Project
+                title={"Tracker Task"}
+                img={TrakerTask}
+                github={"https://github.com/itsPhoenix03/Todo-List-TS"}
+                link={"https://traker-task.netlify.app/"}
               />
             </div>
           </div>
