@@ -102,7 +102,7 @@ const Navbar = () => {
 
         <nav className="flex justify-center items-center flex-wrap">
           <motion.a
-            href="https://twitter.com/its__Shreyas_"
+            href="https://x.com/shreyas_misra_"
             target={"_blank"}
             whileHover={{ y: -2 }}
             whileTap={{ scale: 0.9 }}
