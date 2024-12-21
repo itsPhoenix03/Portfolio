@@ -120,7 +120,7 @@ const Navbar = () => {
             <GithubIcon />
           </motion.a>
           <motion.a
-            href="https://www.linkedin.com/in/shreyas-misra031/"
+            href="https://www.linkedin.com/in/shreyas-misra/"
             target={"_blank"}
             whileHover={{ y: -2 }}
             whileTap={{ scale: 0.9 }}
