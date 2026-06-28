@@ -1,7 +1,7 @@
 ﻿import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  site: 'https://shreyasmisra.dev',
+  site: 'https://shreyas-misra.vercel.app',
   compressHTML: true,
   build: {
     inlineStylesheets: 'auto',

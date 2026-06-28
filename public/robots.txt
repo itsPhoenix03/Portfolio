@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://shreyasmisra.dev/sitemap.xml
+Sitemap: https://shreyas-misra.vercel.app/sitemap.xml
