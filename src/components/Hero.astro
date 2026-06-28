@@ -1,0 +1,186 @@
+﻿---
+import { siteMeta } from '../data/content';
+---
+
+<section class="section section--hero" id="hero">
+  <div class="hero__content">
+    <div class="hero__tag">
+      <span class="hero__tag-dot"></span>
+      <span class="hero__tag-text">{siteMeta.role}</span>
+    </div>
+    <h1 class="hero__name">
+      <span class="hero__name-word" data-word="0">
+        <span class="hero__name-letter" data-letter="S">S</span><span class="hero__name-rest">hreyas</span>
+      </span>
+      <span class="hero__name-word" data-word="1">
+        <span class="hero__name-letter" data-letter="M">M</span><span class="hero__name-rest">isra</span>
+      </span>
+    </h1>
+    <p class="hero__hint" id="hero-hint">✦ scalable, dependable systems</p>
+  </div>
+  <div class="scrollTo" aria-hidden="true">
+    <span>scroll</span>
+    <div class="scrollTo__icon"></div>
+  </div>
+</section>
+
+<style>
+  #hero {
+    position: relative;
+  }
+
+  .hero__content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    pointer-events: none;
+    padding-top: 4rem;
+  }
+
+  .hero__tag {
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 1rem;
+    border-radius: 100px;
+    border: 1px solid var(--border-accent);
+    background: rgba(0, 229, 255, 0.04);
+    margin-bottom: 2rem;
+    opacity: 0;
+    transform: translateY(20px) scale(0.9);
+    animation: chipGlow 3.2s ease-in-out infinite;
+  }
+
+  /* Cyan sheen sweeping across the chip. */
+  .hero__tag::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -120%;
+    width: 55%;
+    height: 100%;
+    background: linear-gradient(
+      100deg,
+      transparent,
+      rgba(0, 229, 255, 0.35),
+      transparent
+    );
+    transform: skewX(-20deg);
+    animation: chipSheen 4s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes chipSheen {
+    0% {
+      left: -120%;
+    }
+    55%,
+    100% {
+      left: 175%;
+    }
+  }
+
+  @keyframes chipGlow {
+    0%,
+    100% {
+      box-shadow: 0 0 0 rgba(0, 229, 255, 0);
+    }
+    50% {
+      box-shadow: 0 0 18px rgba(0, 229, 255, 0.22);
+    }
+  }
+
+  .hero__tag-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent);
+    animation: glowPulse 2s ease-in-out infinite;
+  }
+
+  .hero__tag-text {
+    font-family: var(--font-heading);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+  }
+
+  .hero__name {
+    font-family: var(--font-heading);
+    font-size: clamp(2.8rem, 9vw, 7rem);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    line-height: 1;
+    color: var(--text-primary);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0 0.6em;
+    perspective: 800px;
+  }
+
+  .hero__name-word {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(80px) rotateX(-40deg);
+    will-change: transform, opacity;
+  }
+
+  .hero__name-letter {
+    display: inline-block;
+    will-change: transform, opacity;
+    color: var(--accent);
+    transition: color 0.4s ease;
+  }
+
+  .hero__name-rest {
+    display: inline-block;
+    will-change: transform, opacity;
+  }
+
+  .hero__subtitle {
+    font-family: var(--font-heading);
+    font-size: clamp(0.75rem, 1.5vw, 0.95rem);
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    margin-top: 1.5rem;
+    opacity: 0;
+    transform: translateY(20px);
+    will-change: transform, opacity;
+  }
+
+  .hero__hint {
+    font-family: var(--font-heading);
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-top: 1.75rem;
+    opacity: 0;
+    transform: translateY(15px);
+    will-change: transform, opacity;
+    transition: color 0.4s ease;
+  }
+
+  .hero__hint.is-active {
+    color: var(--accent);
+    text-shadow: 0 0 14px var(--accent-dim);
+  }
+
+  @media (max-width: 768px) {
+    .hero__content {
+      padding-top: 2rem;
+    }
+    .hero__tag {
+      margin-bottom: 1.5rem;
+    }
+  }
+</style>

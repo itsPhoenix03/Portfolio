@@ -1,0 +1,102 @@
+---
+---
+
+<div class="cursor" id="cursor" aria-hidden="true">
+  <div class="cursor__ring" id="cursor-ring"></div>
+  <div class="cursor__dot" id="cursor-dot"></div>
+  <span class="cursor__label" id="cursor-label"></span>
+</div>
+
+<style>
+  .cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  :global(body.cursor-ready) .cursor {
+    opacity: 1;
+  }
+
+  .cursor__dot,
+  .cursor__ring {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    will-change: transform, width, height;
+  }
+
+  .cursor__dot {
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent-glow);
+  }
+
+  .cursor__ring {
+    width: 34px;
+    height: 34px;
+    border: 1px solid var(--border-accent);
+    transition:
+      width 0.3s ease,
+      height 0.3s ease,
+      border-color 0.3s ease,
+      background 0.3s ease;
+  }
+
+  :global(body.cursor-hover) .cursor__ring {
+    width: 54px;
+    height: 54px;
+    border-color: var(--accent);
+    background: rgba(0, 229, 255, 0.06);
+  }
+
+  .cursor__label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 0.25rem 0.6rem;
+    border-radius: 100px;
+    background: var(--accent);
+    color: var(--bg-primary);
+    font-family: var(--font-heading);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    opacity: 0;
+    transform-origin: left top;
+    transition: opacity 0.2s ease, scale 0.2s ease;
+    scale: 0.6;
+    will-change: transform;
+  }
+
+  :global(body.cursor-label-on) .cursor__label {
+    opacity: 1;
+    scale: 1;
+  }
+
+  /* Hide the native cursor everywhere when the custom one is active (overrides
+     element-level cursor: pointer, e.g. on clickable cards). */
+  :global(body.cursor-ready),
+  :global(body.cursor-ready) :global(*) {
+    cursor: none !important;
+  }
+
+  @media (hover: none), (pointer: coarse) {
+    .cursor {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  import '@/scripts/cursor';
+</script>

@@ -1,0 +1,263 @@
+---
+import { siteMeta, education } from '../data/content';
+---
+
+<section class="section section--about" id="about">
+  <span class="ghost-title" data-parallax="0.45" aria-hidden="true">ABOUT</span>
+  <span class="orb orb--accent about__orb-1" data-parallax="-0.6" aria-hidden="true"></span>
+  <span class="orb orb--dim about__orb-2" data-parallax="0.8" aria-hidden="true"></span>
+  <span class="section-light" aria-hidden="true"></span>
+  <div class="container about">
+    <div class="about__grid">
+      <div class="about__intro">
+        <span class="about__eyebrow" data-reveal="up">01 — About</span>
+        <p class="about__lead" data-reveal="up" data-reveal-delay="0.05">
+          I'm <span class="accent">{siteMeta.name}</span>, a {siteMeta.role.toLowerCase()} who
+          builds scalable, dependable systems end&#8209;to&#8209;end.
+        </p>
+        <blockquote class="about__quote" data-reveal="up" data-reveal-delay="0.1">
+          &ldquo;{siteMeta.objective}&rdquo;
+        </blockquote>
+
+        <a
+          class="about__resume magnetic"
+          href="/Resume.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-reveal="up"
+          data-reveal-delay="0.12"
+          data-cursor="Open ↗"
+        >
+          Download Résumé <span aria-hidden="true">↗</span>
+        </a>
+
+        <div class="about__education" data-stagger>
+          <span class="about__sub stagger-item">Education</span>
+          {
+            education.map((ed) => (
+              <div class="about__edu-card card stagger-item">
+                <div class="about__edu-head">
+                  <h4 class="about__edu-degree">{ed.degree}</h4>
+                  <span class="about__edu-period">{ed.period}</span>
+                </div>
+                <p class="about__edu-inst">{ed.institution}</p>
+                <p class="about__edu-grade">{ed.grade}</p>
+                <p class="about__edu-course">{ed.coursework}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="about__visual" data-reveal="right" data-reveal-delay="0.15">
+        <div class="about__avatar-wrap">
+          <img
+            src="/assets/pixton-avatar-headshot.png"
+            alt="Illustrated portrait of Shreyas Misra"
+            class="about__avatar"
+            data-parallax="0.18"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <div class="about__avatar-ring" aria-hidden="true"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about {
+    width: 100%;
+  }
+
+  .about__grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: center;
+  }
+
+  .about__eyebrow {
+    display: inline-block;
+    font-family: var(--font-heading);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+  }
+
+  .about__lead {
+    font-size: clamp(1.3rem, 3vw, 2.1rem);
+    line-height: 1.35;
+    color: var(--text-primary);
+    font-family: var(--font-heading);
+    font-weight: 400;
+    max-width: none;
+    margin-bottom: 1.75rem;
+  }
+
+  .about__quote {
+    position: relative;
+    font-style: italic;
+    font-size: clamp(1rem, 1.8vw, 1.25rem);
+    line-height: 1.5;
+    color: var(--text-muted);
+    padding-left: 1.25rem;
+    border-left: 2px solid var(--border-accent);
+    margin-bottom: 2rem;
+    max-width: 60ch;
+  }
+
+  .about__resume {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-family: var(--font-heading);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    border: 1px solid var(--border-accent);
+    border-radius: 100px;
+    padding: 0.7rem 1.4rem;
+    margin-bottom: 2.5rem;
+    background: var(--accent-dim);
+    transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, gap 0.3s ease;
+  }
+
+  .about__resume:hover {
+    background: var(--accent);
+    color: var(--bg-primary);
+    gap: 0.7rem;
+    box-shadow: 0 0 24px var(--accent-glow);
+  }
+
+  .about__sub {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--text-dim);
+    margin-bottom: 1rem;
+  }
+
+  .about__education {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .about__edu-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .about__edu-degree {
+    font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+    color: var(--text-primary);
+  }
+
+  .about__edu-period {
+    font-family: var(--font-heading);
+    font-size: 0.7rem;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+
+  .about__edu-inst {
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .about__edu-grade {
+    color: var(--accent);
+    font-family: var(--font-heading);
+    font-size: 0.78rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .about__edu-course {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  .about__visual {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .about__avatar-wrap {
+    position: relative;
+    z-index: 2;
+    width: clamp(200px, 28vw, 320px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1px solid var(--border-accent);
+    background: radial-gradient(circle at 50% 30%, var(--accent-dim), var(--bg-card));
+    box-shadow: 0 0 40px var(--accent-dim), inset 0 0 30px var(--accent-dim);
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .about__avatar {
+    width: 100%;
+    /* Taller than the frame so the parallax drift stays masked by the circle. */
+    height: 128%;
+    position: absolute;
+    top: -14%;
+    left: 0;
+    object-fit: cover;
+    object-position: center top;
+    will-change: transform;
+  }
+
+  .about__orb-1 {
+    width: 380px;
+    height: 380px;
+    top: 8%;
+    left: -6%;
+  }
+
+  .about__orb-2 {
+    width: 300px;
+    height: 300px;
+    bottom: 4%;
+    right: -4%;
+  }
+
+  .about__avatar-ring {
+    position: absolute;
+    z-index: 1;
+    width: clamp(240px, 34vw, 400px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 1px dashed var(--border-accent);
+    opacity: 0.4;
+    animation: spinSlow 30s linear infinite;
+  }
+
+  @keyframes spinSlow {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @media (max-width: 860px) {
+    .about__grid {
+      grid-template-columns: 1fr;
+    }
+    .about__visual {
+      grid-row: 1;
+      margin-bottom: 1rem;
+    }
+  }
+</style>

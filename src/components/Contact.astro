@@ -1,0 +1,400 @@
+---
+import { siteMeta, socialLinks } from '../data/content';
+
+const year = new Date().getFullYear();
+const primaryLinks = [
+  { label: 'Email', value: siteMeta.email, href: `mailto:${siteMeta.email}` },
+];
+---
+
+<section class="section section--contact" id="contact">
+  <span class="ghost-title" data-parallax="0.45" aria-hidden="true">HELLO</span>
+  <span class="orb orb--accent contact__orb-1" data-parallax="-0.6" aria-hidden="true"></span>
+  <span class="orb orb--dim contact__orb-2" data-parallax="0.7" aria-hidden="true"></span>
+  <span class="section-light" aria-hidden="true"></span>
+  <div class="container contact">
+    <div class="contact__inner">
+      <span class="contact__eyebrow" data-reveal="up">06 — Contact</span>
+      <h2 class="contact__title" data-reveal="up" data-reveal-delay="0.05">
+        Let's build something <span class="accent">dependable</span>.
+      </h2>
+      <p class="contact__sub" data-reveal="up" data-reveal-delay="0.1">
+        Open to new roles and collaborations.
+      </p>
+
+      <div class="contact__links" data-stagger>
+        {
+          primaryLinks.map((link) => (
+            <a class="contact__big-link stagger-item magnetic" href={link.href}>
+              <span class="contact__big-label">{link.label}</span>
+              <span class="contact__big-value">{link.value}</span>
+            </a>
+          ))
+        }
+      </div>
+
+      <form
+        class="contact__form"
+        name="contact"
+        method="POST"
+        data-netlify="true"
+        netlify-honeypot="bot-field"
+        data-reveal="up"
+        data-reveal-delay="0.12"
+        id="contact-form"
+      >
+        <input type="hidden" name="form-name" value="contact" />
+        <p class="contact__hp">
+          <label>Leave empty: <input name="bot-field" /></label>
+        </p>
+        <div class="contact__field">
+          <input type="text" name="name" id="cf-name" required placeholder=" " />
+          <label for="cf-name">Name</label>
+        </div>
+        <div class="contact__field">
+          <input type="email" name="email" id="cf-email" required placeholder=" " />
+          <label for="cf-email">Email</label>
+        </div>
+        <div class="contact__field">
+          <textarea name="message" id="cf-message" rows="4" required placeholder=" "></textarea>
+          <label for="cf-message">Message</label>
+        </div>
+        <button type="submit" class="contact__submit magnetic" data-cursor="Send ↗">
+          Send message <span aria-hidden="true">↗</span>
+        </button>
+        <p class="contact__status" id="cf-status" role="status" aria-live="polite"></p>
+      </form>
+
+      <div class="contact__socials" data-reveal="up" data-reveal-delay="0.15">
+        {
+          socialLinks.map((social) => (
+            <a
+              class="contact__social magnetic"
+              href={social.href}
+              target={social.href.startsWith('http') ? '_blank' : undefined}
+              rel="noopener noreferrer"
+              aria-label={social.label}
+            >
+              <span
+                class="contact__social-ic"
+                style={`-webkit-mask-image:url('${social.icon}');mask-image:url('${social.icon}')`}
+                aria-hidden="true"
+              ></span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+
+    <footer class="contact__footer">
+      <span>© {year} {siteMeta.name}</span>
+      <span class="contact__footer-note">Built with Astro · Three.js · GSAP</span>
+    </footer>
+  </div>
+</section>
+
+<style>
+  .contact {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    justify-content: center;
+  }
+
+  .contact__orb-1 {
+    width: 460px;
+    height: 460px;
+    top: 6%;
+    left: -8%;
+  }
+
+  .contact__orb-2 {
+    width: 340px;
+    height: 340px;
+    bottom: 8%;
+    right: -6%;
+  }
+
+  .contact__inner {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    padding: 3rem 0;
+  }
+
+  .contact__eyebrow {
+    display: inline-block;
+    font-family: var(--font-heading);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+
+  .contact__title {
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    max-width: 16ch;
+  }
+
+  .contact__sub {
+    color: var(--text-muted);
+    margin-bottom: clamp(2rem, 5vw, 3.5rem);
+  }
+
+  .contact__links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+    max-width: 620px;
+    margin-bottom: 2.5rem;
+  }
+
+  .contact__big-link {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.1rem 0.5rem;
+    border-bottom: 1px solid var(--border);
+    transition: border-color 0.4s ease, padding 0.4s ease;
+  }
+
+  .contact__big-link:hover {
+    border-color: var(--border-accent);
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .contact__big-label {
+    font-family: var(--font-heading);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-dim);
+  }
+
+  .contact__big-value {
+    font-family: var(--font-heading);
+    font-size: clamp(1.1rem, 3vw, 2rem);
+    color: var(--text-primary);
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+  }
+
+  .contact__big-link:hover .contact__big-value {
+    color: var(--accent);
+    text-shadow: 0 0 20px var(--accent-dim);
+  }
+
+  .contact__socials {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .contact__social {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    border: 1px solid var(--border-accent);
+    transition: border-color 0.3s ease, background 0.3s ease, transform 0.3s ease;
+  }
+
+  .contact__social-ic {
+    width: 20px;
+    height: 20px;
+    background-color: var(--accent);
+    -webkit-mask: center / contain no-repeat;
+    mask: center / contain no-repeat;
+    transition: background-color 0.3s ease;
+  }
+
+  .contact__social:hover {
+    border-color: var(--accent);
+    background: var(--accent);
+    transform: translateY(-3px);
+  }
+
+  .contact__social:hover .contact__social-ic {
+    background-color: var(--bg-primary);
+  }
+
+  .contact__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding: 1.5rem 0;
+    border-top: 1px solid var(--border);
+    font-family: var(--font-heading);
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    color: var(--text-dim);
+  }
+
+  /* ----- Contact form ----- */
+  .contact__form {
+    width: 100%;
+    max-width: 520px;
+    margin: 0 auto 2.5rem;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    /* Translucent panel — see the 3D through it; inputs stay opaque to read. */
+    background: var(--panel-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: clamp(1.5rem, 4vw, 2.25rem);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+  }
+
+  .contact__hp {
+    position: absolute;
+    left: -9999px;
+  }
+
+  .contact__field {
+    position: relative;
+  }
+
+  .contact__field input,
+  .contact__field textarea {
+    width: 100%;
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem 0.9rem 0.5rem;
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 0.92rem;
+    resize: vertical;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .contact__field textarea {
+    min-height: 110px;
+  }
+
+  .contact__field input:focus,
+  .contact__field textarea:focus {
+    outline: none;
+    border-color: var(--border-accent);
+    box-shadow: 0 0 0 3px var(--accent-dim);
+  }
+
+  .contact__field label {
+    position: absolute;
+    top: 0.85rem;
+    left: 0.95rem;
+    font-family: var(--font-heading);
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    pointer-events: none;
+    transition: transform 0.2s ease, color 0.2s ease, font-size 0.2s ease;
+    transform-origin: left top;
+  }
+
+  .contact__field input:focus + label,
+  .contact__field input:not(:placeholder-shown) + label,
+  .contact__field textarea:focus + label,
+  .contact__field textarea:not(:placeholder-shown) + label {
+    transform: translateY(-0.7rem) scale(0.78);
+    color: var(--accent);
+  }
+
+  .contact__submit {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-heading);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--bg-primary);
+    background: var(--accent);
+    border-radius: 8px;
+    padding: 0.8rem 1.5rem;
+    transition: gap 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
+  }
+
+  .contact__submit:hover {
+    gap: 0.75rem;
+    box-shadow: 0 0 24px var(--accent-glow);
+  }
+
+  .contact__submit:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+
+  .contact__status {
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    min-height: 1rem;
+    color: var(--text-muted);
+  }
+
+  .contact__status.is-ok {
+    color: var(--success);
+  }
+
+  .contact__status.is-err {
+    color: var(--danger);
+  }
+
+  @media (max-width: 520px) {
+    .contact__big-link {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.25rem;
+    }
+    .contact__footer {
+      justify-content: center;
+      text-align: center;
+    }
+  }
+</style>
+
+<script>
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
+  const status = document.getElementById('cf-status');
+
+  if (form && status) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = form.querySelector<HTMLButtonElement>('.contact__submit');
+      status.className = 'contact__status';
+      status.textContent = 'Sending…';
+      if (btn) btn.disabled = true;
+
+      try {
+        const data = new FormData(form);
+        await fetch('/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams(data as unknown as Record<string, string>).toString(),
+        });
+        status.textContent = '✓ Thanks — I’ll get back to you soon.';
+        status.classList.add('is-ok');
+        form.reset();
+      } catch {
+        status.textContent =
+          '✕ Something went wrong — email me directly instead.';
+        status.classList.add('is-err');
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+    });
+  }
+</script>

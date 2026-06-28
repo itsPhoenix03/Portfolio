@@ -1,0 +1,276 @@
+---
+import { experience } from '../data/content';
+---
+
+<section class="section section--experience" id="experience">
+  <span class="ghost-title" data-parallax="0.45" aria-hidden="true">CAREER</span>
+  <div class="container experience">
+    <header class="experience__head" data-parallax="0.12">
+      <span class="experience__eyebrow" data-reveal="up">03 — Experience</span>
+      <h2 class="experience__title" data-reveal="up" data-reveal-delay="0.05">
+        Where I've <span class="accent">built</span>
+      </h2>
+    </header>
+
+    <div class="timeline">
+      <div class="timeline__track" aria-hidden="true">
+        <div class="timeline__progress"></div>
+      </div>
+
+      {
+        experience.map((job, i) => (
+          <div class={`timeline__row ${i % 2 === 0 ? 'is-left' : 'is-right'}`}>
+            <div class="timeline__node" aria-hidden="true">
+              <span class="timeline__node-dot" />
+            </div>
+            <article
+              class="timeline__card card"
+              data-reveal={i % 2 === 0 ? 'left' : 'right'}
+            >
+              <div class="timeline__card-head">
+                <div>
+                  <h3 class="timeline__role">
+                    <span class="timeline__role-icon" aria-hidden="true"></span>
+                    {job.role}
+                  </h3>
+                  <p class="timeline__company">{job.company}</p>
+                </div>
+                {job.current && <span class="timeline__now">Now</span>}
+              </div>
+              <p class="timeline__meta">
+                {job.period} · {job.location}
+              </p>
+              <ul class="timeline__bullets">
+                {job.bullets.map((b) => (
+                  <li>{b}</li>
+                ))}
+              </ul>
+            </article>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .experience {
+    width: 100%;
+  }
+
+  .experience__head {
+    margin-bottom: clamp(2.5rem, 5vw, 4rem);
+    text-align: center;
+  }
+
+  .experience__eyebrow {
+    display: inline-block;
+    font-family: var(--font-heading);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+  }
+
+  .experience__title {
+    color: var(--text-primary);
+  }
+
+  .timeline {
+    position: relative;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .timeline__track {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 1px;
+    transform: translateX(-50%);
+    background: var(--border);
+  }
+
+  .timeline__progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform-origin: top center;
+    transform: scaleY(0);
+    background: linear-gradient(to bottom, var(--accent), var(--accent-hover));
+    box-shadow: 0 0 12px var(--accent-glow);
+  }
+
+  .timeline__row {
+    position: relative;
+    width: 50%;
+    padding: 1.25rem 2.75rem;
+    box-sizing: border-box;
+  }
+
+  .timeline__row.is-left {
+    left: 0;
+    text-align: right;
+  }
+
+  .timeline__row.is-right {
+    left: 50%;
+  }
+
+  .timeline__node {
+    position: absolute;
+    top: 2rem;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-accent);
+    display: grid;
+    place-items: center;
+    z-index: 2;
+  }
+
+  .timeline__row.is-left .timeline__node {
+    right: -9px;
+  }
+
+  .timeline__row.is-right .timeline__node {
+    left: -9px;
+  }
+
+  .timeline__node-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 10px var(--accent);
+    animation: glowPulse 2.5s ease-in-out infinite;
+  }
+
+  .timeline__card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .timeline__role {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    color: var(--text-primary);
+  }
+
+  .timeline__role-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    background-color: var(--accent);
+    -webkit-mask: url('/svg/laptop-code-solid.svg') center / contain no-repeat;
+    mask: url('/svg/laptop-code-solid.svg') center / contain no-repeat;
+  }
+
+  .timeline__row.is-left .timeline__role {
+    flex-direction: row-reverse;
+  }
+
+  .timeline__company {
+    color: var(--accent);
+    font-family: var(--font-heading);
+    font-size: 0.82rem;
+    margin-top: 0.2rem;
+  }
+
+  .timeline__now {
+    flex-shrink: 0;
+    font-family: var(--font-heading);
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0.2rem 0.55rem;
+    border-radius: 100px;
+    color: var(--bg-primary);
+    background: var(--accent);
+    box-shadow: 0 0 10px var(--accent-glow);
+  }
+
+  .timeline__meta {
+    font-family: var(--font-heading);
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    margin-bottom: 0.9rem;
+  }
+
+  .timeline__bullets {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .timeline__bullets li {
+    position: relative;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.55;
+    padding-left: 1rem;
+    text-align: left;
+  }
+
+  .timeline__bullets li::before {
+    content: '▹';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+  }
+
+  .timeline__row.is-left .timeline__bullets li {
+    text-align: right;
+    padding-left: 0;
+    padding-right: 1rem;
+  }
+
+  .timeline__row.is-left .timeline__bullets li::before {
+    left: auto;
+    right: 0;
+  }
+
+  @media (max-width: 760px) {
+    .timeline__track {
+      left: 8px;
+    }
+    .timeline__row,
+    .timeline__row.is-left,
+    .timeline__row.is-right {
+      width: 100%;
+      left: 0;
+      text-align: left;
+      padding: 1rem 0 1rem 2.5rem;
+    }
+    .timeline__row.is-left .timeline__node,
+    .timeline__row.is-right .timeline__node {
+      left: -1px;
+      right: auto;
+    }
+    .timeline__row.is-left .timeline__role {
+      flex-direction: row;
+    }
+    .timeline__card-head {
+      flex-wrap: wrap;
+    }
+    .timeline__row.is-left .timeline__bullets li {
+      text-align: left;
+      padding-left: 1rem;
+      padding-right: 0;
+    }
+    .timeline__row.is-left .timeline__bullets li::before {
+      left: 0;
+      right: auto;
+    }
+  }
+</style>

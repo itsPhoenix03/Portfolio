@@ -1,0 +1,97 @@
+---
+import { skillGroups } from '../data/content';
+---
+
+<section class="section section--skills" id="skills">
+  <span class="ghost-title" data-parallax="0.45" aria-hidden="true">SKILLS</span>
+  <div class="container skills">
+    <header class="skills__head" data-parallax="0.12">
+      <span class="skills__eyebrow" data-reveal="up">02 — Skills</span>
+      <h2 class="skills__title" data-reveal="up" data-reveal-delay="0.05">
+        Tools of the <span class="accent">trade</span>
+      </h2>
+    </header>
+
+    <div class="skills__grid" data-stagger data-parallax="-0.08">
+      {
+        skillGroups.map((group) => (
+          <article class="skills__card card tilt stagger-item">
+            <h3 class="skills__cat">{group.category}</h3>
+            <ul class="skills__items">
+              {group.items.map((skill) => (
+                <li class="skills__item">{skill.name}</li>
+              ))}
+            </ul>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .skills {
+    width: 100%;
+  }
+
+  .skills__head {
+    margin-bottom: clamp(2rem, 4vw, 3.5rem);
+  }
+
+  .skills__eyebrow {
+    display: inline-block;
+    font-family: var(--font-heading);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+  }
+
+  .skills__title {
+    color: var(--text-primary);
+  }
+
+  .skills__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+    gap: 1.25rem;
+  }
+
+  .skills__card {
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+
+  .skills__cat {
+    font-size: 0.95rem;
+    color: var(--accent);
+    margin-bottom: 1rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .skills__items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .skills__item {
+    font-family: var(--font-heading);
+    font-size: 0.72rem;
+    letter-spacing: 0.03em;
+    padding: 0.35rem 0.7rem;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    transition: color 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+  }
+
+  .skills__item:hover {
+    color: var(--accent);
+    border-color: var(--border-accent);
+    background: var(--accent-dim);
+  }
+</style>

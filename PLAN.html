@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Build Plan — Shreyas Misra</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-card: #111111;
+            --bg-card-hover: #161616;
+            --text-primary: #e0e0e0;
+            --text-muted: #8a8a8a;
+            --accent: #00e5ff;
+            --accent-dim: #00e5ff33;
+            --accent-hover: #00b8cc;
+            --border: #222222;
+            --border-accent: #00e5ff44;
+            --success: #00ff88;
+            --warning: #ffaa00;
+            --danger: #ff4466;
+            --pending: #555555;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        header {
+            margin-bottom: 3rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 2rem;
+        }
+
+        header h1 {
+            font-family: 'Space Mono', monospace;
+            font-size: 2rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .meta-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+        }
+
+        .meta-card .label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: 0.3rem;
+            font-family: 'Space Mono', monospace;
+        }
+
+        .meta-card .value {
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            font-family: 'Space Mono', monospace;
+        }
+
+        .meta-card .value.accent {
+            color: var(--accent);
+        }
+
+        section {
+            margin-bottom: 3rem;
+        }
+
+        section h2 {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.3rem;
+            color: var(--text-primary);
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        section h2::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 1.3rem;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
+        .stack-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .stack-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.75rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .stack-item .purpose {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .design-system {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .design-swatch {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .swatch {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .swatch-info .swatch-name {
+            font-size: 0.75rem;
+            font-family: 'Space Mono', monospace;
+            color: var(--text-primary);
+        }
+
+        .swatch-info .swatch-hex {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            font-family: 'Space Mono', monospace;
+        }
+
+        .assets-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        .assets-table th {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .assets-table td {
+            padding: 0.6rem 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .assets-table tr:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.15rem 0.55rem;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            font-family: 'Space Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .badge-use {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+        }
+
+        .badge-skip {
+            background: rgba(255, 68, 102, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(255, 68, 102, 0.2);
+        }
+
+        .file-tree {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem 1.5rem;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.8rem;
+            line-height: 1.8;
+            color: var(--text-muted);
+            overflow-x: auto;
+        }
+
+        .file-tree .folder {
+            color: var(--accent);
+        }
+
+        .file-tree .file {
+            color: var(--text-primary);
+        }
+
+        .file-tree .comment {
+            color: #555;
+            font-style: italic;
+        }
+
+        .phase-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .phase-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+            display: grid;
+            grid-template-columns: 3rem 1fr auto;
+            gap: 1rem;
+            align-items: start;
+            transition: border-color 0.2s;
+        }
+
+        .phase-card:hover {
+            border-color: var(--border-accent);
+        }
+
+        .phase-card.completed {
+            opacity: 0.5;
+            border-color: var(--success);
+        }
+
+        .phase-card.in-progress {
+            border-color: var(--warning);
+            background: rgba(255, 170, 0, 0.03);
+        }
+
+        .phase-number {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            line-height: 1;
+        }
+
+        .phase-card.in-progress .phase-number {
+            color: var(--warning);
+        }
+
+        .phase-card.completed .phase-number {
+            color: var(--success);
+        }
+
+        .phase-title {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .phase-desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .phase-subtasks {
+            margin-top: 0.5rem;
+            list-style: none;
+            padding: 0;
+        }
+
+        .phase-subtasks li {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            padding: 0.15rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .phase-subtasks li::before {
+            content: '→';
+            color: var(--accent);
+            font-size: 0.65rem;
+        }
+
+        .phase-status {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            white-space: nowrap;
+            align-self: center;
+        }
+
+        .phase-status.pending {
+            background: rgba(85, 85, 85, 0.2);
+            color: var(--pending);
+            border: 1px solid rgba(85, 85, 85, 0.3);
+        }
+
+        .phase-status.in-progress {
+            background: rgba(255, 170, 0, 0.1);
+            color: var(--warning);
+            border: 1px solid rgba(255, 170, 0, 0.3);
+        }
+
+        .phase-status.completed {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        .sections-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .section-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem;
+            transition: border-color 0.2s;
+        }
+
+        .section-card:hover {
+            border-color: var(--border-accent);
+        }
+
+        .section-card h3 {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--accent);
+            margin-bottom: 0.75rem;
+        }
+
+        .section-card p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .section-card .tech-note {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--accent);
+            opacity: 0.7;
+            margin-top: 0.5rem;
+        }
+
+        .progress-summary {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-stat {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem;
+            text-align: center;
+        }
+
+        .progress-stat .number {
+            font-family: 'Space Mono', monospace;
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .progress-stat .number.pending-num { color: var(--pending); }
+        .progress-stat .number.in-progress-num { color: var(--warning); }
+        .progress-stat .number.completed-num { color: var(--success); }
+
+        .progress-stat .stat-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-top: 0.4rem;
+            font-family: 'Space Mono', monospace;
+        }
+
+        .footer-note {
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-family: 'Space Mono', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>PORTFOLIO BUILD PLAN</h1>
+            <p>Shreyas Misra — FullStack Developer Portfolio &middot; Dark + Minimal &middot; Futuristic Interactive</p>
+        </header>
+
+        <!-- META -->
+        <div class="meta-grid">
+            <div class="meta-card">
+                <div class="label">Framework</div>
+                <div class="value accent">Astro</div>
+            </div>
+            <div class="meta-card">
+                <div class="label">3D Engine</div>
+                <div class="value accent">Three.js</div>
+            </div>
+            <div class="meta-card">
+                <div class="label">Animation</div>
+                <div class="value accent">GSAP + ScrollTrigger</div>
+            </div>
+            <div class="meta-card">
+                <div class="label">Smooth Scroll</div>
+                <div class="value accent">Lenis</div>
+            </div>
+            <div class="meta-card">
+                <div class="label">Heading Font</div>
+                <div class="value">Space Mono</div>
+            </div>
+            <div class="meta-card">
+                <div class="label">Body Font</div>
+                <div class="value">Inter</div>
+            </div>
+            <div class="meta-card">
+                <div class="label">Accent Color</div>
+                <div class="value accent">#00e5ff</div>
+            </div>
+            <div class="meta-card">
+                <div class="label">Structure</div>
+                <div class="value">Single Page Scroll</div>
+            </div>
+            <div class="meta-card">
+                <div class="label">Nav Style</div>
+                <div class="value">Side Dot Indicators</div>
+            </div>
+            <div class="meta-card">
+                <div class="label">Reference</div>
+                <div class="value">landonorris.com</div>
+            </div>
+        </div>
+
+        <!-- TECH STACK -->
+        <section>
+            <h2>Tech Stack</h2>
+            <div class="stack-grid">
+                <div class="stack-item">
+                    <span>astro</span>
+                    <span class="purpose">Static HTML, zero hydration</span>
+                </div>
+                <div class="stack-item">
+                    <span>three</span>
+                    <span class="purpose">3D floating geometries</span>
+                </div>
+                <div class="stack-item">
+                    <span>gsap</span>
+                    <span class="purpose">ScrollTrigger + timelines</span>
+                </div>
+                <div class="stack-item">
+                    <span>@studio-freight/lenis</span>
+                    <span class="purpose">Buttery smooth scroll</span>
+                </div>
+                <div class="stack-item">
+                    <span>Space Mono</span>
+                    <span class="purpose">Monospace heading font</span>
+                </div>
+                <div class="stack-item">
+                    <span>Inter</span>
+                    <span class="purpose">Body text font</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- DESIGN SYSTEM -->
+        <section>
+            <h2>Design System</h2>
+            <div class="design-system">
+                <div class="design-swatch">
+                    <div class="swatch" style="background: #0a0a0a;"></div>
+                    <div class="swatch-info">
+                        <div class="swatch-name">Background</div>
+                        <div class="swatch-hex">#0a0a0a</div>
+                    </div>
+                </div>
+                <div class="design-swatch">
+                    <div class="swatch" style="background: #111111;"></div>
+                    <div class="swatch-info">
+                        <div class="swatch-name">Card BG</div>
+                        <div class="swatch-hex">#111111</div>
+                    </div>
+                </div>
+                <div class="design-swatch">
+                    <div class="swatch" style="background: #e0e0e0;"></div>
+                    <div class="swatch-info">
+                        <div class="swatch-name">Text Primary</div>
+                        <div class="swatch-hex">#e0e0e0</div>
+                    </div>
+                </div>
+                <div class="design-swatch">
+                    <div class="swatch" style="background: #8a8a8a;"></div>
+                    <div class="swatch-info">
+                        <div class="swatch-name">Text Muted</div>
+                        <div class="swatch-hex">#8a8a8a</div>
+                    </div>
+                </div>
+                <div class="design-swatch">
+                    <div class="swatch" style="background: #00e5ff;"></div>
+                    <div class="swatch-info">
+                        <div class="swatch-name">Accent Cyan</div>
+                        <div class="swatch-hex">#00e5ff</div>
+                    </div>
+                </div>
+                <div class="design-swatch">
+                    <div class="swatch" style="background: #00e5ff33;"></div>
+                    <div class="swatch-info">
+                        <div class="swatch-name">Accent Dim</div>
+                        <div class="swatch-hex">#00e5ff33</div>
+                    </div>
+                </div>
+                <div class="design-swatch">
+                    <div class="swatch" style="background: #222222; border-color: #444;"></div>
+                    <div class="swatch-info">
+                        <div class="swatch-name">Border</div>
+                        <div class="swatch-hex">#222222</div>
+                    </div>
+                </div>
+                <div class="design-swatch">
+                    <div class="swatch" style="background: #00e5ff44;"></div>
+                    <div class="swatch-info">
+                        <div class="swatch-name">Border Accent</div>
+                        <div class="swatch-hex">#00e5ff44</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTIONS BREAKDOWN -->
+        <section>
+            <h2>Sections Breakdown</h2>
+            <div class="sections-grid">
+                <div class="section-card">
+                    <h3>01 — Hero</h3>
+                    <p>Full viewport. Three.js floating geometries cluster — multiple small wireframe shapes (icosahedron, octahedron, tetrahedron, cubes) orbiting a central point with particle cloud backdrop. Mouse-reactive. Click/drag orbit controls.</p>
+                    <p><strong>Text Overlay:</strong> "SHREYAS MISRA" in Space Mono large, "FullStack Developer" subtitle with GSAP stagger character reveal.</p>
+                    <p><strong>Transition Out:</strong> 3D scales down/fades, text slides up — "leaving the world"</p>
+                    <div class="tech-note">Three.js + GSAP SplitText</div>
+                </div>
+                <div class="section-card">
+                    <h3>02 — About</h3>
+                    <p>Full viewport. Scroll-reveal text lines stagger in from left (Lando quote style). Objective statement prominent in large italic: "Becoming a High Value Agency...". Education details fade in with parallax.</p>
+                    <p><strong>Avatar:</strong> pixton-avatar-headshot.png</p>
+                    <div class="tech-note">GSAP ScrollTrigger + parallax</div>
+                </div>
+                <div class="section-card">
+                    <h3>03 — Skills</h3>
+                    <p>Full viewport. Skills grouped by category (Languages, Frontend, Backend, Tools, Soft Skills). Grid cards stagger in on scroll. 3D tilt effect on hover. Glow borders.</p>
+                    <div class="tech-note">GSAP stagger + vanilla tilt</div>
+                </div>
+                <div class="section-card">
+                    <h3>04 — Experience</h3>
+                    <p>Full viewport timeline. Timeline line draws on scroll. Role cards slide in from alternating sides. Glowing nodes at each stop.</p>
+                    <p><strong>Meril (Nuvo AI)</strong> — May 2026–Present, Kanpur, R&D at IIT Kanpur Technopark</p>
+                    <p><strong>Laitkor</strong> — May 2024–May 2026, Lucknow</p>
+                    <div class="tech-note">GSAP ScrollTrigger draw + slide</div>
+                </div>
+                <div class="section-card">
+                    <h3>05 — Projects</h3>
+                    <p>Full viewport. Parallax card grid. Cards fly in from alternating directions. 3D perspective on hover. Each shows name, description, tech, link.</p>
+                    <p><strong>Projects:</strong> Social Scoop, NSS Portal, Yacht Fuel Platform, Jira-Trello Automation</p>
+                    <div class="tech-note">GSAP + link.svg for demo links</div>
+                </div>
+                <div class="section-card">
+                    <h3>06 — Certifications</h3>
+                    <p>Scroll-reveal badge cards stagger from bottom. Glow pulse animation on hover.</p>
+                    <p>Oracle OCI GenAI Pro, OCI AI Foundations, GCP ML APIs, React Training</p>
+                    <div class="tech-note">GSAP stagger reveal</div>
+                </div>
+                <div class="section-card">
+                    <h3>07 — Contact</h3>
+                    <p>Full viewport. Large clickable text links (Lando-style). Subtle particle burst on hover. Minimal footer.</p>
+                    <p><strong>Links:</strong> Email, LinkedIn, GitHub, Phone + location info</p>
+                    <div class="tech-note">CSS hover FX + GSAP</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TRANSITION SYSTEM -->
+        <section>
+            <h2>Transition System — "New World" Effect</h2>
+            <div class="stack-grid">
+                <div class="stack-item">
+                    <span>Lenis Smooth Scroll</span>
+                    <span class="purpose">Buttery scroll momentum</span>
+                </div>
+                <div class="stack-item">
+                    <span>CSS scroll-snap</span>
+                    <span class="purpose">Section locking feel</span>
+                </div>
+                <div class="stack-item">
+                    <span>GSAP ScrollTrigger</span>
+                    <span class="purpose">Pin + animate per section</span>
+                </div>
+                <div class="stack-item">
+                    <span>Background gradient shifts</span>
+                    <span class="purpose">Dark tone change per world</span>
+                </div>
+                <div class="stack-item">
+                    <span>Section wipe transitions</span>
+                    <span class="purpose">Elements slide out before new in</span>
+                </div>
+                <div class="stack-item">
+                    <span>Side nav dots</span>
+                    <span class="purpose">Which "world" you are in</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ASSETS INVENTORY -->
+        <section>
+            <h2>Assets Inventory</h2>
+            <h3 style="font-family: 'Space Mono', monospace; font-size: 0.85rem; color: var(--success); margin-bottom: 0.75rem;">Using</h3>
+            <table class="assets-table">
+                <thead>
+                    <tr>
+                        <th>File</th>
+                        <th>Type</th>
+                        <th>Used In</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>DarkThemeTopLogo.svg</td>
+                        <td>SVG</td>
+                        <td>Navbar / branding</td>
+                        <td><span class="badge badge-use">use</span></td>
+                    </tr>
+                    <tr>
+                        <td>github-brands.svg</td>
+                        <td>SVG</td>
+                        <td>Contact section</td>
+                        <td><span class="badge badge-use">use</span></td>
+                    </tr>
+                    <tr>
+                        <td>linkedIn-circle.svg</td>
+                        <td>SVG</td>
+                        <td>Contact section</td>
+                        <td><span class="badge badge-use">use</span></td>
+                    </tr>
+                    <tr>
+                        <td>email-svgrepo-com.svg</td>
+                        <td>SVG</td>
+                        <td>Contact section</td>
+                        <td><span class="badge badge-use">use</span></td>
+                    </tr>
+                    <tr>
+                        <td>phone-alt-svgrepo-com.svg</td>
+                        <td>SVG</td>
+                        <td>Contact section</td>
+                        <td><span class="badge badge-use">use</span></td>
+                    </tr>
+                    <tr>
+                        <td>laptop-code-solid.svg</td>
+                        <td>SVG</td>
+                        <td>Experience section role card</td>
+                        <td><span class="badge badge-use">use</span></td>
+                    </tr>
+                    <tr>
+                        <td>link.svg</td>
+                        <td>SVG</td>
+                        <td>Project card "live demo" links</td>
+                        <td><span class="badge badge-use">use</span></td>
+                    </tr>
+                    <tr>
+                        <td>Logo Portfolio (700x700).png</td>
+                        <td>PNG</td>
+                        <td>Favicon + OG meta image</td>
+                        <td><span class="badge badge-use">use</span></td>
+                    </tr>
+                    <tr>
+                        <td>pixton-avatar-headshot.png</td>
+                        <td>PNG</td>
+                        <td>About section avatar</td>
+                        <td><span class="badge badge-use">use</span></td>
+                    </tr>
+                    <tr>
+                        <td>contact-avatar.png</td>
+                        <td>PNG</td>
+                        <td>Contact section avatar</td>
+                        <td><span class="badge badge-use">use</span></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 style="font-family: 'Space Mono', monospace; font-size: 0.85rem; color: var(--danger); margin: 1.5rem 0 0.75rem;">Skipping</h3>
+            <table class="assets-table">
+                <thead>
+                    <tr>
+                        <th>File</th>
+                        <th>Type</th>
+                        <th>Reason</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>LightThemeTopLogo.svg</td>
+                        <td>SVG</td>
+                        <td>Black fill — wrong for dark theme</td>
+                        <td><span class="badge badge-skip">skip</span></td>
+                    </tr>
+                    <tr>
+                        <td>facebook-brands.svg</td>
+                        <td>SVG</td>
+                        <td>No Facebook in resume</td>
+                        <td><span class="badge badge-skip">skip</span></td>
+                    </tr>
+                    <tr>
+                        <td>twitter-brands.svg</td>
+                        <td>SVG</td>
+                        <td>No Twitter in resume</td>
+                        <td><span class="badge badge-skip">skip</span></td>
+                    </tr>
+                    <tr>
+                        <td>youtube-brands.svg</td>
+                        <td>SVG</td>
+                        <td>No YouTube in resume</td>
+                        <td><span class="badge badge-skip">skip</span></td>
+                    </tr>
+                    <tr>
+                        <td>anchor-solid.svg</td>
+                        <td>SVG</td>
+                        <td>Doesn't fit dev portfolio semantically</td>
+                        <td><span class="badge badge-skip">skip</span></td>
+                    </tr>
+                    <tr>
+                        <td>palette-solid.svg</td>
+                        <td>SVG</td>
+                        <td>Not design-focused portfolio</td>
+                        <td><span class="badge badge-skip">skip</span></td>
+                    </tr>
+                    <tr>
+                        <td>power-off-solid.svg</td>
+                        <td>SVG</td>
+                        <td>No contextual fit</td>
+                        <td><span class="badge badge-skip">skip</span></td>
+                    </tr>
+                    <tr>
+                        <td>yin-yang-solid.svg</td>
+                        <td>SVG</td>
+                        <td>Too abstract, no section mapping</td>
+                        <td><span class="badge badge-skip">skip</span></td>
+                    </tr>
+                    <tr>
+                        <td>link-solid.svg</td>
+                        <td>SVG</td>
+                        <td>Duplicate of link.svg (outline preferred)</td>
+                        <td><span class="badge badge-skip">skip</span></td>
+                    </tr>
+                    <tr>
+                        <td>Logo Portfolio copy.png</td>
+                        <td>PNG</td>
+                        <td>Duplicate</td>
+                        <td><span class="badge badge-skip">skip</span></td>
+                    </tr>
+                    <tr>
+                        <td>Logo Portfolio.png</td>
+                        <td>PNG</td>
+                        <td>Lower res variant</td>
+                        <td><span class="badge badge-skip">skip</span></td>
+                    </tr>
+                    <tr>
+                        <td>Logo.png</td>
+                        <td>PNG</td>
+                        <td>Older/different variant</td>
+                        <td><span class="badge badge-skip">skip</span></td>
+                    </tr>
+                    <tr>
+                        <td>about-full-body.png</td>
+                        <td>PNG</td>
+                        <td>Too large for minimal about section</td>
+                        <td><span class="badge badge-skip">skip</span></td>
+                    </tr>
+                    <tr>
+                        <td>pixton-avatar-full-body.png</td>
+                        <td>PNG</td>
+                        <td>Headshot is cleaner for minimal design</td>
+                        <td><span class="badge badge-skip">skip</span></td>
+                    </tr>
+                    <tr>
+                        <td>explore section avatar.png</td>
+                        <td>PNG</td>
+                        <td>Redundant with headshot + contact avatar</td>
+                        <td><span class="badge badge-skip">skip</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- FILE STRUCTURE -->
+        <section>
+            <h2>File Structure</h2>
+            <div class="file-tree">
+<pre><span class="folder">new-portfolio/</span>
+├── <span class="folder">public/</span>
+│   ├── <span class="folder">assets/</span>
+│   │   ├── <span class="file">logo-700.png</span>            <span class="comment"># favicon + OG</span>
+│   │   ├── <span class="file">pixton-avatar-headshot.png</span>  <span class="comment"># about avatar</span>
+│   │   └── <span class="file">contact-avatar.png</span>       <span class="comment"># contact avatar</span>
+│   ├── <span class="folder">svg/</span>
+│   │   ├── <span class="file">DarkThemeTopLogo.svg</span>
+│   │   ├── <span class="file">github-brands.svg</span>
+│   │   ├── <span class="file">linkedIn-circle.svg</span>
+│   │   ├── <span class="file">email-svgrepo-com.svg</span>
+│   │   ├── <span class="file">phone-alt-svgrepo-com.svg</span>
+│   │   ├── <span class="file">laptop-code-solid.svg</span>
+│   │   └── <span class="file">link.svg</span>
+│   └── <span class="file">favicon.ico</span>
+├── <span class="folder">src/</span>
+│   ├── <span class="folder">layouts/</span>
+│   │   └── <span class="file">Layout.astro</span>            <span class="comment"># base HTML shell, fonts, meta</span>
+│   ├── <span class="folder">pages/</span>
+│   │   └── <span class="file">index.astro</span>             <span class="comment"># single page, imports all sections</span>
+│   ├── <span class="folder">components/</span>
+│   │   ├── <span class="file">Hero.astro</span>              <span class="comment"># three.js canvas + text overlay</span>
+│   │   ├── <span class="file">About.astro</span>             <span class="comment"># scroll reveal about</span>
+│   │   ├── <span class="file">Skills.astro</span>            <span class="comment"># animated skill grid</span>
+│   │   ├── <span class="file">Experience.astro</span>        <span class="comment"># timeline with scroll draw</span>
+│   │   ├── <span class="file">Projects.astro</span>          <span class="comment"># parallax project cards</span>
+│   │   ├── <span class="file">Certifications.astro</span>    <span class="comment"># stagger badge reveal</span>
+│   │   ├── <span class="file">Contact.astro</span>           <span class="comment"># links + footer</span>
+│   │   ├── <span class="file">Navbar.astro</span>            <span class="comment"># side dot indicators</span>
+│   │   └── <span class="file">CustomCursor.astro</span>      <span class="comment"># magnetic cursor FX</span>
+│   ├── <span class="folder">scripts/</span>
+│   │   ├── <span class="file">three-scene.js</span>          <span class="comment"># floating geometries cluster</span>
+│   │   ├── <span class="file">scroll-animations.js</span>   <span class="comment"># GSAP ScrollTrigger setup</span>
+│   │   ├── <span class="file">smooth-scroll.js</span>        <span class="comment"># Lenis config</span>
+│   │   └── <span class="file">cursor.js</span>              <span class="comment"># custom cursor logic</span>
+│   ├── <span class="folder">styles/</span>
+│   │   └── <span class="file">global.css</span>              <span class="comment"># reset, variables, base, utils</span>
+│   └── <span class="folder">data/</span>
+│       └── <span class="file">content.ts</span>              <span class="comment"># typed resume data objects</span>
+├── <span class="file">astro.config.mjs</span>
+├── <span class="file">package.json</span>
+├── <span class="file">tsconfig.json</span>
+└── <span class="file">PLAN.html</span>                  <span class="comment"># this file</span></pre>
+            </div>
+        </section>
+
+        <!-- IMPLEMENTATION PHASES -->
+        <section>
+            <h2>Implementation Phases</h2>
+
+            <div class="progress-summary">
+                <div class="progress-stat">
+                    <div class="number pending-num">12</div>
+                    <div class="stat-label">Pending</div>
+                </div>
+                <div class="progress-stat">
+                    <div class="number in-progress-num">0</div>
+                    <div class="stat-label">In Progress</div>
+                </div>
+                <div class="progress-stat">
+                    <div class="number completed-num">0</div>
+                    <div class="stat-label">Completed</div>
+                </div>
+            </div>
+
+            <div class="phase-list">
+                <div class="phase-card" id="phase-1">
+                    <div class="phase-number">01</div>
+                    <div>
+                        <div class="phase-title">Scaffold Astro Project</div>
+                        <div class="phase-desc">Initialize Astro project, install all dependencies (three, gsap, lenis), configure astro.config.mjs, tsconfig.json.</div>
+                        <ul class="phase-subtasks">
+                            <li>npm create astro@latest — minimal template</li>
+                            <li>npm install three gsap @studio-freight/lenis</li>
+                            <li>Configure astro.config.mjs (compress HTML, site URL)</li>
+                            <li>Setup tsconfig.json with strict mode</li>
+                            <li>Verify dev server runs</li>
+                        </ul>
+                    </div>
+                    <div class="phase-status pending">pending</div>
+                </div>
+
+                <div class="phase-card" id="phase-2">
+                    <div class="phase-number">02</div>
+                    <div>
+                        <div class="phase-title">Layout + Global Styles</div>
+                        <div class="phase-desc">Build Layout.astro shell with HTML meta, font imports, global CSS with design system variables, CSS reset.</div>
+                        <ul class="phase-subtasks">
+                            <li>Layout.astro — HTML shell with <head> (fonts, meta, global.css)</li>
+                            <li>global.css — CSS reset, custom properties (colors, fonts, spacing), base typography, utility classes</li>
+                            <li>Google Fonts import: Space Mono 400/700, Inter 300/400/500/600</li>
+                            <li>Configure font-display: swap for performance</li>
+                        </ul>
+                    </div>
+                    <div class="phase-status pending">pending</div>
+                </div>
+
+                <div class="phase-card" id="phase-3">
+                    <div class="phase-number">03</div>
+                    <div>
+                        <div class="phase-title">Data Layer (content.ts)</div>
+                        <div class="phase-desc">Create typed data objects for all resume content — skills, experience, projects, certifications, contact info.</div>
+                        <ul class="phase-subtasks">
+                            <li>Define TypeScript interfaces for each content type</li>
+                            <li>Export typed objects with all resume data</li>
+                            <li>Include social links, project URLs, credential URLs</li>
+                        </ul>
+                    </div>
+                    <div class="phase-status pending">pending</div>
+                </div>
+
+                <div class="phase-card" id="phase-4">
+                    <div class="phase-number">04</div>
+                    <div>
+                        <div class="phase-title">Hero Section — Three.js Scene</div>
+                        <div class="phase-desc">Build the floating geometries cluster with Three.js. Wireframe icosahedron, octahedron, tetrahedron, cubes orbiting center. Particle cloud backdrop. Mouse-reactive. Orbit controls.</div>
+                        <ul class="phase-subtasks">
+                            <li>three-scene.js — scene, camera, renderer setup</li>
+                            <li>Create wireframe geometries with MeshBasicMaterial (wireframe: true, color: cyan)</li>
+                            <li>Particle system with BufferGeometry points</li>
+                            <li>Mouse position tracking for subtle camera follow</li>
+                            <li>OrbitControls for click/drag interaction</li>
+                            <li>Window resize handler</li>
+                            <li>powerPreference: 'high-performance'</li>
+                        </ul>
+                    </div>
+                    <div class="phase-status pending">pending</div>
+                </div>
+
+                <div class="phase-card" id="phase-5">
+                    <div class="phase-number">05</div>
+                    <div>
+                        <div class="phase-title">Hero Section — GSAP Text Reveal + Overlay</div>
+                        <div class="phase-desc">Build Hero.astro with canvas container + text overlay. GSAP stagger reveal for name and subtitle.</div>
+                        <ul class="phase-subtasks">
+                            <li>Hero.astro — position canvas behind content (z-index, absolute)</li>
+                            <li>"SHREYAS MISRA" — large Space Mono, letter stagger animation</li>
+                            <li>"FullStack Developer" — fade-in subtitle</li>
+                            <li>Scroll indicator at bottom (animated chevron)</li>
+                            <li>Exit animation: scale down 3D, text slides up</li>
+                        </ul>
+                    </div>
+                    <div class="phase-status pending">pending</div>
+                </div>
+
+                <div class="phase-card" id="phase-6">
+                    <div class="phase-number">06</div>
+                    <div>
+                        <div class="phase-title">Smooth Scroll + ScrollTrigger System</div>
+                        <div class="phase-desc">Set up Lenis smooth scrolling, GSAP ScrollTrigger registration, CSS scroll-snap sections, and the transition system between sections.</div>
+                        <ul class="phase-subtasks">
+                            <li>smooth-scroll.js — Lenis instance config, RAF loop</li>
+                            <li>Register GSAP ScrollTrigger plugin</li>
+                            <li>Wire Lenis to ScrollTrigger (update method)</li>
+                            <li>CSS scroll-snap-type: y mandatory on sections</li>
+                            <li>Background gradient body class toggle on scroll</li>
+                            <li>section-wipe transition classes</li>
+                        </ul>
+                    </div>
+                    <div class="phase-status pending">pending</div>
+                </div>
+
+                <div class="phase-card" id="phase-7">
+                    <div class="phase-number">07</div>
+                    <div>
+                        <div class="phase-title">Navbar — Side Dot Indicators</div>
+                        <div class="phase-desc">Fixed right-side navigation dots. Current section glows cyan. Clickable to navigate. Updates on scroll via IntersectionObserver.</div>
+                        <ul class="phase-subtasks">
+                            <li>Navbar.astro — fixed position right, vertically centered</li>
+                            <li>7 dots for 7 sections with labels on hover</li>
+                            <li>Active dot: cyan glow, larger size</li>
+                            <li>IntersectionObserver to track current section</li>
+                            <li>Click handler: smooth scroll to target section</li>
+                        </ul>
+                    </div>
+                    <div class="phase-status pending">pending</div>
+                </div>
+
+                <div class="phase-card" id="phase-8">
+                    <div class="phase-number">08</div>
+                    <div>
+                        <div class="phase-title">About Section — Scroll Reveal Text</div>
+                        <div class="phase-desc">Full viewport about section with stagger text reveal, avatar, education, and large quote-style objective statement.</div>
+                        <ul class="phase-subtasks">
+                            <li>About.astro — full-viewport section layout</li>
+                            <li>GSAP ScrollTrigger: text lines stagger from left</li>
+                            <li>Large italic quote: "Becoming a High Value Agency..."</li>
+                            <li>Education cards fade in with parallax offset</li>
+                            <li>pixton-avatar-headshot.png with subtle float animation</li>
+                            <li>Background gradient shift for this world</li>
+                        </ul>
+                    </div>
+                    <div class="phase-status pending">pending</div>
+                </div>
+
+                <div class="phase-card" id="phase-9">
+                    <div class="phase-number">09</div>
+                    <div>
+                        <div class="phase-title">Skills Section — Animated Stagger Grid</div>
+                        <div class="phase-desc">Grouped skill cards with scroll-stagger animation, 3D tilt hover effect, and cyan glow borders.</div>
+                        <ul class="phase-subtasks">
+                            <li>Skills.astro — category groups: Languages, Frontend, Backend, Tools, Soft</li>
+                            <li>GSAP stagger from bottom on scroll-enter</li>
+                            <li>Vanilla JS 3D tilt on card hover (perspective transform)</li>
+                            <li>Cyan glow border on hover (box-shadow transition)</li>
+                            <li>laptop-code-solid.svg as section icon</li>
+                        </ul>
+                    </div>
+                    <div class="phase-status pending">pending</div>
+                </div>
+
+                <div class="phase-card" id="phase-10">
+                    <div class="phase-number">10</div>
+                    <div>
+                        <div class="phase-title">Experience Section — Draw-On-Scroll Timeline</div>
+                        <div class="phase-desc">Vertical timeline with SVG line that draws on scroll, glowing nodes at each role, cards sliding in from alternating sides.</div>
+                        <ul class="phase-subtasks">
+                            <li>Experience.astro — timeline layout (center line, left/right cards)</li>
+                            <li>SVG path with stroke-dasharray/dashoffset for draw-on-scroll</li>
+                            <li>GSAP ScrollTrigger: Scrub timeline line draw</li>
+                            <li>Role cards reveal: Meril slides from left, Laitkor from right</li>
+                            <li>Glowing nodes at timeline intersection points</li>
+                            <li>laptop-code-solid.svg as role icon</li>
+                        </ul>
+                    </div>
+                    <div class="phase-status pending">pending</div>
+                </div>
+
+                <div class="phase-card" id="phase-11">
+                    <div class="phase-number">11</div>
+                    <div>
+                        <div class="phase-title">Projects Section — Parallax Card Grid</div>
+                        <div class="phase-desc">4 project cards flying in from alternating directions with parallax depth. 3D perspective on hover. Background + link icons.</div>
+                        <ul class="phase-subtasks">
+                            <li>Projects.astro — responsive card grid</li>
+                            <li>GSAP: cards fly in from left/right/top/bottom alternately</li>
+                            <li>3D perspective tilt on card hover (rotateX/Y)</li>
+                            <li>Card content: name, desc, tech tags, link icon</li>
+                            <li>link.svg as "view project" icon</li>
+                            <li>4 projects: Social Scoop, NSS Portal, Yacht Fuel, Jira-Trello</li>
+                        </ul>
+                    </div>
+                    <div class="phase-status pending">pending</div>
+                </div>
+
+                <div class="phase-card" id="phase-12">
+                    <div class="phase-number">12</div>
+                    <div>
+                        <div class="phase-title">Certifications + Contact + Footer</div>
+                        <div class="phase-desc">Certification badges with stagger reveal, contact section with large links and social icons, minimal footer.</div>
+                        <ul class="phase-subtasks">
+                            <li>Certifications.astro — 4 badge cards, stagger from bottom</li>
+                            <li>Glow pulse animation on badge hover</li>
+                            <li>Contact.astro — full viewport, large text links (Lando-style)</li>
+                            <li>Social icons: github-brands, linkedIn-circle, email, phone</li>
+                            <li>contact-avatar.png placement</li>
+                            <li>Particle burst effect on link hover</li>
+                            <li>Footer — copyright, subtle branding</li>
+                        </ul>
+                    </div>
+                    <div class="phase-status pending">pending</div>
+                </div>
+
+                <div class="phase-card" id="phase-13">
+                    <div class="phase-number">13</div>
+                    <div>
+                        <div class="phase-title">Custom Cursor + Polish</div>
+                        <div class="phase-desc">Custom cursor with magnetic effect on interactive elements. Final polish: transitions, responsive breakpoints, performance audit.</div>
+                        <ul class="phase-subtasks">
+                            <li>cursor.js — custom dot cursor, magnetic pull on links/buttons</li>
+                            <li>CustomCursor.astro — cursor DOM elements + hide default</li>
+                            <li>Responsive: mobile breakpoints (768, 480)</li>
+                            <li>Disable custom cursor on touch devices</li>
+                            <li>Performance: lazy images, Three.js dispose, requestIdleCallback</li>
+                            <li>Favicon setup from Logo Portfolio 700x700</li>
+                            <li>OG meta tags for social sharing</li>
+                            <li>Cross-browser testing</li>
+                        </ul>
+                    </div>
+                    <div class="phase-status pending">pending</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- RESUME REFERENCE -->
+        <section>
+            <h2>Resume Reference Data</h2>
+            <div class="meta-grid">
+                <div class="meta-card">
+                    <div class="label">Name</div>
+                    <div class="value">Shreyas Misra</div>
+                </div>
+                <div class="meta-card">
+                    <div class="label">Phone</div>
+                    <div class="value">+91(830) 363-6014</div>
+                </div>
+                <div class="meta-card">
+                    <div class="label">Email</div>
+                    <div class="value">shreyas.misra03@gmail.com</div>
+                </div>
+                <div class="meta-card">
+                    <div class="label">Location</div>
+                    <div class="value">Lucknow, India</div>
+                </div>
+                <div class="meta-card">
+                    <div class="label">LinkedIn</div>
+                    <div class="value">linkedin.com/shreyasmisra</div>
+                </div>
+                <div class="meta-card">
+                    <div class="label">GitHub</div>
+                    <div class="value">github/shreyas</div>
+                </div>
+            </div>
+        </section>
+
+        <div class="footer-note">
+            Last updated: 2026-06-21 &middot; Reference: landonorris.com &middot; No JS hydration (Astro static) &middot; Three.js loaded as island
+        </div>
+    </div>
+</body>
+</html>

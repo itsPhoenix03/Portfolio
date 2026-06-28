@@ -1,0 +1,712 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600&display=swap');
+
+:root {
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #0d0d0d;
+  --bg-card: #111111;
+  --bg-card-hover: #161616;
+  --text-primary: #e0e0e0;
+  --text-muted: #8a8a8a;
+  --text-dim: #555555;
+  --accent: #00e5ff;
+  --accent-dim: #00e5ff33;
+  --accent-hover: #00b8cc;
+  --accent-glow: #00e5ff66;
+  --border: #1a1a1a;
+  --border-accent: #00e5ff44;
+  --success: #00ff88;
+  --danger: #ff4466;
+  /* Translucent veils over the 3D background (themed). */
+  --veil-1: rgba(8, 9, 12, 0.72);
+  --veil-2: rgba(8, 9, 12, 0.82);
+  --hero-veil: rgba(10, 10, 10, 0.5);
+  --panel-bg: rgba(17, 18, 22, 0.45);
+  /* Soft "light on the floor" glow used in select sections. */
+  --glow: rgba(0, 229, 255, 0.09);
+  --font-heading: 'Space Mono', monospace;
+  --font-body: 'Inter', sans-serif;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-circ: cubic-bezier(0.85, 0, 0.15, 1);
+  --section-padding: clamp(2rem, 8vh, 6rem);
+}
+
+/* Light theme — same variable-driven UI with a light palette and a deeper,
+   more readable cyan accent. */
+[data-theme='light'] {
+  --bg-primary: #eef1f5;
+  --bg-secondary: #e6e9ee;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f6f8fb;
+  --text-primary: #0f1720;
+  --text-muted: #4a5560;
+  --text-dim: #8a96a3;
+  --accent: #0090a8;
+  --accent-dim: #0090a81f;
+  --accent-hover: #007387;
+  --accent-glow: #0090a855;
+  --border: #d7dde4;
+  --border-accent: #0090a855;
+  --success: #0a8f55;
+  --danger: #d12b48;
+  --veil-1: rgba(238, 241, 245, 0.48);
+  --veil-2: rgba(238, 241, 245, 0.6);
+  --hero-veil: rgba(238, 241, 245, 0.28);
+  --panel-bg: rgba(255, 255, 255, 0.5);
+  --glow: rgba(0, 144, 168, 0.14);
+}
+
+/* Smooth the swap between themes. */
+body,
+.card {
+  transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+}
+
+[data-theme='light'] .ghost-title {
+  color: rgba(0, 144, 168, 0.05);
+  -webkit-text-stroke: 1.5px rgba(0, 144, 168, 0.28);
+  text-shadow: 0 0 60px rgba(0, 144, 168, 0.06);
+}
+
+[data-theme='light'] .ghost-title__letter.flicker {
+  color: rgba(0, 144, 168, 0.12);
+  -webkit-text-stroke: 1.5px rgba(0, 144, 168, 0.55);
+}
+
+/* ----- Theme toggle ----- */
+.theme-toggle {
+  position: fixed;
+  left: 2rem;
+  bottom: 1.75rem;
+  z-index: 95;
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--border-accent);
+  background: var(--bg-card);
+  color: var(--accent);
+  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.theme-toggle:hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 18px var(--accent-dim);
+}
+
+.theme-toggle svg {
+  width: 18px;
+  height: 18px;
+}
+
+.theme-toggle__moon {
+  display: none;
+}
+
+[data-theme='light'] .theme-toggle__sun {
+  display: none;
+}
+
+[data-theme='light'] .theme-toggle__moon {
+  display: block;
+}
+
+@media (max-width: 600px) {
+  .theme-toggle {
+    left: 1rem;
+    bottom: 1rem;
+  }
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  /* `clip` (not `hidden`) prevents horizontal scroll without creating a
+     scroll container — `hidden` would break `position: sticky` stacking. */
+  overflow-x: clip;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+::selection {
+  background-color: var(--accent-dim);
+  color: #ffffff;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  font-size: clamp(2.5rem, 8vw, 5.5rem);
+  font-weight: 700;
+}
+
+h2 {
+  font-size: clamp(1.8rem, 5vw, 3.5rem);
+  font-weight: 700;
+}
+
+h3 {
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  font-weight: 700;
+}
+
+h4 {
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  font-weight: 400;
+}
+
+p {
+  font-size: clamp(0.9rem, 1.2vw, 1.05rem);
+  color: var(--text-muted);
+  max-width: 65ch;
+}
+
+.section {
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--section-padding);
+  overflow: hidden;
+}
+
+/* Hero sits directly over the live background — only a faint vignette so the
+   title stays legible. */
+.section--hero {
+  background: radial-gradient(
+    ellipse at 50% 45%,
+    var(--hero-veil) 0%,
+    transparent 70%
+  );
+}
+
+/* Content sections are translucent dark panels so the animated 3D background
+   shows through while text stays readable. Lightweight — no backdrop blur. */
+.section--about,
+.section--skills,
+.section--experience,
+.section--projects,
+.section--certifications,
+.section--contact {
+  background: linear-gradient(var(--veil-1), var(--veil-2));
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 clamp(1.5rem, 4vw, 3rem);
+  position: relative;
+  z-index: 2;
+}
+
+/* Live 3D scene fixed behind the whole site; content scrolls over it. */
+.bg-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* ----- Intro preloader ----- */
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  background: var(--bg-primary);
+  display: grid;
+  place-items: center;
+  will-change: transform;
+}
+
+.preloader__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.preloader__logo {
+  display: flex;
+  gap: 0.1em;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  color: var(--accent);
+  text-shadow: 0 0 30px var(--accent-dim);
+}
+
+.preloader__bar {
+  position: relative;
+  width: 200px;
+  max-width: 60vw;
+  height: 1px;
+  background: var(--border);
+  overflow: hidden;
+}
+
+.preloader__fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0;
+  background: var(--accent);
+  box-shadow: 0 0 10px var(--accent);
+}
+
+.preloader__count {
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  letter-spacing: 0.25em;
+  color: var(--text-muted);
+}
+
+/* ----- Parallax depth layers ----- */
+
+/* Giant outlined watermark word that drifts behind a section. */
+.ghost-title {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  /* Centering lives on the `translate` property so GSAP's transform
+     (translateY) is free to drive the parallax without fighting it. */
+  translate: -50% -50%;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: clamp(5rem, 26vw, 24rem);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: rgba(0, 229, 255, 0.05);
+  -webkit-text-stroke: 1.5px rgba(0, 229, 255, 0.22);
+  text-shadow: 0 0 60px rgba(0, 229, 255, 0.08);
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+  will-change: transform;
+}
+
+/* Ghost titles are split into per-letter spans at runtime; one random letter
+   per heading gets `.flicker` for a neon-sign flicker. */
+.ghost-title__letter {
+  display: inline-block;
+}
+
+.ghost-title__letter.flicker {
+  color: rgba(0, 229, 255, 0.12);
+  -webkit-text-stroke: 1.5px rgba(0, 229, 255, 0.5);
+  animation: ghostFlicker 5s infinite;
+}
+
+@keyframes ghostFlicker {
+  0%,
+  30%,
+  36%,
+  68%,
+  72%,
+  100% {
+    opacity: 1;
+  }
+  32%,
+  70%,
+  71% {
+    opacity: 0.18;
+  }
+  34% {
+    opacity: 0.6;
+  }
+}
+
+/* Soft glowing orb that floats at its own speed for atmospheric depth. */
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.5;
+  pointer-events: none;
+  z-index: 0;
+  will-change: transform;
+}
+
+.orb--accent {
+  background: radial-gradient(circle, rgba(0, 229, 255, 0.18), transparent 70%);
+}
+
+.orb--dim {
+  background: radial-gradient(circle, rgba(0, 229, 255, 0.08), transparent 70%);
+}
+
+/* Soft "light hitting the floor" — strong at the centre, fading outward.
+   Theme-aware via --glow. Added to select sections only. */
+.section-light {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(1000px, 100%);
+  height: 85%;
+  background: radial-gradient(
+    ellipse 55% 50% at 50% 38%,
+    var(--glow) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+@media (max-width: 600px) {
+  .ghost-title {
+    font-size: clamp(4rem, 32vw, 9rem);
+  }
+}
+
+.accent {
+  color: var(--accent);
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+.heading {
+  font-family: var(--font-heading);
+}
+
+.mono {
+  font-family: var(--font-heading);
+}
+
+.glow-text {
+  text-shadow: 0 0 20px var(--accent-dim), 0 0 40px var(--accent-dim);
+}
+
+.glow-border {
+  border: 1px solid var(--border-accent);
+  box-shadow: 0 0 15px var(--accent-dim), inset 0 0 15px rgba(0, 229, 255, 0.03);
+}
+
+.card {
+  background-color: var(--bg-card);
+  /* Cursor-tracking spotlight (vars set per-card in JS); a background layer so
+     it glows behind content without affecting text legibility. */
+  background-image: radial-gradient(
+    240px circle at var(--mx, 50%) var(--my, -200px),
+    rgba(0, 229, 255, 0.14),
+    transparent 70%
+  );
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: clamp(1rem, 2vw, 1.5rem);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.card:hover {
+  border-color: var(--border-accent);
+  box-shadow: 0 0 20px var(--accent-dim);
+  transform: translateY(-2px);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 4px;
+  font-family: var(--font-heading);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: var(--accent-dim);
+  color: var(--accent);
+  border: 1px solid var(--border-accent);
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-accent), transparent);
+}
+
+.tag {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  font-family: var(--font-heading);
+  font-size: 0.65rem;
+  letter-spacing: 0.05em;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+
+.scrollTo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--text-muted);
+  font-family: var(--font-heading);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.site-initials {
+  position: fixed;
+  top: 1.5rem;
+  left: 2rem;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  display: flex;
+  gap: 0.15em;
+  transform-origin: left center;
+  will-change: transform, opacity;
+}
+
+.site-initials__s,
+.site-initials__m {
+  font-family: var(--font-heading);
+  font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+  font-weight: 700;
+  color: var(--accent);
+  text-shadow: 0 0 12px var(--accent-dim);
+  will-change: transform, opacity;
+}
+
+.site-role {
+  position: fixed;
+  top: 1.5rem;
+  right: 2rem;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.9rem;
+  border-radius: 100px;
+  border: 1px solid var(--border-accent);
+  background: rgba(0, 229, 255, 0.04);
+  transform-origin: right center;
+  will-change: transform, opacity;
+  animation: chipGlow 3.2s ease-in-out infinite;
+}
+
+.site-role::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 55%;
+  height: 100%;
+  background: linear-gradient(
+    100deg,
+    transparent,
+    rgba(0, 229, 255, 0.35),
+    transparent
+  );
+  transform: skewX(-20deg);
+  animation: chipSheen 4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes chipSheen {
+  0% {
+    left: -120%;
+  }
+  55%,
+  100% {
+    left: 175%;
+  }
+}
+
+@keyframes chipGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 rgba(0, 229, 255, 0);
+  }
+  50% {
+    box-shadow: 0 0 18px rgba(0, 229, 255, 0.22);
+  }
+}
+
+.site-role__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent);
+  animation: glowPulse 2s ease-in-out infinite;
+}
+
+.site-role__text {
+  font-family: var(--font-heading);
+  font-size: clamp(0.6rem, 1.4vw, 0.7rem);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+  .site-initials {
+    top: 1rem;
+    left: 1rem;
+  }
+  .site-role {
+    top: 1rem;
+    right: 1rem;
+    padding: 0.3rem 0.7rem;
+  }
+}
+
+.scrollTo__icon {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, var(--accent), transparent);
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.3; transform: scaleY(0.5); transform-origin: top; }
+  50% { opacity: 1; transform: scaleY(1); transform-origin: top; }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInLeft {
+  from { opacity: 0; transform: translateX(-30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeInRight {
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 5px var(--accent-dim); }
+  50% { box-shadow: 0 0 20px var(--accent-glow); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.reveal {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Pre-hide scroll-reveal targets only when JS is available, so GSAP can
+   drive them in. Without JS they stay fully visible. */
+html.js [data-reveal],
+html.js [data-stagger] .stagger-item {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.js [data-reveal],
+  html.js [data-stagger] .stagger-item {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: clamp(1.5rem, 6vh, 3rem);
+  }
+
+  .container {
+    padding: 0 clamp(1rem, 3vw, 1.5rem);
+  }
+
+  h1 {
+    font-size: clamp(2rem, 10vw, 3.5rem);
+  }
+
+  h2 {
+    font-size: clamp(1.5rem, 7vw, 2.5rem);
+  }
+}
+
+@media (max-width: 480px) {
+  .section {
+    min-height: auto;
+    padding: 3rem 0;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+}

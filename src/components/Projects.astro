@@ -1,0 +1,477 @@
+---
+import { projects } from '../data/content';
+---
+
+<section class="section section--projects" id="projects">
+  <span class="ghost-title" data-parallax="0.45" aria-hidden="true">WORK</span>
+  <span class="orb orb--dim projects__orb" data-parallax="-0.7" aria-hidden="true"></span>
+  <span class="section-light" aria-hidden="true"></span>
+  <div class="container projects">
+    <header class="projects__head" data-parallax="0.12">
+      <span class="projects__eyebrow" data-reveal="up">04 — Projects</span>
+      <h2 class="projects__title" data-reveal="up" data-reveal-delay="0.05">
+        Things I've <span class="accent">shipped</span>
+      </h2>
+    </header>
+
+    <div class="projects__grid" data-parallax="-0.08">
+      {
+        projects.map((project, i) => (
+          <article
+            class="projects__card card tilt"
+            data-reveal={i % 2 === 0 ? 'left' : 'right'}
+            data-reveal-delay={(i % 2) * 0.08}
+            data-title={project.title}
+            data-desc={project.description}
+            data-tags={JSON.stringify(project.tags)}
+            data-highlights={JSON.stringify(project.highlights ?? [])}
+            data-link={project.link ?? ''}
+            data-link-label={project.linkLabel ?? ''}
+            data-index={`0${i + 1}`}
+            data-cursor="View ↗"
+            role="button"
+            tabindex="0"
+            aria-label={`View details for ${project.title}`}
+          >
+            <div class="projects__card-top">
+              <span class="projects__index">0{i + 1}</span>
+              {project.link && (
+                <a
+                  class="projects__link"
+                  href={project.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${project.linkLabel ?? 'Open'} — ${project.title}`}
+                >
+                  <span class="projects__link-ic" aria-hidden="true"></span>
+                </a>
+              )}
+            </div>
+            <h3 class="projects__name">{project.title}</h3>
+            <p class="projects__desc">{project.description}</p>
+            <ul class="projects__tags">
+              {project.tags.map((t) => (
+                <li class="tag">{t}</li>
+              ))}
+            </ul>
+            {project.link && (
+              <a
+                class="projects__cta"
+                href={project.link}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {project.linkLabel ?? 'View project'} <span aria-hidden="true">→</span>
+              </a>
+            )}
+          </article>
+        ))
+      }
+    </div>
+  </div>
+
+  <div class="pmodal" id="pmodal" aria-hidden="true">
+    <div class="pmodal__backdrop" data-close></div>
+    <article class="pmodal__panel" role="dialog" aria-modal="true" aria-labelledby="pmodal-title">
+      <button class="pmodal__close" data-close aria-label="Close">&times;</button>
+      <span class="pmodal__index" id="pmodal-index"></span>
+      <h3 class="pmodal__title" id="pmodal-title"></h3>
+      <p class="pmodal__desc" id="pmodal-desc"></p>
+      <ul class="pmodal__highlights" id="pmodal-highlights"></ul>
+      <ul class="pmodal__tags" id="pmodal-tags"></ul>
+      <a
+        class="pmodal__cta"
+        id="pmodal-cta"
+        target="_blank"
+        rel="noopener noreferrer"
+      ></a>
+    </article>
+  </div>
+</section>
+
+<style>
+  .projects {
+    width: 100%;
+  }
+
+  .projects__orb {
+    width: 420px;
+    height: 420px;
+    top: 10%;
+    right: -8%;
+  }
+
+  .projects__head {
+    margin-bottom: clamp(2rem, 4vw, 3.5rem);
+  }
+
+  .projects__eyebrow {
+    display: inline-block;
+    font-family: var(--font-heading);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+  }
+
+  .projects__title {
+    color: var(--text-primary);
+  }
+
+  .projects__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+    gap: 1.5rem;
+  }
+
+  .projects__card {
+    display: flex;
+    flex-direction: column;
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+
+  .projects__card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .projects__index {
+    font-family: var(--font-heading);
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+  }
+
+  .projects__link {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    border: 1px solid var(--border-accent);
+    transition: border-color 0.3s ease, background 0.3s ease, transform 0.3s ease;
+  }
+
+  .projects__link-ic {
+    width: 15px;
+    height: 15px;
+    background-color: var(--accent);
+    -webkit-mask: url('/svg/link.svg') center / contain no-repeat;
+    mask: url('/svg/link.svg') center / contain no-repeat;
+    transition: background-color 0.3s ease;
+  }
+
+  .projects__link:hover {
+    border-color: var(--accent);
+    background: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  .projects__link:hover .projects__link-ic {
+    background-color: var(--bg-primary);
+  }
+
+  .projects__name {
+    font-size: clamp(1.15rem, 2vw, 1.5rem);
+    color: var(--text-primary);
+    margin-bottom: 0.6rem;
+  }
+
+  .projects__desc {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 1.1rem;
+    flex-grow: 1;
+  }
+
+  .projects__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin-bottom: 1.1rem;
+  }
+
+  .projects__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    transition: gap 0.3s ease;
+  }
+
+  .projects__cta:hover {
+    gap: 0.75rem;
+  }
+
+  .projects__card {
+    cursor: pointer;
+  }
+
+  /* ----- Project detail modal ----- */
+  .pmodal {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: none;
+  }
+
+  .pmodal.is-open {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+  }
+
+  .pmodal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(5, 6, 8, 0.72);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .pmodal__panel {
+    position: relative;
+    width: min(640px, 92vw);
+    max-height: 86vh;
+    overflow-y: auto;
+    background: var(--bg-card);
+    border: 1px solid var(--border-accent);
+    border-radius: 14px;
+    padding: clamp(1.75rem, 4vw, 2.75rem);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), 0 0 50px var(--accent-dim);
+    will-change: transform, opacity;
+  }
+
+  .pmodal__close {
+    position: absolute;
+    top: 1rem;
+    right: 1.1rem;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 1.4rem;
+    line-height: 1;
+    transition: color 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+  }
+
+  .pmodal__close:hover {
+    color: var(--accent);
+    border-color: var(--border-accent);
+    background: var(--accent-dim);
+  }
+
+  .pmodal__index {
+    font-family: var(--font-heading);
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+  }
+
+  .pmodal__title {
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    color: var(--text-primary);
+    margin: 0.4rem 0 0.9rem;
+  }
+
+  .pmodal__desc {
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: var(--text-muted);
+    margin-bottom: 1.25rem;
+  }
+
+  .pmodal__highlights {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .pmodal__highlights li {
+    position: relative;
+    padding-left: 1.25rem;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    line-height: 1.5;
+  }
+
+  .pmodal__highlights li::before {
+    content: '▹';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+  }
+
+  .pmodal__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .pmodal__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-heading);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--bg-primary);
+    background: var(--accent);
+    padding: 0.6rem 1.1rem;
+    border-radius: 8px;
+    transition: gap 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .pmodal__cta:hover {
+    gap: 0.75rem;
+    box-shadow: 0 0 20px var(--accent-glow);
+  }
+
+  .pmodal__cta[hidden] {
+    display: none;
+  }
+</style>
+
+<script>
+  import gsap from 'gsap';
+  import { lenisInstance } from '@/scripts/smooth-scroll';
+
+  const modal = document.getElementById('pmodal');
+  const panel = modal?.querySelector<HTMLElement>('.pmodal__panel');
+  const backdrop = modal?.querySelector<HTMLElement>('.pmodal__backdrop');
+  const cards = Array.from(
+    document.querySelectorAll<HTMLElement>('.projects__card')
+  );
+
+  if (modal && panel && backdrop && cards.length) {
+    const elIndex = document.getElementById('pmodal-index')!;
+    const elTitle = document.getElementById('pmodal-title')!;
+    const elDesc = document.getElementById('pmodal-desc')!;
+    const elHighlights = document.getElementById('pmodal-highlights')!;
+    const elTags = document.getElementById('pmodal-tags')!;
+    const elCta = document.getElementById('pmodal-cta') as HTMLAnchorElement;
+
+    let activeCard: HTMLElement | null = null;
+    let isOpen = false;
+
+    const parse = (v: string | undefined): string[] => {
+      try {
+        return JSON.parse(v || '[]');
+      } catch {
+        return [];
+      }
+    };
+
+    function fillList(ul: HTMLElement, items: string[], cls: string) {
+      ul.innerHTML = '';
+      for (const item of items) {
+        const li = document.createElement('li');
+        if (cls) li.className = cls;
+        li.textContent = item;
+        ul.appendChild(li);
+      }
+    }
+
+    function open(card: HTMLElement) {
+      activeCard = card;
+      const d = card.dataset;
+      elIndex.textContent = d.index || '';
+      elTitle.textContent = d.title || '';
+      elDesc.textContent = d.desc || '';
+      fillList(elHighlights, parse(d.highlights), '');
+      fillList(elTags, parse(d.tags), 'tag');
+      if (d.link) {
+        elCta.href = d.link;
+        elCta.textContent = `${d.linkLabel || 'Visit'} ↗`;
+        elCta.hidden = false;
+      } else {
+        elCta.hidden = true;
+      }
+
+      modal!.classList.add('is-open');
+      modal!.setAttribute('aria-hidden', 'false');
+      lenisInstance.stop();
+      isOpen = true;
+
+      const cr = card.getBoundingClientRect();
+      const pr = panel!.getBoundingClientRect();
+      const dx = cr.left + cr.width / 2 - (pr.left + pr.width / 2);
+      const dy = cr.top + cr.height / 2 - (pr.top + pr.height / 2);
+      const scale = Math.max(0.2, cr.width / pr.width);
+
+      gsap.killTweensOf([panel, backdrop]);
+      gsap.set(panel, { x: dx, y: dy, scale, opacity: 0 });
+      gsap.to(backdrop, { opacity: 1, duration: 0.35, ease: 'power2.out' });
+      gsap.to(panel, {
+        x: 0,
+        y: 0,
+        scale: 1,
+        opacity: 1,
+        duration: 0.55,
+        ease: 'power3.out',
+      });
+    }
+
+    function close() {
+      if (!isOpen) return;
+      isOpen = false;
+      const cr = activeCard?.getBoundingClientRect();
+      const pr = panel!.getBoundingClientRect();
+      const dx = cr ? cr.left + cr.width / 2 - (pr.left + pr.width / 2) : 0;
+      const dy = cr ? cr.top + cr.height / 2 - (pr.top + pr.height / 2) : 40;
+      const scale = cr ? Math.max(0.2, cr.width / pr.width) : 0.6;
+
+      gsap.killTweensOf([panel, backdrop]);
+      gsap.to(backdrop, { opacity: 0, duration: 0.4, ease: 'power2.in' });
+      gsap.to(panel, {
+        x: dx,
+        y: dy,
+        scale,
+        opacity: 0,
+        duration: 0.4,
+        ease: 'power3.in',
+        onComplete: () => {
+          modal!.classList.remove('is-open');
+          modal!.setAttribute('aria-hidden', 'true');
+          lenisInstance.start();
+        },
+      });
+    }
+
+    cards.forEach((card) => {
+      card.addEventListener('click', (e) => {
+        // Let the real "live demo" link work without opening the modal.
+        if ((e.target as HTMLElement).closest('a')) return;
+        open(card);
+      });
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          open(card);
+        }
+      });
+    });
+
+    modal.querySelectorAll('[data-close]').forEach((el) =>
+      el.addEventListener('click', close)
+    );
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') close();
+    });
+  }
+</script>
