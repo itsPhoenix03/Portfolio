@@ -1,4 +1,4 @@
-﻿export interface Skill {
+export interface Skill {
   name: string;
 }
 
@@ -31,6 +31,8 @@ export interface Project {
   highlights?: string[];
   link?: string;
   linkLabel?: string;
+  /** Short monogram shown on the project cover (defaults to initials). */
+  cover?: string;
 }
 
 export interface Certification {
@@ -52,6 +54,10 @@ export interface SiteMeta {
   role: string;
   objective: string;
   email: string;
+  location: string;
+  timezone: string;
+  currently: string;
+  careerStart: string;
 }
 
 export const siteMeta: SiteMeta = {
@@ -61,7 +67,32 @@ export const siteMeta: SiteMeta = {
   role: 'Software Engineer',
   objective: 'Becoming a High Value Agency and delivering Scalable and Dependable Systems which help Organizations Grow and have Success.',
   email: 'shreyas.misra03@gmail.com',
+  location: 'India',
+  timezone: 'Asia/Kolkata',
+  currently: 'SDE-1 at Meril (Nuvo AI) — R&D, IIT Kanpur Technopark',
+  careerStart: '2024-05-01',
 };
+
+// Contact form → Web3Forms, which emails submissions to the inbox tied to this
+// access key. The key is designed to be public (it only allows sending to that
+// inbox), so it's fine in client-side code.
+export const contactForm = {
+  endpoint: 'https://api.web3forms.com/submit',
+  accessKey: 'c8fc02b9-5b6e-40ed-a0fc-4058b42cb37a',
+};
+
+// Words that run across the crossing marquee "tapes".
+export const marqueeWords: string[] = [
+  'Software Engineer',
+  'Full-Stack',
+  'AI-Integrated Systems',
+  'Scalable',
+  'Dependable',
+  'TypeScript',
+  'Next.js',
+  'Node.js',
+  'Golang',
+];
 
 export const education: Education[] = [
   {
@@ -172,6 +203,35 @@ export const experience: Experience[] = [
 
 export const projects: Project[] = [
   {
+    title: 'Stanley AI',
+    cover: 'SA',
+    description:
+      'Regulatory intelligence for medical devices — a documentation workspace for EU MDR, US FDA and CDSCO submissions that generates design inputs, GSPR coverage and audit-ready dossiers in a single session-aware platform.',
+    tags: ['React', 'Generative AI', 'Regulatory Tech', 'AWS'],
+    highlights: [
+      'Generates design inputs and GSPR coverage for medical devices',
+      'Audit-ready dossiers for EU MDR, US FDA and CDSCO submissions',
+      'Session-aware workspace built in R&D at Meril (Nuvo AI)',
+    ],
+    link: 'https://stanleyai.nuvobuddy.com/',
+    linkLabel: 'Visit Stanley',
+  },
+  {
+    title: 'Echoes of the Hearth',
+    cover: 'EH',
+    description:
+      'A web-based 2D isometric co-op survival RPG — gather, craft, build and defend together across four biomes, with real-time multiplayer powered by a Go WebSocket server.',
+    tags: ['Golang', 'WebSockets', 'TypeScript', 'Vite'],
+    highlights: [
+      'Real-time co-op multiplayer over a Go WebSocket server',
+      'Four biomes with dynamic weather, elevation and fall damage',
+      'Crafting, base building, wildlife and escalating monster waves',
+      'Persistent 1280×1280 world across sessions',
+    ],
+    link: 'https://github.com/itsPhoenix03/echoes-of-the-hearth',
+    linkLabel: 'View code',
+  },
+  {
     title: 'Social Scoop',
     description: 'Built Social Scoop to curate trending content, featuring a RESTful API and responsive UI for seamless user experience.',
     tags: ['React.js', 'Node.js', 'REST API', 'MongoDB'],
@@ -195,26 +255,23 @@ export const projects: Project[] = [
     link: 'https://pondicherryuniversitynss.netlify.app/',
     linkLabel: 'Explore',
   },
-  {
-    title: 'Yacht Fuel Platform',
-    description: 'Client application to connect yacht owners directly with fuel suppliers, reducing middlemen and streamlining supply requests.',
-    tags: ['React.js', 'Node.js', 'REST API', 'PostgreSQL'],
-    highlights: [
-      'Connects yacht owners directly with fuel suppliers',
-      'Removes middlemen from the supply chain',
-      'Streamlined supply-request workflow',
-    ],
-  },
-  {
-    title: 'Jira-Trello Automation',
-    description: 'Built an automation solution to sync Jira tasks and attachments for a client workflow.',
-    tags: ['Node.js', 'N8n', 'Automation', 'API Integration'],
-    highlights: [
-      'Auto-syncs Jira tasks and their attachments',
-      'Built around a real client workflow',
-      'Reliable, hands-off task automation',
-    ],
-  },
+];
+
+// "Team radio" lines surfaced by the hidden easter eggs (see EasterEggs.astro).
+export interface RadioQuote {
+  text: string;
+  by: string;
+}
+
+export const radioQuotes: RadioQuote[] = [
+  { text: 'Simply lovely.', by: 'Max Verstappen' },
+  { text: 'If you no longer go for a gap that exists, you are no longer a racing driver.', by: 'Ayrton Senna' },
+  { text: "If everything seems under control, you're not going fast enough.", by: 'Mario Andretti' },
+  { text: 'If in doubt, flat out.', by: 'Colin McRae' },
+  { text: "Leave me alone, I know what I'm doing.", by: 'Kimi Räikkönen' },
+  { text: 'Riding a race bike is an art — a thing you do because you feel something inside.', by: 'Valentino Rossi' },
+  { text: 'To finish first, first you have to finish.', by: 'Racing proverb' },
+  { text: 'Lights out and away we go.', by: 'Race start' },
 ];
 
 export const certifications: Certification[] = [

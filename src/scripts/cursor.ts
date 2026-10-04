@@ -1,4 +1,4 @@
-// Custom cursor: dot + magnetic ring, magnetic pull on interactive elements,
+// Custom cursor: dot + trailing ring, magnetic pull on interactive elements,
 // and an intent label ("VIEW ↗") on elements with data-cursor.
 // No-ops on touch / coarse-pointer devices.
 
@@ -25,36 +25,31 @@ if (!isTouch) {
     let ringX = mouseX;
     let ringY = mouseY;
     let magnetTarget: HTMLElement | null = null;
+    let labelOn = false;
 
     window.addEventListener('mousemove', (e) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
-      dot.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
-      if (label) {
-        label.style.transform = `translate(${mouseX + 18}px, ${mouseY + 18}px)`;
-      }
+      dot.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
     });
 
-    // Ring growth (delegated; eased so any flicker is invisible).
+    // Ring growth + intent label (delegated, so elements created later work).
     document.addEventListener(
       'mouseover',
       (e) => {
-        const t = (e.target as HTMLElement)?.closest<HTMLElement>(hoverSelector);
-        if (t) {
-          magnetTarget = t;
-          document.body.classList.add('cursor-hover');
+        const el = e.target as HTMLElement;
+        const t = el?.closest<HTMLElement>(hoverSelector);
+        magnetTarget = t && t.matches('.magnetic, [data-magnetic]') ? t : null;
+        document.body.classList.toggle('cursor-hover', !!t);
+
+        const intent = el?.closest<HTMLElement>('[data-cursor]');
+        if (intent && label) {
+          label.textContent = intent.dataset.cursor || '';
+          labelOn = true;
+        } else {
+          labelOn = false;
         }
-      },
-      true
-    );
-    document.addEventListener(
-      'mouseout',
-      (e) => {
-        const t = (e.target as HTMLElement)?.closest<HTMLElement>(hoverSelector);
-        if (t && t === magnetTarget) {
-          magnetTarget = null;
-          document.body.classList.remove('cursor-hover');
-        }
+        document.body.classList.toggle('cursor-label-on', labelOn);
       },
       true
     );
@@ -63,12 +58,11 @@ if (!isTouch) {
     document
       .querySelectorAll<HTMLElement>('.magnetic, [data-magnetic]')
       .forEach((el) => {
-        el.style.transition =
-          'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)';
+        el.style.transition = 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1)';
         el.addEventListener('mousemove', (e) => {
           const r = el.getBoundingClientRect();
-          const mx = clamp((e.clientX - (r.left + r.width / 2)) * 0.3, -14, 14);
-          const my = clamp((e.clientY - (r.top + r.height / 2)) * 0.3, -14, 14);
+          const mx = clamp((e.clientX - (r.left + r.width / 2)) * 0.35, -18, 18);
+          const my = clamp((e.clientY - (r.top + r.height / 2)) * 0.35, -18, 18);
           el.style.transform = `translate(${mx}px, ${my}px)`;
         });
         el.addEventListener('mouseleave', () => {
@@ -76,32 +70,19 @@ if (!isTouch) {
         });
       });
 
-    // Intent label.
-    if (label) {
-      document.querySelectorAll<HTMLElement>('[data-cursor]').forEach((el) => {
-        el.addEventListener('mouseenter', () => {
-          label.textContent = el.dataset.cursor || '';
-          document.body.classList.add('cursor-label-on');
-        });
-        el.addEventListener('mouseleave', () => {
-          document.body.classList.remove('cursor-label-on');
-        });
-      });
-    }
-
     const tick = () => {
       let targetX = mouseX;
       let targetY = mouseY;
-      if (magnetTarget) {
+      if (magnetTarget && !labelOn) {
         const rect = magnetTarget.getBoundingClientRect();
         const cx = rect.left + rect.width / 2;
         const cy = rect.top + rect.height / 2;
         targetX = cx + (mouseX - cx) * 0.35;
         targetY = cy + (mouseY - cy) * 0.35;
       }
-      ringX += (targetX - ringX) * 0.18;
-      ringY += (targetY - ringY) * 0.18;
-      ring.style.transform = `translate(${ringX}px, ${ringY}px) translate(-50%, -50%)`;
+      ringX += (targetX - ringX) * 0.16;
+      ringY += (targetY - ringY) * 0.16;
+      ring.style.transform = `translate(${ringX}px, ${ringY}px)`;
       requestAnimationFrame(tick);
     };
     requestAnimationFrame(tick);

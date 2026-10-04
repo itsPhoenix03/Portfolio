@@ -1,72 +1,113 @@
 ---
-import { projects } from '../data/content';
+import { projects, socialLinks } from '../data/content';
+
+const github = socialLinks.find((s) => s.label === 'GitHub')?.href ?? '#';
+const initials = (t: string) =>
+  t
+    .split(/[\s-]+/)
+    .map((w) => w[0])
+    .join('')
+    .slice(0, 3);
 ---
 
-<section class="section section--projects" id="projects">
-  <span class="ghost-title" data-parallax="0.45" aria-hidden="true">WORK</span>
-  <span class="orb orb--dim projects__orb" data-parallax="-0.7" aria-hidden="true"></span>
-  <span class="section-light" aria-hidden="true"></span>
-  <div class="container projects">
-    <header class="projects__head" data-parallax="0.12">
-      <span class="projects__eyebrow" data-reveal="up">04 — Projects</span>
-      <h2 class="projects__title" data-reveal="up" data-reveal-delay="0.05">
-        Things I've <span class="accent">shipped</span>
-      </h2>
-    </header>
+<section class="projects" id="projects">
+  <div class="projects__pin">
+    <div class="projects__head wrap">
+      <div>
+        <div class="sec-label" data-reveal>
+          <span class="sec-label__idx">(04)</span>
+          <span class="sec-label__rule" data-line></span>
+          <span data-scramble>Selected work</span>
+        </div>
+        <h2 class="sec-title display projects__title" data-split>
+          Things I've <span class="serif">shipped</span>
+        </h2>
+      </div>
+      <div class="projects__counter mono" aria-hidden="true">
+        <span class="projects__count" id="proj-count">01</span>
+        <span class="projects__bar"><span class="projects__bar-fill" id="proj-bar"></span></span>
+        <span>{String(projects.length).padStart(2, '0')}</span>
+      </div>
+    </div>
 
-    <div class="projects__grid" data-parallax="-0.08">
-      {
-        projects.map((project, i) => (
-          <article
-            class="projects__card card tilt"
-            data-reveal={i % 2 === 0 ? 'left' : 'right'}
-            data-reveal-delay={(i % 2) * 0.08}
-            data-title={project.title}
-            data-desc={project.description}
-            data-tags={JSON.stringify(project.tags)}
-            data-highlights={JSON.stringify(project.highlights ?? [])}
-            data-link={project.link ?? ''}
-            data-link-label={project.linkLabel ?? ''}
-            data-index={`0${i + 1}`}
-            data-cursor="View ↗"
-            role="button"
-            tabindex="0"
-            aria-label={`View details for ${project.title}`}
-          >
-            <div class="projects__card-top">
-              <span class="projects__index">0{i + 1}</span>
-              {project.link && (
-                <a
-                  class="projects__link"
-                  href={project.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`${project.linkLabel ?? 'Open'} — ${project.title}`}
-                >
-                  <span class="projects__link-ic" aria-hidden="true"></span>
-                </a>
-              )}
-            </div>
-            <h3 class="projects__name">{project.title}</h3>
-            <p class="projects__desc">{project.description}</p>
-            <ul class="projects__tags">
-              {project.tags.map((t) => (
-                <li class="tag">{t}</li>
-              ))}
-            </ul>
-            {project.link && (
-              <a
-                class="projects__cta"
-                href={project.link}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {project.linkLabel ?? 'View project'} <span aria-hidden="true">→</span>
-              </a>
-            )}
-          </article>
-        ))
-      }
+    <div class="projects__viewport">
+      <div class="projects__track" id="proj-track">
+        {
+          projects.map((project, i) => (
+            <article
+              class={`pcard ${i % 2 === 0 ? 'pcard--accent' : 'pcard--dark'}`}
+              data-title={project.title}
+              data-desc={project.description}
+              data-tags={JSON.stringify(project.tags)}
+              data-highlights={JSON.stringify(project.highlights ?? [])}
+              data-link={project.link ?? ''}
+              data-link-label={project.linkLabel ?? ''}
+              data-index={`0${i + 1}`}
+              data-cursor="Details +"
+              role="button"
+              tabindex="0"
+              aria-label={`View details for ${project.title}`}
+            >
+              <div class="pcard__cover" aria-hidden="true">
+                <div class="pcard__cover-inner" data-hparallax>
+                  <span class="pcard__initials display">{project.cover ?? initials(project.title)}</span>
+                </div>
+                <span class="pcard__grid" />
+                <span class="pcard__num display">0{i + 1}</span>
+                <ul class="pcard__cover-tags mono">
+                  {project.tags.slice(0, 3).map((t) => (
+                    <li>{t}</li>
+                  ))}
+                </ul>
+              </div>
+              <div class="pcard__body">
+                <span class="mono pcard__kicker">
+                  Project 0{i + 1} / {String(projects.length).padStart(2, '0')}
+                </span>
+                <h3 class="pcard__title display">{project.title}</h3>
+                <p class="pcard__desc">{project.description}</p>
+                <ul class="pcard__tags">
+                  {project.tags.map((t) => (
+                    <li class="tag">{t}</li>
+                  ))}
+                </ul>
+                <div class="pcard__actions">
+                  {project.link && (
+                    <a
+                      class="pill pill--solid"
+                      href={project.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      data-cursor="Visit ↗"
+                    >
+                      <span class="roll">
+                        <span data-text={project.linkLabel ?? 'Visit'}>
+                          {project.linkLabel ?? 'Visit'}
+                        </span>
+                      </span>
+                      <span class="pill__arrow" aria-hidden="true">↗</span>
+                    </a>
+                  )}
+                  <span class="pcard__more mono">Click for details +</span>
+                </div>
+              </div>
+            </article>
+          ))
+        }
+        <a
+          class="pcard pcard--end"
+          href={github}
+          target="_blank"
+          rel="noopener noreferrer"
+          data-cursor="GitHub ↗"
+        >
+          <span class="mono">More experiments</span>
+          <span class="pcard__end-title display">
+            See it all <span class="serif">on</span> GitHub
+          </span>
+          <span class="pcard__end-arrow" aria-hidden="true">↗</span>
+        </a>
+      </div>
     </div>
   </div>
 
@@ -74,146 +115,277 @@ import { projects } from '../data/content';
     <div class="pmodal__backdrop" data-close></div>
     <article class="pmodal__panel" role="dialog" aria-modal="true" aria-labelledby="pmodal-title">
       <button class="pmodal__close" data-close aria-label="Close">&times;</button>
-      <span class="pmodal__index" id="pmodal-index"></span>
-      <h3 class="pmodal__title" id="pmodal-title"></h3>
+      <span class="pmodal__index mono" id="pmodal-index"></span>
+      <h3 class="pmodal__title display" id="pmodal-title"></h3>
       <p class="pmodal__desc" id="pmodal-desc"></p>
       <ul class="pmodal__highlights" id="pmodal-highlights"></ul>
       <ul class="pmodal__tags" id="pmodal-tags"></ul>
-      <a
-        class="pmodal__cta"
-        id="pmodal-cta"
-        target="_blank"
-        rel="noopener noreferrer"
-      ></a>
+      <a class="pill pill--solid pmodal__cta" id="pmodal-cta" target="_blank" rel="noopener noreferrer"></a>
     </article>
   </div>
 </section>
 
 <style>
   .projects {
-    width: 100%;
+    position: relative;
+    background: var(--veil);
   }
 
-  .projects__orb {
-    width: 420px;
-    height: 420px;
-    top: 10%;
-    right: -8%;
+  .projects__pin {
+    min-height: 100vh;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: clamp(1.5rem, 4vh, 3rem);
+    padding: calc(var(--header-h) + 1rem) 0 clamp(1.5rem, 4vh, 3rem);
+    overflow: hidden;
   }
 
   .projects__head {
-    margin-bottom: clamp(2rem, 4vw, 3.5rem);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 2rem;
+    padding: 0 var(--gutter);
   }
 
-  .projects__eyebrow {
-    display: inline-block;
-    font-family: var(--font-heading);
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.2em;
-    color: var(--accent);
-    margin-bottom: 0.75rem;
+  .projects__head .sec-label {
+    margin-bottom: 1.2rem;
   }
 
   .projects__title {
-    color: var(--text-primary);
+    font-size: clamp(3rem, 8vw, 8rem);
   }
 
-  .projects__grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
-    gap: 1.5rem;
-  }
-
-  .projects__card {
+  .projects__counter {
     display: flex;
-    flex-direction: column;
-    transform-style: preserve-3d;
+    align-items: center;
+    gap: 0.8rem;
+    color: var(--ink-2);
+    padding-bottom: 0.6rem;
+  }
+
+  .projects__count {
+    color: var(--accent-text);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .projects__bar {
+    position: relative;
+    width: clamp(80px, 12vw, 180px);
+    height: 1px;
+    background: var(--line-strong);
+    overflow: hidden;
+  }
+
+  .projects__bar-fill {
+    position: absolute;
+    inset: 0;
+    background: var(--accent-text);
+    transform: scaleX(0);
+    transform-origin: left center;
+  }
+
+  .projects__track {
+    display: flex;
+    gap: clamp(1rem, 2vw, 2rem);
+    width: max-content;
+    padding: 0 var(--gutter);
     will-change: transform;
   }
 
-  .projects__card-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
+  /* ----- Card ----- */
+  .pcard {
+    position: relative;
+    flex: 0 0 auto;
+    width: min(82vw, 1080px);
+    height: clamp(380px, 58vh, 620px);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    cursor: pointer;
   }
 
-  .projects__index {
-    font-family: var(--font-heading);
-    font-size: 0.8rem;
-    color: var(--text-dim);
-    letter-spacing: 0.1em;
+  .pcard__cover {
+    position: relative;
+    overflow: hidden;
+    background: var(--accent);
+    color: var(--on-accent);
   }
 
-  .projects__link {
+  .pcard--dark .pcard__cover {
+    background: var(--ink);
+    color: var(--bg);
+  }
+
+  .pcard__cover-inner {
+    position: absolute;
+    inset: 0 -20%;
     display: grid;
     place-items: center;
-    width: 34px;
-    height: 34px;
-    border-radius: 8px;
-    border: 1px solid var(--border-accent);
-    transition: border-color 0.3s ease, background 0.3s ease, transform 0.3s ease;
+    will-change: transform;
   }
 
-  .projects__link-ic {
-    width: 15px;
-    height: 15px;
-    background-color: var(--accent);
-    -webkit-mask: url('/svg/link.svg') center / contain no-repeat;
-    mask: url('/svg/link.svg') center / contain no-repeat;
-    transition: background-color 0.3s ease;
+  .pcard__initials {
+    font-size: clamp(9rem, 22vw, 22rem);
+    font-weight: 900;
+    font-stretch: 62%;
+    line-height: 0.8;
+    letter-spacing: -0.04em;
+    transition: transform 0.9s var(--ease-out);
   }
 
-  .projects__link:hover {
-    border-color: var(--accent);
-    background: var(--accent);
-    transform: translateY(-2px);
+  .pcard:hover .pcard__initials {
+    transform: scale(1.06) rotate(-2deg);
   }
 
-  .projects__link:hover .projects__link-ic {
-    background-color: var(--bg-primary);
+  .pcard__grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(currentColor 1px, transparent 1px),
+      linear-gradient(90deg, currentColor 1px, transparent 1px);
+    background-size: 44px 44px;
+    opacity: 0.09;
   }
 
-  .projects__name {
-    font-size: clamp(1.15rem, 2vw, 1.5rem);
-    color: var(--text-primary);
-    margin-bottom: 0.6rem;
+  .pcard__num {
+    position: absolute;
+    top: 1.1rem;
+    left: 1.3rem;
+    font-size: 1.6rem;
   }
 
-  .projects__desc {
-    font-size: 0.88rem;
-    color: var(--text-muted);
-    line-height: 1.6;
-    margin-bottom: 1.1rem;
+  .pcard__cover-tags {
+    position: absolute;
+    left: 1.3rem;
+    right: 1.3rem;
+    bottom: 1.1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem 1rem;
+    font-size: 0.64rem;
+  }
+
+  .pcard__body {
+    display: flex;
+    flex-direction: column;
+    padding: clamp(1.5rem, 3vw, 2.75rem);
+    gap: 1.1rem;
+  }
+
+  .pcard__kicker {
+    color: var(--ink-3);
+  }
+
+  .pcard__title {
+    font-size: clamp(2.4rem, 4.6vw, 4.6rem);
+    line-height: 0.88;
+  }
+
+  .pcard__desc {
+    font-size: clamp(0.95rem, 1.1vw, 1.08rem);
+    line-height: 1.55;
     flex-grow: 1;
   }
 
-  .projects__tags {
+  .pcard__tags {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.45rem;
-    margin-bottom: 1.1rem;
-  }
-
-  .projects__cta {
-    display: inline-flex;
-    align-items: center;
     gap: 0.4rem;
-    font-family: var(--font-heading);
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--accent);
-    transition: gap 0.3s ease;
   }
 
-  .projects__cta:hover {
-    gap: 0.75rem;
+  .pcard__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.5rem;
   }
 
-  .projects__card {
-    cursor: pointer;
+  .pcard__more {
+    color: var(--ink-3);
+    transition: color 0.3s ease;
+  }
+
+  .pcard:hover .pcard__more {
+    color: var(--accent-text);
+  }
+
+  /* ----- End card ----- */
+  .pcard--end {
+    width: min(60vw, 620px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: clamp(1.5rem, 3vw, 2.75rem);
+    background: transparent;
+    border: 1px dashed var(--line-strong);
+    color: var(--ink);
+    transition: background 0.5s var(--ease-out), color 0.5s var(--ease-out);
+  }
+
+  .pcard--end .mono {
+    color: inherit;
+    opacity: 0.6;
+  }
+
+  .pcard--end:hover {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+
+  .pcard__end-title {
+    font-size: clamp(3rem, 6vw, 6rem);
+  }
+
+  .pcard__end-title .serif {
+    color: var(--accent-text);
+  }
+
+  .pcard--end:hover .pcard__end-title .serif {
+    color: inherit;
+  }
+
+  .pcard__end-arrow {
+    align-self: flex-end;
+    font-size: clamp(4rem, 8vw, 8rem);
+    line-height: 1;
+    transition: transform 0.6s var(--ease-out);
+  }
+
+  .pcard--end:hover .pcard__end-arrow {
+    transform: rotate(45deg);
+  }
+
+  /* Mobile / tablet / reduced motion: plain vertical stack, no pin. */
+  @media (max-width: 900px), (prefers-reduced-motion: reduce) {
+    .projects__pin {
+      min-height: 0;
+      padding: clamp(4rem, 10vh, 6rem) 0;
+    }
+    .projects__counter {
+      display: none;
+    }
+    .projects__track {
+      flex-direction: column;
+      width: auto;
+    }
+    .pcard,
+    .pcard--end {
+      width: 100%;
+      height: auto;
+      grid-template-columns: 1fr;
+    }
+    .pcard__cover {
+      aspect-ratio: 16 / 9;
+    }
+    .pcard--end {
+      min-height: 280px;
+    }
   }
 
   /* ----- Project detail modal ----- */
@@ -234,22 +406,22 @@ import { projects } from '../data/content';
   .pmodal__backdrop {
     position: absolute;
     inset: 0;
-    background: rgba(5, 6, 8, 0.72);
-    backdrop-filter: blur(4px);
+    background: rgba(5, 10, 20, 0.74);
+    backdrop-filter: blur(6px);
     opacity: 0;
     cursor: pointer;
   }
 
   .pmodal__panel {
     position: relative;
-    width: min(640px, 92vw);
+    width: min(680px, 92vw);
     max-height: 86vh;
     overflow-y: auto;
-    background: var(--bg-card);
-    border: 1px solid var(--border-accent);
-    border-radius: 14px;
-    padding: clamp(1.75rem, 4vw, 2.75rem);
-    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), 0 0 50px var(--accent-dim);
+    background: var(--surface);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    padding: clamp(1.75rem, 4vw, 3rem);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
     will-change: transform, opacity;
   }
 
@@ -257,89 +429,63 @@ import { projects } from '../data/content';
     position: absolute;
     top: 1rem;
     right: 1.1rem;
-    width: 34px;
-    height: 34px;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    color: var(--text-muted);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--line-strong);
+    color: var(--ink);
     font-size: 1.4rem;
     line-height: 1;
-    transition: color 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+    transition: background 0.3s ease, color 0.3s ease, transform 0.4s var(--ease-out);
   }
 
   .pmodal__close:hover {
-    color: var(--accent);
-    border-color: var(--border-accent);
-    background: var(--accent-dim);
+    background: var(--accent);
+    color: var(--on-accent);
+    transform: rotate(90deg);
   }
 
   .pmodal__index {
-    font-family: var(--font-heading);
-    font-size: 0.8rem;
-    letter-spacing: 0.1em;
-    color: var(--text-dim);
+    color: var(--accent-text);
   }
 
   .pmodal__title {
-    font-size: clamp(1.4rem, 3vw, 2rem);
-    color: var(--text-primary);
-    margin: 0.4rem 0 0.9rem;
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    margin: 0.6rem 0 1rem;
   }
 
   .pmodal__desc {
-    font-size: 0.95rem;
+    font-size: 1rem;
     line-height: 1.65;
-    color: var(--text-muted);
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
   }
 
   .pmodal__highlights {
     display: flex;
     flex-direction: column;
-    gap: 0.55rem;
     margin-bottom: 1.5rem;
+    border-top: 1px solid var(--line);
   }
 
-  .pmodal__highlights li {
+  .pmodal__highlights :global(li) {
+    padding: 0.8rem 0 0.8rem 1.6rem;
     position: relative;
-    padding-left: 1.25rem;
-    font-size: 0.9rem;
-    color: var(--text-primary);
-    line-height: 1.5;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink);
   }
 
-  .pmodal__highlights li::before {
-    content: '▹';
+  .pmodal__highlights :global(li)::before {
+    content: '✦';
     position: absolute;
     left: 0;
-    color: var(--accent);
+    color: var(--accent-text);
   }
 
   .pmodal__tags {
     display: flex;
     flex-wrap: wrap;
     gap: 0.45rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .pmodal__cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    font-family: var(--font-heading);
-    font-size: 0.78rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--bg-primary);
-    background: var(--accent);
-    padding: 0.6rem 1.1rem;
-    border-radius: 8px;
-    transition: gap 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  .pmodal__cta:hover {
-    gap: 0.75rem;
-    box-shadow: 0 0 20px var(--accent-glow);
+    margin-bottom: 1.75rem;
   }
 
   .pmodal__cta[hidden] {
@@ -354,9 +500,7 @@ import { projects } from '../data/content';
   const modal = document.getElementById('pmodal');
   const panel = modal?.querySelector<HTMLElement>('.pmodal__panel');
   const backdrop = modal?.querySelector<HTMLElement>('.pmodal__backdrop');
-  const cards = Array.from(
-    document.querySelectorAll<HTMLElement>('.projects__card')
-  );
+  const cards = Array.from(document.querySelectorAll<HTMLElement>('.pcard[data-title]'));
 
   if (modal && panel && backdrop && cards.length) {
     const elIndex = document.getElementById('pmodal-index')!;
@@ -390,7 +534,7 @@ import { projects } from '../data/content';
     function open(card: HTMLElement) {
       activeCard = card;
       const d = card.dataset;
-      elIndex.textContent = d.index || '';
+      elIndex.textContent = `Project ${d.index || ''}`;
       elTitle.textContent = d.title || '';
       elDesc.textContent = d.desc || '';
       fillList(elHighlights, parse(d.highlights), '');
@@ -412,19 +556,25 @@ import { projects } from '../data/content';
       const pr = panel!.getBoundingClientRect();
       const dx = cr.left + cr.width / 2 - (pr.left + pr.width / 2);
       const dy = cr.top + cr.height / 2 - (pr.top + pr.height / 2);
-      const scale = Math.max(0.2, cr.width / pr.width);
 
       gsap.killTweensOf([panel, backdrop]);
-      gsap.set(panel, { x: dx, y: dy, scale, opacity: 0 });
-      gsap.to(backdrop, { opacity: 1, duration: 0.35, ease: 'power2.out' });
+      gsap.set(panel, { x: dx, y: dy, scale: 0.6, opacity: 0, rotate: -3 });
+      gsap.to(backdrop, { opacity: 1, duration: 0.4, ease: 'power2.out' });
       gsap.to(panel, {
         x: 0,
         y: 0,
         scale: 1,
+        rotate: 0,
         opacity: 1,
-        duration: 0.55,
-        ease: 'power3.out',
+        duration: 0.7,
+        ease: 'expo.out',
       });
+      gsap.fromTo(
+        panel!.children,
+        { y: 24, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.6, stagger: 0.04, ease: 'power3.out', delay: 0.12 }
+      );
+      panel!.querySelector<HTMLElement>('.pmodal__close')?.focus({ preventScroll: true });
     }
 
     function close() {
@@ -434,21 +584,21 @@ import { projects } from '../data/content';
       const pr = panel!.getBoundingClientRect();
       const dx = cr ? cr.left + cr.width / 2 - (pr.left + pr.width / 2) : 0;
       const dy = cr ? cr.top + cr.height / 2 - (pr.top + pr.height / 2) : 40;
-      const scale = cr ? Math.max(0.2, cr.width / pr.width) : 0.6;
 
       gsap.killTweensOf([panel, backdrop]);
       gsap.to(backdrop, { opacity: 0, duration: 0.4, ease: 'power2.in' });
       gsap.to(panel, {
         x: dx,
         y: dy,
-        scale,
+        scale: 0.6,
         opacity: 0,
-        duration: 0.4,
+        duration: 0.45,
         ease: 'power3.in',
         onComplete: () => {
           modal!.classList.remove('is-open');
           modal!.setAttribute('aria-hidden', 'true');
           lenisInstance.start();
+          activeCard?.focus({ preventScroll: true });
         },
       });
     }
@@ -460,6 +610,7 @@ import { projects } from '../data/content';
         open(card);
       });
       card.addEventListener('keydown', (e) => {
+        if (e.target !== card) return;
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           open(card);
@@ -467,9 +618,7 @@ import { projects } from '../data/content';
       });
     });
 
-    modal.querySelectorAll('[data-close]').forEach((el) =>
-      el.addEventListener('click', close)
-    );
+    modal.querySelectorAll('[data-close]').forEach((el) => el.addEventListener('click', close));
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') close();
     });

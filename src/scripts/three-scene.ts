@@ -9,7 +9,7 @@ if (!canvas) throw new Error('Background canvas not found');
 const isSmall = window.innerWidth < 768;
 
 const scene = new THREE.Scene();
-scene.fog = new THREE.FogExp2(0x0a0a0a, 0.028);
+scene.fog = new THREE.FogExp2(0x0b1426, 0.028);
 
 const camera = new THREE.PerspectiveCamera(
   60,
@@ -27,7 +27,7 @@ const renderer = new THREE.WebGLRenderer({
 });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, isSmall ? 1.5 : 2));
-renderer.setClearColor(0x0a0a0a, 1);
+renderer.setClearColor(0x0b1426, 1);
 
 // Bloom post-processing makes the cyan wireframes/particles glow. Skipped on
 // small screens to stay light (plain render there).
@@ -51,9 +51,10 @@ let useBloom = !isSmall;
 // Tracks the active theme so effects (e.g. the click ripple) can adapt their
 // blending — additive glow reads on dark, normal blending reads on light.
 let isLightTheme = false;
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-const accentColor = new THREE.Color(0x00e5ff);
-const dimColor = new THREE.Color(0x33ecff);
+const accentColor = new THREE.Color(0xe8112d);
+const dimColor = new THREE.Color(0xf0586b);
 
 // Whole scene lives in `field` so it can drift/rotate as a unit.
 const field = new THREE.Group();
@@ -67,6 +68,8 @@ interface Planet {
   floatSpeed: number;
   floatAmp: number;
   baseY: number;
+  homeX: number;
+  homeZ: number;
   pulse: number;
 }
 
@@ -113,6 +116,8 @@ function createPlanet(
     floatSpeed: 0.3 + Math.random() * 0.4,
     floatAmp: 0.4 + Math.random() * 0.6,
     baseY: position.y,
+    homeX: position.x,
+    homeZ: position.z,
     pulse: 0,
   });
 }
@@ -162,7 +167,6 @@ function createSaturn(position: THREE.Vector3): void {
     );
     rings.add(line);
   });
-  // Tilt the flat rings for the classic Saturn ellipse.
   rings.rotation.x = 1.15;
   rings.rotation.z = 0.32;
   group.add(rings);
@@ -176,6 +180,8 @@ function createSaturn(position: THREE.Vector3): void {
     floatSpeed: 0.25,
     floatAmp: 0.45,
     baseY: position.y,
+    homeX: position.x,
+    homeZ: position.z,
     pulse: 0,
   });
 }
@@ -184,6 +190,73 @@ createPlanet(2.4, 1, new THREE.Vector3(9, 1, -2), 0.4);
 createPlanet(1.3, 1, new THREE.Vector3(-9, 4, -8), 0.26);
 createPlanet(0.9, 0, new THREE.Vector3(6, -6, -12), 0.24);
 createSaturn(new THREE.Vector3(-13, -3, -4));
+
+// ----- Black hole finale (fades in near the Contact section) ----------------
+
+interface BlackHole {
+  group: THREE.Group;
+  disk: THREE.Group;
+  fade: { mat: THREE.Material; base: number }[];
+}
+let blackHole: BlackHole | null = null;
+
+function createBlackHole(): void {
+  const group = new THREE.Group();
+  const fade: { mat: THREE.Material; base: number }[] = [];
+
+  // Event horizon — a near-black sphere (kept dark; excluded from theme tint).
+  const ehMat = new THREE.MeshBasicMaterial({
+    color: 0x05070a,
+    transparent: true,
+    opacity: 0,
+  });
+  ehMat.userData.noTheme = true;
+  group.add(new THREE.Mesh(new THREE.SphereGeometry(2, 32, 32), ehMat));
+  fade.push({ mat: ehMat, base: 1 });
+
+  // Photon ring hugging the horizon.
+  const photonMat = new THREE.MeshBasicMaterial({
+    color: accentColor,
+    transparent: true,
+    opacity: 0,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+  });
+  photonMat.userData.noTheme = true;
+  group.add(
+    new THREE.Mesh(new THREE.TorusGeometry(2.15, 0.04, 16, 120), photonMat)
+  );
+  fade.push({ mat: photonMat, base: 0.95 });
+
+  // Accretion disk — concentric glowing rings, tilted.
+  const disk = new THREE.Group();
+  [2.5, 3.0, 3.6, 4.3, 5.1].forEach((r, i) => {
+    const pts: THREE.Vector3[] = [];
+    const seg = 120;
+    for (let j = 0; j <= seg; j++) {
+      const a = (j / seg) * Math.PI * 2;
+      pts.push(new THREE.Vector3(Math.cos(a) * r, 0, Math.sin(a) * r));
+    }
+    const m = new THREE.LineBasicMaterial({
+      color: accentColor,
+      transparent: true,
+      opacity: 0,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+    m.userData.noTheme = true;
+    disk.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), m));
+    fade.push({ mat: m, base: 0.5 - i * 0.06 });
+  });
+  disk.rotation.x = 1.35;
+  disk.rotation.z = 0.2;
+  group.add(disk);
+
+  group.scale.setScalar(0.001);
+  scene.add(group);
+  blackHole = { group, disk, fade };
+}
+createBlackHole();
 
 // ----- Mini asteroids (ambient drifting movement) ---------------------------
 
@@ -326,7 +399,7 @@ const camStops: CamStop[] = [
   { pos: new THREE.Vector3(9, -3, 2), look: new THREE.Vector3(6, -6, -12) },
   { pos: new THREE.Vector3(-2, 7, 12), look: new THREE.Vector3(0, 1, -4) },
   { pos: new THREE.Vector3(-7, -3, 9), look: new THREE.Vector3(-3, -1, -5) },
-  { pos: new THREE.Vector3(0, 0, 22), look: new THREE.Vector3(0, 0, 0) },
+  { pos: new THREE.Vector3(0, 1.5, 13), look: new THREE.Vector3(0, 0, 0) },
 ];
 
 let anchors: number[] = [];
@@ -372,9 +445,11 @@ function updateCameraTargets(): void {
 // ----- Mouse parallax -------------------------------------------------------
 
 const mouse = { x: 0, y: 0 };
+let pointerActive = false;
 window.addEventListener('mousemove', (e) => {
   mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
   mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+  pointerActive = true;
 });
 
 // ----- Hero interaction: click sends a shockwave ripple into the scene -------
@@ -442,11 +517,87 @@ heroEl?.addEventListener('click', (e) => {
   }
 });
 
+// Reusable vectors for the per-frame cursor-gravity raycast.
+const mouseVec = new THREE.Vector2();
+const cursorWorld = new THREE.Vector3();
+const cursorLocal = new THREE.Vector3();
+const gravDir = new THREE.Vector3();
+
+// ----- Comets / shooting stars ----------------------------------------------
+
+interface Comet {
+  line: THREE.Line;
+  geo: THREE.BufferGeometry;
+  mat: THREE.LineBasicMaterial;
+  vel: THREE.Vector3;
+  dir: THREE.Vector3;
+  trail: number;
+  head: THREE.Vector3;
+  life: number;
+  maxLife: number;
+}
+const comets: Comet[] = [];
+let cometTimer = 0;
+let nextComet = 2.5;
+
+function spawnComet(): void {
+  const dir = new THREE.Vector3(
+    (Math.random() - 0.5) * 1.3,
+    -1,
+    (Math.random() - 0.5) * 0.6
+  ).normalize();
+  const head = new THREE.Vector3(
+    (Math.random() - 0.5) * 44,
+    14 + Math.random() * 10,
+    (Math.random() - 0.5) * 24
+  );
+  const trail = 3 + Math.random() * 2.5;
+  const tail = head.clone().addScaledVector(dir, -trail);
+  const geo = new THREE.BufferGeometry().setFromPoints([tail, head]);
+  const mat = new THREE.LineBasicMaterial({
+    color: accentColor,
+    transparent: true,
+    opacity: 0,
+    blending: isLightTheme ? THREE.NormalBlending : THREE.AdditiveBlending,
+    depthWrite: false,
+  });
+  const line = new THREE.Line(geo, mat);
+  scene.add(line);
+  comets.push({
+    line,
+    geo,
+    mat,
+    vel: dir.clone().multiplyScalar(22 + Math.random() * 16),
+    dir,
+    trail,
+    head,
+    life: 0,
+    maxLife: 1.8,
+  });
+}
+
+// ----- Warp-in intro: camera flies out of hyperspace on reveal --------------
+
+let introActive = false;
+let introT = 0;
+const INTRO_DUR = 1.7;
+const introStartPos = new THREE.Vector3(0, 0, 80);
+
+window.addEventListener('app:reveal', () => {
+  if (reduceMotion) return;
+  introActive = true;
+  introT = 0;
+  camera.position.copy(introStartPos);
+});
+
 // ----- Animation loop -------------------------------------------------------
 
 const clock = new THREE.Clock();
 let prevTime = 0;
 let ambientY = 0;
+let lastScrollY = 0;
+let scrollVelSmooth = 0;
+let bhTime = 0;
 let visible = !document.hidden;
 
 document.addEventListener('visibilitychange', () => {
@@ -459,6 +610,7 @@ function animate() {
   const elapsed = clock.getElapsedTime();
   if (!visible) {
     prevTime = elapsed;
+    lastScrollY = window.scrollY;
     return;
   }
   const dt = Math.min(elapsed - prevTime, 0.05);
@@ -472,22 +624,42 @@ function animate() {
     computeAnchors();
   }
 
-  // Subtly shift the whole scene's hue as you scroll down — each section feels
-  // like a slightly different "world". Cheap (CSS filter on the canvas).
+  // Page scroll progress (drives the black-hole finale below).
   const maxScroll = Math.max(1, dh - window.innerHeight);
   const pageP = Math.min(Math.max(window.scrollY / maxScroll, 0), 1);
-  (canvas as HTMLCanvasElement).style.filter = `hue-rotate(${(pageP * 55).toFixed(1)}deg)`;
+
+  // Scroll-velocity "wake" — the field streaks faster the harder you scroll and
+  // eases back to rest when you stop, so navigation feels physical.
+  const sv = Math.abs(window.scrollY - lastScrollY);
+  lastScrollY = window.scrollY;
+  scrollVelSmooth += (sv - scrollVelSmooth) * 0.15;
+  const scrollWarp = 1 + Math.min(scrollVelSmooth * 0.18, 7);
 
   updateCameraTargets();
 
-  // Ease the camera toward the scroll target, plus mouse parallax + idle bob.
-  const idle = Math.sin(elapsed * 0.25) * 0.25;
-  camera.position.x += (desiredPos.x + mouse.x * 1.4 - camera.position.x) * 0.045;
-  camera.position.y +=
-    (desiredPos.y + mouse.y * 1.0 + idle - camera.position.y) * 0.045;
-  camera.position.z += (desiredPos.z - camera.position.z) * 0.045;
-  currentLook.lerp(desiredLook, 0.045);
-  camera.lookAt(currentLook);
+  // Warp factor streaks the asteroids/particles during the intro fly-in.
+  let warpFactor = 1;
+
+  if (introActive) {
+    // Fly out of hyperspace: dolly from deep space into the hero framing.
+    introT += dt / INTRO_DUR;
+    const e = 1 - Math.pow(1 - Math.min(introT, 1), 3); // easeOutCubic
+    camera.position.lerpVectors(introStartPos, desiredPos, e);
+    currentLook.lerp(desiredLook, 0.12);
+    camera.lookAt(currentLook);
+    warpFactor = 1 + (1 - e) * 12;
+    if (introT >= 1) introActive = false;
+  } else {
+    // Ease the camera toward the scroll target, plus mouse parallax + idle bob.
+    const idle = Math.sin(elapsed * 0.25) * 0.25;
+    camera.position.x +=
+      (desiredPos.x + mouse.x * 1.4 - camera.position.x) * 0.045;
+    camera.position.y +=
+      (desiredPos.y + mouse.y * 1.0 + idle - camera.position.y) * 0.045;
+    camera.position.z += (desiredPos.z - camera.position.z) * 0.045;
+    currentLook.lerp(desiredLook, 0.045);
+    camera.lookAt(currentLook);
+  }
 
   // Ambient drift + interactive tilt: the whole field leans toward the cursor.
   ambientY += dt * 0.01;
@@ -509,30 +681,138 @@ function animate() {
     }
   }
 
+  // Black hole is a timed sequence once you reach the end: it appears + grows
+  // (bhAppear), then begins pulling planets and asteroids in (consume). Winds
+  // back down if you scroll away from the end.
+  const atEnd = pageP > 0.9;
+  // Cap at just past full consumption (~4.5s) so there's no long "drain" on
+  // reversal, and wind down quickly — the smoothstep keeps it smooth.
+  bhTime = atEnd
+    ? Math.min(bhTime + dt, 4.8)
+    : Math.max(0, bhTime - dt * 5);
+  const bhAppear = smoothstep(bhTime / 1.3);
+  const consume = smoothstep((bhTime - 1.5) / 3);
+
   for (const planet of planets) {
-    planet.group.rotation.x += planet.spin.x * dt;
-    planet.group.rotation.y += planet.spin.y * dt;
-    planet.group.position.y =
+    // Once the hole starts consuming, planets are dragged in — tumbling faster,
+    // pulled toward the core, and shrinking away. Reversible.
+    const spinMul = 1 + consume * 6;
+    planet.group.rotation.x += planet.spin.x * dt * spinMul;
+    planet.group.rotation.y += planet.spin.y * dt * spinMul;
+    const homeY =
       planet.baseY + Math.sin(elapsed * planet.floatSpeed) * planet.floatAmp;
-    // Shockwave pulse — quick scale bump that decays back.
-    planet.group.scale.setScalar(1 + planet.pulse * 0.25);
+    const pull = consume * 0.92;
+    planet.group.position.set(
+      planet.homeX * (1 - pull),
+      homeY * (1 - pull),
+      planet.homeZ * (1 - pull)
+    );
+    const s = (1 + planet.pulse * 0.25) * (1 - consume);
+    planet.group.scale.setScalar(Math.max(0, s));
     planet.pulse *= 0.9;
   }
 
+  // Cursor gravity — project the pointer onto the scene plane so asteroids
+  // near it get nudged away (a force field that follows the cursor).
+  let cursorHit = false;
+  if (pointerActive) {
+    mouseVec.set(mouse.x, mouse.y);
+    raycaster.setFromCamera(mouseVec, camera);
+    if (raycaster.ray.intersectPlane(clickPlane, cursorWorld)) {
+      cursorLocal.copy(cursorWorld);
+      field.worldToLocal(cursorLocal);
+      cursorHit = true;
+    }
+  }
+  const GRAV_R = 8;
+
   for (const a of asteroids) {
-    a.group.position.addScaledVector(a.velocity, dt);
+    const p = a.group.position;
+    // Normal drift (eased down as the black hole takes over).
+    p.addScaledVector(
+      a.velocity,
+      dt * warpFactor * scrollWarp * (1 - consume * 0.6)
+    );
     a.group.rotation.x += a.rotationSpeed.x;
     a.group.rotation.y += a.rotationSpeed.y;
     a.group.rotation.z += a.rotationSpeed.z;
-    if (a.group.position.length() > BOUND) resetAsteroidPath(a);
+    if (cursorHit) {
+      const gd = p.distanceTo(cursorLocal);
+      if (gd < GRAV_R && gd > 0.001) {
+        gravDir.copy(p).sub(cursorLocal).normalize();
+        p.addScaledVector(gravDir, (1 - gd / GRAV_R) * 6 * dt);
+      }
+    }
+
+    // Black hole: spiral inward, then get consumed at the core and re-feed.
+    if (consume > 0.02) {
+      const dist = p.length();
+      if (dist < 2.1) {
+        resetAsteroidPath(a);
+      } else {
+        const step = Math.min(dist - 2, consume * (0.8 + 9 / dist) * dt);
+        p.multiplyScalar(1 - step / dist);
+        const swirl = consume * (0.4 + 3 / dist) * dt;
+        const cos = Math.cos(swirl);
+        const sin = Math.sin(swirl);
+        const nx = p.x * cos - p.z * sin;
+        const nz = p.x * sin + p.z * cos;
+        p.x = nx;
+        p.z = nz;
+      }
+    }
+
+    // Shrink toward nothing as it nears the core; full size out in the field.
+    const shrink = Math.min(1, Math.max(0, (p.length() - 2) / 6));
+    a.group.scale.setScalar(1 - consume * (1 - shrink));
+
+    if (p.length() > BOUND) resetAsteroidPath(a);
   }
 
   const posArray = particleGeo.attributes.position.array as Float32Array;
   for (let i = 0; i < particleCount; i++) {
-    posArray[i * 3 + 1] += particleSpeeds[i];
+    posArray[i * 3 + 1] += particleSpeeds[i] * warpFactor * scrollWarp;
     if (posArray[i * 3 + 1] > 25) posArray[i * 3 + 1] = -25;
   }
   particleGeo.attributes.position.needsUpdate = true;
+
+  // Comets — spawn on a timer and streak across, fading in then out.
+  cometTimer += dt;
+  if (!reduceMotion && cometTimer > nextComet) {
+    cometTimer = 0;
+    nextComet = 4 + Math.random() * 6;
+    spawnComet();
+  }
+  for (let i = comets.length - 1; i >= 0; i--) {
+    const c = comets[i];
+    c.life += dt;
+    c.head.addScaledVector(c.vel, dt);
+    const cp = c.geo.attributes.position.array as Float32Array;
+    cp[0] = c.head.x - c.dir.x * c.trail;
+    cp[1] = c.head.y - c.dir.y * c.trail;
+    cp[2] = c.head.z - c.dir.z * c.trail;
+    cp[3] = c.head.x;
+    cp[4] = c.head.y;
+    cp[5] = c.head.z;
+    c.geo.attributes.position.needsUpdate = true;
+    const t = c.life / c.maxLife;
+    c.mat.opacity = 0.9 * Math.min(t / 0.15, 1) * (1 - t);
+    if (c.life >= c.maxLife) {
+      scene.remove(c.line);
+      c.geo.dispose();
+      c.mat.dispose();
+      comets.splice(i, 1);
+    }
+  }
+
+  // Black hole finale — appears + grows at the end, then spins up as it eats.
+  if (blackHole) {
+    // Fully hide the black hole unless the finale is actually playing.
+    blackHole.group.visible = bhAppear > 0.01;
+    for (const f of blackHole.fade) f.mat.opacity = f.base * bhAppear;
+    blackHole.group.scale.setScalar(0.001 + bhAppear * 1.05 + consume * 0.35);
+    blackHole.disk.rotation.z += dt * (0.15 + consume * 0.5);
+  }
 
   if (useBloom && composer) composer.render();
   else renderer.render(scene, camera);
@@ -542,13 +822,15 @@ function animate() {
 function applyTheme(theme: string): void {
   const light = theme === 'light';
   isLightTheme = light;
-  const bgHex = light ? 0xeef1f5 : 0x0a0a0a;
-  // Light scene uses a darker, stronger teal so the wireframes read against the
-  // light background and show through the translucent section veils.
-  accentColor.set(light ? 0x00697d : 0x00e5ff);
-  dimColor.set(light ? 0x1a8499 : 0x33ecff);
-  renderer.setClearColor(bgHex, 1);
-  (scene.fog as THREE.FogExp2).color.setHex(bgHex);
+  // Colours come from the CSS tokens (--scene-bg / --scene-accent) so the 3D
+  // background always matches the site palette. Light mode uses a darker
+  // accent so the wireframes read against the light background.
+  const css = getComputedStyle(document.documentElement);
+  const bg = new THREE.Color(css.getPropertyValue('--scene-bg').trim() || (light ? '#f2f0ea' : '#0b1426'));
+  accentColor.set(css.getPropertyValue('--scene-accent').trim() || (light ? '#1d3461' : '#e8112d'));
+  dimColor.copy(accentColor).lerp(new THREE.Color(light ? 0x000000 : 0xffffff), 0.25);
+  renderer.setClearColor(bg, 1);
+  (scene.fog as THREE.FogExp2).color.copy(bg);
 
   scene.traverse((obj) => {
     const mat = (obj as THREE.Mesh).material as
@@ -559,8 +841,10 @@ function applyTheme(theme: string): void {
     const list = Array.isArray(mat) ? mat : [mat];
     list.forEach((m) => {
       const cm = m as THREE.MeshBasicMaterial & {
-        userData: { baseOpacity?: number };
+        userData: { baseOpacity?: number; noTheme?: boolean };
       };
+      // Black-hole materials manage their own color/opacity (scroll-driven).
+      if (cm.userData.noTheme) return;
       if (cm.color) cm.color.copy(accentColor);
       // There's no bloom in light mode, so boost opacity to keep the scene
       // visible. Remember each material's base so dark mode restores exactly.
@@ -571,7 +855,9 @@ function applyTheme(theme: string): void {
     });
   });
 
-  useBloom = !light && !isSmall;
+  // Bloom disabled for now (removes the bright "glare" over the hero field).
+  // To re-enable: useBloom = !light && !isSmall;
+  useBloom = false;
 }
 
 applyTheme(document.documentElement.dataset.theme || 'dark');

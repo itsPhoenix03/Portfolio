@@ -1,0 +1,419 @@
+---
+// Hidden extras, never advertised in the UI:
+//  - Click the "SM" logo 5× quickly, or enter the Konami code → F1 start
+//    lights with a reaction-time test (click/press any key on lights out).
+//  - Type "max" or "33" → team-radio toast. Type "box" → "Box, box."
+//  - Scroll really hard → "DRS enabled".
+//  - The devtools console has a little message too.
+---
+
+<div class="lights" id="lights" aria-hidden="true">
+  <div class="lights__gantry">
+    {
+      Array.from({ length: 5 }).map(() => (
+        <div class="lights__pod">
+          <span class="lights__bulb" />
+          <span class="lights__bulb" />
+        </div>
+      ))
+    }
+  </div>
+  <p class="lights__msg display" id="lights-msg"></p>
+  <p class="lights__sub mono" id="lights-sub"></p>
+</div>
+
+<div class="radio" id="radio" role="status" aria-live="polite">
+  <span class="radio__cap mono">
+    <span class="radio__wave" id="radio-wave" aria-hidden="true">
+      {Array.from({ length: 11 }).map(() => <i />)}
+    </span>
+    <span class="radio__label" id="radio-cap">Team radio</span>
+  </span>
+  <p class="radio__text" id="radio-text"></p>
+  <span class="radio__by mono" id="radio-by"></span>
+</div>
+
+<div class="drs mono" id="drs" aria-hidden="true">DRS enabled</div>
+
+<style>
+  /* ----- Start lights ----- */
+  .lights {
+    position: fixed;
+    inset: 0;
+    z-index: 9500;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2.5rem;
+    background: rgba(5, 10, 20, 0.93);
+    color: #efeee8;
+    padding: var(--gutter);
+    text-align: center;
+  }
+
+  .lights.is-on {
+    display: flex;
+  }
+
+  .lights__gantry {
+    display: flex;
+    gap: clamp(0.5rem, 2vw, 1.25rem);
+    padding: clamp(0.8rem, 2vw, 1.2rem);
+    background: #050505;
+    border-radius: 14px;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+  }
+
+  .lights__pod {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.4rem, 1.2vw, 0.75rem);
+    padding: clamp(0.5rem, 1.2vw, 0.75rem);
+    background: #151515;
+    border-radius: 10px;
+  }
+
+  .lights__bulb {
+    width: clamp(34px, 8vw, 72px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: #2a0d0d;
+    transition: background 0.08s linear, box-shadow 0.08s linear;
+  }
+
+  .lights__pod.is-lit .lights__bulb {
+    background: #ff2a1f;
+    box-shadow: 0 0 24px #ff2a1f, 0 0 60px rgba(255, 42, 31, 0.5);
+  }
+
+  .lights__msg {
+    font-size: clamp(2.5rem, 9vw, 8rem);
+    min-height: 1em;
+    color: var(--accent-2);
+  }
+
+  .lights__sub {
+    min-height: 1.4em;
+    color: #a6a69d;
+  }
+
+  /* ----- Team radio toast ----- */
+  .radio {
+    position: fixed;
+    right: var(--gutter);
+    bottom: 1.4rem;
+    z-index: 9400;
+    width: min(360px, calc(100vw - 2 * var(--gutter)));
+    padding: 1rem 1.2rem 1.1rem;
+    border-radius: 14px;
+    background: var(--ink);
+    color: var(--bg);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(20px);
+    visibility: hidden;
+  }
+
+  .radio__cap {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    font-size: 0.62rem;
+  }
+
+  .radio__label {
+    opacity: 0.7;
+  }
+
+  /* Voice waveform: bars jitter at uneven speeds while the message "plays",
+     then settle to a flat idle line. */
+  .radio__wave {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    height: 18px;
+  }
+
+  .radio__wave i {
+    width: 2.5px;
+    height: 100%;
+    border-radius: 2px;
+    background: var(--accent);
+    transform: scaleY(0.14);
+    transform-origin: center;
+    transition: transform 0.35s ease;
+  }
+
+  .radio__wave.is-talking i {
+    animation: radioVoice 0.9s ease-in-out infinite;
+  }
+
+  /* Uneven durations/delays so it reads as speech, not a loop. */
+  .radio__wave.is-talking i:nth-child(1) { animation-duration: 0.74s; animation-delay: -0.12s; }
+  .radio__wave.is-talking i:nth-child(2) { animation-duration: 0.58s; animation-delay: -0.41s; }
+  .radio__wave.is-talking i:nth-child(3) { animation-duration: 0.92s; animation-delay: -0.27s; }
+  .radio__wave.is-talking i:nth-child(4) { animation-duration: 0.66s; animation-delay: -0.6s; }
+  .radio__wave.is-talking i:nth-child(5) { animation-duration: 0.81s; animation-delay: -0.08s; }
+  .radio__wave.is-talking i:nth-child(6) { animation-duration: 0.53s; animation-delay: -0.33s; }
+  .radio__wave.is-talking i:nth-child(7) { animation-duration: 0.97s; animation-delay: -0.5s; }
+  .radio__wave.is-talking i:nth-child(8) { animation-duration: 0.62s; animation-delay: -0.19s; }
+  .radio__wave.is-talking i:nth-child(9) { animation-duration: 0.77s; animation-delay: -0.66s; }
+  .radio__wave.is-talking i:nth-child(10) { animation-duration: 0.55s; animation-delay: -0.37s; }
+  .radio__wave.is-talking i:nth-child(11) { animation-duration: 0.86s; animation-delay: -0.23s; }
+
+  @keyframes radioVoice {
+    0%, 100% { transform: scaleY(0.18); }
+    18% { transform: scaleY(0.85); }
+    32% { transform: scaleY(0.35); }
+    50% { transform: scaleY(1); }
+    64% { transform: scaleY(0.25); }
+    80% { transform: scaleY(0.7); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .radio__wave.is-talking i {
+      animation: none;
+      transform: scaleY(0.5);
+    }
+  }
+
+  .radio__text {
+    margin: 0.55rem 0 0.5rem;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 1.35rem;
+    line-height: 1.2;
+    color: inherit;
+  }
+
+  .radio__by {
+    font-size: 0.62rem;
+    opacity: 0.7;
+  }
+
+  /* ----- DRS chip ----- */
+  .drs {
+    position: fixed;
+    top: calc(var(--header-h) + 0.75rem);
+    left: 0;
+    right: 0;
+    width: max-content;
+    margin: 0 auto;
+    z-index: 9400;
+    padding: 0.45rem 0.9rem;
+    border-radius: 6px;
+    background: #22c55e;
+    color: #04150a;
+    font-weight: 500;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+</style>
+
+<script>
+  import gsap from 'gsap';
+  import { lenisInstance } from '@/scripts/smooth-scroll';
+  import { radioQuotes, type RadioQuote } from '@/data/content';
+
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const pick = <T,>(arr: T[]) => arr[Math.floor(Math.random() * arr.length)];
+
+  // ----- Console hello -----
+  const q = pick(radioQuotes);
+  console.log(
+    '%c🏁 Lights out and away we go.',
+    'font: 700 16px system-ui; color:#ffc906; background:#0b1426; padding:6px 10px; border-radius:4px'
+  );
+  console.log(`%c“${q.text}” — ${q.by}`, 'font: italic 13px Georgia, serif; color:#a6a69d');
+  console.log('%cPsst… the logo has a launch procedure.', 'font: 12px monospace; color:#66675f');
+
+  // ----- Team radio toast -----
+  const radio = document.getElementById('radio')!;
+  const radioCap = document.getElementById('radio-cap')!;
+  const radioText = document.getElementById('radio-text')!;
+  const radioBy = document.getElementById('radio-by')!;
+  const radioWave = document.getElementById('radio-wave')!;
+  let radioTimer = 0;
+  let talkTimer = 0;
+
+  function showRadio(quote: RadioQuote, cap = 'Team radio') {
+    radioCap.textContent = cap;
+    radioText.textContent = `“${quote.text}”`;
+    radioBy.textContent = `— ${quote.by}`;
+    window.clearTimeout(radioTimer);
+    window.clearTimeout(talkTimer);
+    gsap.killTweensOf(radio);
+    gsap.to(radio, { autoAlpha: 1, y: 0, duration: 0.6, ease: 'expo.out' });
+
+    // "Play" the message: the waveform talks for roughly as long as it would
+    // take to say the line, then falls flat.
+    radioWave.classList.add('is-talking');
+    const talkMs = Math.min(3600, 700 + quote.text.length * 45);
+    talkTimer = window.setTimeout(() => radioWave.classList.remove('is-talking'), talkMs);
+    radioTimer = window.setTimeout(
+      () => gsap.to(radio, { autoAlpha: 0, y: 20, duration: 0.5, ease: 'power3.in' }),
+      5200
+    );
+  }
+
+  // Other components can trigger the toast, e.g. the contact form on success.
+  window.addEventListener('team-radio', (e) => {
+    const { quote, cap } = (e as CustomEvent<{ quote: RadioQuote; cap?: string }>).detail;
+    showRadio(quote, cap);
+  });
+
+  // ----- Start lights + reaction test -----
+  const lights = document.getElementById('lights')!;
+  const pods = Array.from(lights.querySelectorAll<HTMLElement>('.lights__pod'));
+  const msg = document.getElementById('lights-msg')!;
+  const sub = document.getElementById('lights-sub')!;
+  let running = false;
+  let phase: 'idle' | 'arming' | 'go' | 'done' = 'idle';
+  let goAt = 0;
+  const timers: number[] = [];
+
+  const later = (fn: () => void, ms: number) => timers.push(window.setTimeout(fn, ms));
+
+  // Closes the overlay after `delay`; the team-radio toast (if any) only
+  // appears once the overlay has fully faded, so it never sits behind it.
+  function endLights(delay = 1800, quote?: RadioQuote) {
+    phase = 'done';
+    later(() => {
+      gsap.to(lights, {
+        autoAlpha: 0,
+        duration: 0.5,
+        onComplete: () => {
+          lights.classList.remove('is-on');
+          gsap.set(lights, { clearProps: 'all' });
+          lenisInstance.start();
+          running = false;
+          phase = 'idle';
+          if (quote) window.setTimeout(() => showRadio(quote), 250);
+        },
+      });
+    }, delay);
+  }
+
+  function startLights() {
+    if (running) return;
+    running = true;
+    phase = 'arming';
+    timers.splice(0).forEach(window.clearTimeout);
+    pods.forEach((p) => p.classList.remove('is-lit'));
+    msg.textContent = '';
+    sub.textContent = 'Click or press any key when the lights go out';
+    lights.classList.add('is-on');
+    lenisInstance.stop();
+    gsap.fromTo(lights, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.3 });
+
+    const step = reduce ? 300 : 900;
+    pods.forEach((p, i) => later(() => p.classList.add('is-lit'), 500 + i * step));
+    // Random hold after all five are lit, like the real thing.
+    const hold = 500 + 4 * step + 600 + Math.random() * 2200;
+    later(() => {
+      pods.forEach((p) => p.classList.remove('is-lit'));
+      phase = 'go';
+      goAt = performance.now();
+      msg.textContent = 'Lights out';
+      sub.textContent = '';
+      later(() => {
+        if (phase !== 'go') return;
+        sub.textContent = 'Too slow — still on the grid.';
+        endLights(1800, { text: 'Lights out and away we go.', by: 'Race start' });
+      }, 2500);
+    }, hold);
+  }
+
+  function reactLights() {
+    if (phase === 'arming') {
+      timers.splice(0).forEach(window.clearTimeout);
+      pods.forEach((p) => p.classList.add('is-lit'));
+      msg.textContent = 'Jump start';
+      sub.textContent = '5-second time penalty.';
+      endLights(2200, { text: 'Leave me alone, I know what I’m doing.', by: 'Kimi Räikkönen' });
+    } else if (phase === 'go') {
+      const ms = Math.round(performance.now() - goAt);
+      timers.splice(0).forEach(window.clearTimeout);
+      msg.textContent = `${(ms / 1000).toFixed(3)}s`;
+      sub.textContent =
+        ms < 200 ? 'Pole position reflexes.' : ms < 300 ? 'Clean getaway.' : 'Lost a couple of places into turn one.';
+      endLights(2400, ms < 250 ? radioQuotes[0] : pick(radioQuotes));
+    }
+  }
+
+  lights.addEventListener('pointerdown', reactLights);
+
+  // Logo: five quick clicks.
+  let clicks: number[] = [];
+  document.querySelector('.hdr__logo')?.addEventListener('click', () => {
+    const now = performance.now();
+    clicks = clicks.filter((t) => now - t < 2500);
+    clicks.push(now);
+    if (clicks.length >= 5) {
+      clicks = [];
+      startLights();
+    }
+  });
+
+  // ----- Keyboard: Konami code + typed words -----
+  const konami = ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft', 'arrowright', 'arrowleft', 'arrowright', 'b', 'a'];
+  let keys: string[] = [];
+  let typed = '';
+
+  window.addEventListener('keydown', (e) => {
+    if (running) {
+      if (!e.repeat) reactLights();
+      return;
+    }
+    const t = e.target as HTMLElement;
+    if (t?.closest('input, textarea, [contenteditable]')) return;
+    const k = e.key.toLowerCase();
+
+    keys = [...keys, k].slice(-konami.length);
+    if (keys.join() === konami.join()) {
+      keys = [];
+      startLights();
+      return;
+    }
+
+    if (k.length !== 1) return;
+    typed = (typed + k).slice(-6);
+    if (typed.endsWith('max') || typed.endsWith('33')) {
+      typed = '';
+      showRadio(radioQuotes[0], 'Car 1 · Team radio');
+    } else if (typed.endsWith('box')) {
+      typed = '';
+      showRadio({ text: 'Box, box.', by: 'Pit wall' });
+    }
+  });
+
+  // ----- Footer radio line: a random quote; click to cycle -----
+  const footerRadio = document.getElementById('footer-radio');
+  if (footerRadio) {
+    let i = Math.floor(Math.random() * radioQuotes.length);
+    const render = () => {
+      const fq = radioQuotes[i % radioQuotes.length];
+      footerRadio.textContent = `“${fq.text}” — ${fq.by}`;
+    };
+    render();
+    footerRadio.addEventListener('click', () => {
+      i++;
+      gsap.fromTo(footerRadio, { opacity: 0, y: 6 }, { opacity: 1, y: 0, duration: 0.4, onStart: render });
+    });
+  }
+
+  // ----- DRS: scroll really hard -----
+  const drs = document.getElementById('drs')!;
+  let drsReady = true;
+  lenisInstance.on('scroll', (e: { velocity: number }) => {
+    if (!drsReady || Math.abs(e.velocity) < 60) return;
+    drsReady = false;
+    gsap
+      .timeline({ onComplete: () => window.setTimeout(() => (drsReady = true), 20000) })
+      .to(drs, { opacity: 1, y: 0, duration: 0.3, ease: 'power3.out' })
+      .to(drs, { opacity: 0, y: -10, duration: 0.4, ease: 'power3.in' }, '+=1.3');
+  });
+</script>

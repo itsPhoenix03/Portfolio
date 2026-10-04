@@ -1,260 +1,323 @@
 ---
-import { siteMeta, socialLinks } from '../data/content';
+import { siteMeta, socialLinks, navSections, contactForm } from '../data/content';
 
 const year = new Date().getFullYear();
-const primaryLinks = [
-  { label: 'Email', value: siteMeta.email, href: `mailto:${siteMeta.email}` },
+const links = [
+  ...socialLinks.filter((s) => s.href.startsWith('http')),
+  { label: 'Résumé', href: '/Resume.pdf', icon: '' },
 ];
 ---
 
-<section class="section section--contact" id="contact">
-  <span class="ghost-title" data-parallax="0.45" aria-hidden="true">HELLO</span>
-  <span class="orb orb--accent contact__orb-1" data-parallax="-0.6" aria-hidden="true"></span>
-  <span class="orb orb--dim contact__orb-2" data-parallax="0.7" aria-hidden="true"></span>
-  <span class="section-light" aria-hidden="true"></span>
-  <div class="container contact">
-    <div class="contact__inner">
-      <span class="contact__eyebrow" data-reveal="up">06 — Contact</span>
-      <h2 class="contact__title" data-reveal="up" data-reveal-delay="0.05">
-        Let's build something <span class="accent">dependable</span>.
-      </h2>
-      <p class="contact__sub" data-reveal="up" data-reveal-delay="0.1">
-        Open to new roles and collaborations.
-      </p>
+<section class="section contact" id="contact">
+  <div class="wrap">
+    <div class="sec-label" data-reveal>
+      <span class="sec-label__idx">(06)</span>
+      <span class="sec-label__rule" data-line></span>
+      <span data-scramble>Contact</span>
+    </div>
 
-      <div class="contact__links" data-stagger>
-        {
-          primaryLinks.map((link) => (
-            <a class="contact__big-link stagger-item magnetic" href={link.href}>
-              <span class="contact__big-label">{link.label}</span>
-              <span class="contact__big-value">{link.value}</span>
-            </a>
-          ))
-        }
+    <div class="contact__hero">
+      <h2 class="contact__title display" data-split>
+        Let's build<br />something <span class="serif">dependable</span>
+      </h2>
+
+      <div class="contact__wave">
+        <div class="contact__wave-frame">
+          <img
+            src="/assets/avatar-wave.png"
+            alt="Illustrated Shreyas Misra waving hello"
+            width="640"
+            height="1280"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <a
+        class="contact__orb magnetic"
+        href={`mailto:${siteMeta.email}`}
+        data-cursor="Email ↗"
+        aria-label={`Email ${siteMeta.name}`}
+      >
+        <svg class="contact__orb-ring" viewBox="0 0 200 200" aria-hidden="true">
+          <defs>
+            <path id="orb-circle" d="M100,100 m-80,0 a80,80 0 1,1 160,0 a80,80 0 1,1 -160,0"></path>
+          </defs>
+          <text>
+            <textPath href="#orb-circle">
+              Say hello ✦ Let's talk ✦ Say hello ✦ Let's talk ✦
+            </textPath>
+          </text>
+        </svg>
+        <span class="contact__orb-arrow" aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="contact__grid">
+      <div class="contact__info" data-reveal>
+        <span class="mono contact__cap">Drop a line</span>
+        <a class="contact__mail" href={`mailto:${siteMeta.email}`} data-cursor="Email ↗">
+          {siteMeta.email}
+        </a>
+        <p class="contact__sub">
+          Open to new roles, freelance builds and collaborations — especially anything where
+          reliability and scale actually matter.
+        </p>
       </div>
 
       <form
         class="contact__form"
-        name="contact"
+        action={contactForm.endpoint}
         method="POST"
-        data-netlify="true"
-        netlify-honeypot="bot-field"
-        data-reveal="up"
-        data-reveal-delay="0.12"
+        data-reveal
         id="contact-form"
       >
-        <input type="hidden" name="form-name" value="contact" />
-        <p class="contact__hp">
-          <label>Leave empty: <input name="bot-field" /></label>
-        </p>
-        <div class="contact__field">
-          <input type="text" name="name" id="cf-name" required placeholder=" " />
-          <label for="cf-name">Name</label>
-        </div>
-        <div class="contact__field">
-          <input type="email" name="email" id="cf-email" required placeholder=" " />
-          <label for="cf-email">Email</label>
+        <input type="hidden" name="access_key" value={contactForm.accessKey} />
+        <input type="hidden" name="subject" value="New message from your portfolio" />
+        <input type="hidden" name="from_name" value={`${siteMeta.name} — Portfolio`} />
+        <!-- Honeypot: bots tick it, humans never see it; Web3Forms drops those. -->
+        <input type="checkbox" name="botcheck" class="contact__hp" tabindex="-1" autocomplete="off" />
+        <div class="contact__row">
+          <div class="contact__field">
+            <input type="text" name="name" id="cf-name" required placeholder=" " autocomplete="name" />
+            <label for="cf-name">Your name</label>
+          </div>
+          <div class="contact__field">
+            <input type="email" name="email" id="cf-email" required placeholder=" " autocomplete="email" />
+            <label for="cf-email">Email</label>
+          </div>
         </div>
         <div class="contact__field">
           <textarea name="message" id="cf-message" rows="4" required placeholder=" "></textarea>
-          <label for="cf-message">Message</label>
+          <label for="cf-message">Tell me about your project</label>
         </div>
-        <button type="submit" class="contact__submit magnetic" data-cursor="Send ↗">
-          Send message <span aria-hidden="true">↗</span>
-        </button>
-        <p class="contact__status" id="cf-status" role="status" aria-live="polite"></p>
+        <div class="contact__submit-row">
+          <button type="submit" class="pill pill--solid contact__submit magnetic" data-cursor="Send ↗">
+            <span class="roll"><span data-text="Send message">Send message</span></span>
+            <span class="pill__arrow" aria-hidden="true">↗</span>
+          </button>
+          <p class="contact__status mono" id="cf-status" role="status" aria-live="polite"></p>
+        </div>
       </form>
-
-      <div class="contact__socials" data-reveal="up" data-reveal-delay="0.15">
-        {
-          socialLinks.map((social) => (
-            <a
-              class="contact__social magnetic"
-              href={social.href}
-              target={social.href.startsWith('http') ? '_blank' : undefined}
-              rel="noopener noreferrer"
-              aria-label={social.label}
-            >
-              <span
-                class="contact__social-ic"
-                style={`-webkit-mask-image:url('${social.icon}');mask-image:url('${social.icon}')`}
-                aria-hidden="true"
-              ></span>
-            </a>
-          ))
-        }
-      </div>
     </div>
 
-    <footer class="contact__footer">
-      <span>© {year} {siteMeta.name}</span>
-      <span class="contact__footer-note">Built with Astro · Three.js · GSAP</span>
+    <footer class="footer">
+      <div class="footer__cols">
+        <div class="footer__col">
+          <span class="mono footer__cap">Elsewhere</span>
+          <ul>
+            {
+              links.map((l) => (
+                <li>
+                  <a href={l.href} target="_blank" rel="noopener noreferrer">
+                    <span class="roll">
+                      <span data-text={l.label}>{l.label}</span>
+                    </span>{' '}
+                    ↗
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <div class="footer__col">
+          <span class="mono footer__cap">Index</span>
+          <ul>
+            {
+              navSections.slice(1).map((s) => (
+                <li>
+                  <a href={`#${s.id}`} data-nav={s.id}>
+                    <span class="roll">
+                      <span data-text={s.label}>{s.label}</span>
+                    </span>
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <div class="footer__col">
+          <span class="mono footer__cap">Local time</span>
+          <span class="footer__time display"><span data-clock>--:--:--</span></span>
+          <span class="mono footer__muted">{siteMeta.location} · IST</span>
+        </div>
+        <div class="footer__col footer__col--end">
+          <a href="#hero" data-nav="hero" class="pill magnetic" data-cursor="Top ↑">
+            <span class="roll"><span data-text="Back to top">Back to top</span></span>
+            <span aria-hidden="true">↑</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer__name display" id="footer-name" aria-hidden="true">
+        <span class="footer__name-text">Shreyas Misra</span>
+      </div>
+
+      <div class="footer__base mono">
+        <span>© {year} {siteMeta.name}</span>
+        <button type="button" class="footer__radio" id="footer-radio" aria-label="Next quote"></button>
+        <span>Built with Astro · Three.js · GSAP</span>
+      </div>
     </footer>
   </div>
 </section>
 
 <style>
   .contact {
-    width: 100%;
+    padding-bottom: 0;
+  }
+
+  .contact__hero {
     display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    justify-content: center;
-  }
-
-  .contact__orb-1 {
-    width: 460px;
-    height: 460px;
-    top: 6%;
-    left: -8%;
-  }
-
-  .contact__orb-2 {
-    width: 340px;
-    height: 340px;
-    bottom: 8%;
-    right: -6%;
-  }
-
-  .contact__inner {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-    align-items: center;
-    padding: 3rem 0;
-  }
-
-  .contact__eyebrow {
-    display: inline-block;
-    font-family: var(--font-heading);
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.2em;
-    color: var(--accent);
-    margin-bottom: 1rem;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 2rem;
+    margin: clamp(2.5rem, 7vh, 5rem) 0 clamp(3rem, 9vh, 6rem);
   }
 
   .contact__title {
-    color: var(--text-primary);
+    font-size: clamp(3.4rem, 10.5vw, 11rem);
+  }
+
+  .contact__title .serif {
+    color: var(--accent-text);
+  }
+
+  /* Waving avatar rising from the divider, with the orb as a speech bubble. */
+  .contact__wave {
+    position: relative;
+    flex: 0 0 auto;
+    align-self: flex-end;
+    width: clamp(200px, 22vw, 320px);
+    margin-bottom: calc(-1 * clamp(3rem, 9vh, 6rem));
+  }
+
+  .contact__wave-frame {
+    position: relative;
+    aspect-ratio: 1 / 1.15;
+    overflow: hidden;
+  }
+
+  .contact__wave-frame img {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: auto;
+    transform-origin: 50% 100%;
+    transition: transform 0.6s var(--ease-out);
+  }
+
+  .contact__wave:hover .contact__wave-frame img {
+    transform: rotate(-3deg) translateY(-2%);
+  }
+
+  .contact__wave .contact__orb {
+    position: absolute;
+    top: -8%;
+    left: -42%;
+  }
+
+  /* Rotating "Say hello" badge. */
+  .contact__orb {
+    position: relative;
+    flex: 0 0 auto;
+    width: clamp(140px, 15vw, 220px);
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--on-accent);
+    transition: background 0.5s var(--ease-out), color 0.5s var(--ease-out);
+  }
+
+  .contact__orb:hover {
+    background: var(--ink);
+    color: var(--bg);
+  }
+
+  .contact__orb-ring {
+    position: absolute;
+    inset: 6%;
+    width: 88%;
+    height: 88%;
+    animation: orbSpin 14s linear infinite;
+  }
+
+  .contact__orb-ring text {
+    fill: currentColor;
+    font-family: var(--font-mono);
+    font-size: 14.2px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .contact__orb-arrow {
+    font-size: clamp(2.2rem, 3.4vw, 3.4rem);
+    line-height: 1;
+    transition: transform 0.6s var(--ease-out);
+  }
+
+  .contact__orb:hover .contact__orb-arrow {
+    transform: rotate(45deg);
+  }
+
+  @keyframes orbSpin {
+    to { transform: rotate(360deg); }
+  }
+
+  .contact__grid {
+    position: relative;
+    z-index: 1;
+    background: var(--veil);
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: clamp(2rem, 6vw, 6rem);
+    padding-top: clamp(2rem, 5vh, 3rem);
+    border-top: 1px solid var(--line-strong);
+  }
+
+  .contact__cap {
+    display: block;
+    color: var(--ink-3);
     margin-bottom: 1rem;
-    max-width: 16ch;
+  }
+
+  .contact__mail {
+    display: inline-block;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-stretch: 80%;
+    font-size: clamp(1.4rem, 2.7vw, 2.6rem);
+    line-height: 1.1;
+    word-break: break-all;
+    background: linear-gradient(var(--accent-text), var(--accent-text)) left bottom / 0 2px no-repeat;
+    padding-bottom: 0.2rem;
+    transition: background-size 0.6s var(--ease-out), color 0.4s ease;
+  }
+
+  .contact__mail:hover {
+    background-size: 100% 2px;
+    color: var(--accent-text);
   }
 
   .contact__sub {
-    color: var(--text-muted);
-    margin-bottom: clamp(2rem, 5vw, 3.5rem);
+    margin-top: 1.5rem;
+    max-width: 38ch;
   }
 
-  .contact__links {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    width: 100%;
-    max-width: 620px;
-    margin-bottom: 2.5rem;
-  }
-
-  .contact__big-link {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 1.1rem 0.5rem;
-    border-bottom: 1px solid var(--border);
-    transition: border-color 0.4s ease, padding 0.4s ease;
-  }
-
-  .contact__big-link:hover {
-    border-color: var(--border-accent);
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-
-  .contact__big-label {
-    font-family: var(--font-heading);
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    color: var(--text-dim);
-  }
-
-  .contact__big-value {
-    font-family: var(--font-heading);
-    font-size: clamp(1.1rem, 3vw, 2rem);
-    color: var(--text-primary);
-    transition: color 0.3s ease, text-shadow 0.3s ease;
-  }
-
-  .contact__big-link:hover .contact__big-value {
-    color: var(--accent);
-    text-shadow: 0 0 20px var(--accent-dim);
-  }
-
-  .contact__socials {
-    display: flex;
-    gap: 1rem;
-  }
-
-  .contact__social {
-    display: grid;
-    place-items: center;
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
-    border: 1px solid var(--border-accent);
-    transition: border-color 0.3s ease, background 0.3s ease, transform 0.3s ease;
-  }
-
-  .contact__social-ic {
-    width: 20px;
-    height: 20px;
-    background-color: var(--accent);
-    -webkit-mask: center / contain no-repeat;
-    mask: center / contain no-repeat;
-    transition: background-color 0.3s ease;
-  }
-
-  .contact__social:hover {
-    border-color: var(--accent);
-    background: var(--accent);
-    transform: translateY(-3px);
-  }
-
-  .contact__social:hover .contact__social-ic {
-    background-color: var(--bg-primary);
-  }
-
-  .contact__footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
-    flex-wrap: wrap;
-    padding: 1.5rem 0;
-    border-top: 1px solid var(--border);
-    font-family: var(--font-heading);
-    font-size: 0.7rem;
-    letter-spacing: 0.05em;
-    color: var(--text-dim);
-  }
-
-  /* ----- Contact form ----- */
+  /* ----- Form ----- */
   .contact__form {
-    width: 100%;
-    max-width: 520px;
-    margin: 0 auto 2.5rem;
-    text-align: left;
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
-    /* Translucent panel — see the 3D through it; inputs stay opaque to read. */
-    background: var(--panel-bg);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: clamp(1.5rem, 4vw, 2.25rem);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+    gap: 1.6rem;
+  }
+
+  .contact__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.6rem;
   }
 
   .contact__hp {
@@ -269,67 +332,55 @@ const primaryLinks = [
   .contact__field input,
   .contact__field textarea {
     width: 100%;
-    background: var(--bg-primary);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 1rem 0.9rem 0.5rem;
-    color: var(--text-primary);
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--line-strong);
+    padding: 1.6rem 0 0.7rem;
+    color: var(--ink);
     font-family: var(--font-body);
-    font-size: 0.92rem;
+    font-size: 1.15rem;
     resize: vertical;
-    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    border-radius: 0;
+    transition: border-color 0.3s ease;
   }
 
   .contact__field textarea {
-    min-height: 110px;
+    min-height: 120px;
   }
 
   .contact__field input:focus,
   .contact__field textarea:focus {
     outline: none;
-    border-color: var(--border-accent);
-    box-shadow: 0 0 0 3px var(--accent-dim);
+    border-color: var(--accent-text);
   }
 
   .contact__field label {
     position: absolute;
-    top: 0.85rem;
-    left: 0.95rem;
-    font-family: var(--font-heading);
-    font-size: 0.78rem;
-    color: var(--text-dim);
+    top: 1.6rem;
+    left: 0;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-3);
     pointer-events: none;
-    transition: transform 0.2s ease, color 0.2s ease, font-size 0.2s ease;
     transform-origin: left top;
+    transition: transform 0.35s var(--ease-out), color 0.3s ease;
   }
 
   .contact__field input:focus + label,
   .contact__field input:not(:placeholder-shown) + label,
   .contact__field textarea:focus + label,
   .contact__field textarea:not(:placeholder-shown) + label {
-    transform: translateY(-0.7rem) scale(0.78);
-    color: var(--accent);
+    transform: translateY(-1.35rem) scale(0.82);
+    color: var(--accent-text);
   }
 
-  .contact__submit {
-    align-self: flex-start;
-    display: inline-flex;
+  .contact__submit-row {
+    display: flex;
     align-items: center;
-    gap: 0.4rem;
-    font-family: var(--font-heading);
-    font-size: 0.78rem;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--bg-primary);
-    background: var(--accent);
-    border-radius: 8px;
-    padding: 0.8rem 1.5rem;
-    transition: gap 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
-  }
-
-  .contact__submit:hover {
-    gap: 0.75rem;
-    box-shadow: 0 0 24px var(--accent-glow);
+    flex-wrap: wrap;
+    gap: 1rem 1.5rem;
   }
 
   .contact__submit:disabled {
@@ -338,11 +389,7 @@ const primaryLinks = [
   }
 
   .contact__status {
-    font-family: var(--font-heading);
-    font-size: 0.75rem;
-    letter-spacing: 0.05em;
-    min-height: 1rem;
-    color: var(--text-muted);
+    color: var(--ink-2);
   }
 
   .contact__status.is-ok {
@@ -353,15 +400,132 @@ const primaryLinks = [
     color: var(--danger);
   }
 
-  @media (max-width: 520px) {
-    .contact__big-link {
+  /* ----- Footer ----- */
+  .footer {
+    margin-top: clamp(5rem, 14vh, 9rem);
+    border-top: 1px solid var(--line-strong);
+    padding-top: 2.5rem;
+  }
+
+  .footer__cols {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 2rem;
+  }
+
+  .footer__col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .footer__col ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    font-size: 1.05rem;
+  }
+
+  .footer__col a:hover {
+    color: var(--accent-text);
+  }
+
+  .footer__col--end {
+    align-items: flex-end;
+    justify-content: flex-start;
+  }
+
+  .footer__cap {
+    color: var(--ink-3);
+    margin-bottom: 0.6rem;
+  }
+
+  .footer__time {
+    font-size: clamp(2rem, 3.4vw, 3.2rem);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .footer__muted {
+    color: var(--ink-3);
+  }
+
+  .footer__name {
+    margin-top: clamp(3rem, 8vh, 6rem);
+    font-size: var(--fit, 13vw);
+    font-weight: 900;
+    font-stretch: 68%;
+    line-height: 0.78;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+    color: var(--ink);
+    overflow: hidden;
+    padding-top: 0.04em;
+  }
+
+  .footer__name-text {
+    display: inline-block;
+  }
+
+  .footer__base {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    padding: 1.4rem 0 1.6rem;
+    color: var(--ink-3);
+  }
+
+  .footer__radio {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 0.95rem;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--ink-3);
+    text-align: center;
+    max-width: 52ch;
+    transition: color 0.3s ease;
+  }
+
+  .footer__radio:hover {
+    color: var(--accent-text);
+  }
+
+  @media (max-width: 900px) {
+    .footer__radio {
+      order: 3;
+      text-align: left;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .contact__hero {
       flex-direction: column;
       align-items: flex-start;
-      gap: 0.25rem;
     }
-    .contact__footer {
-      justify-content: center;
-      text-align: center;
+    .contact__wave {
+      align-self: flex-end;
+      width: clamp(170px, 46vw, 240px);
+      margin-right: 1rem;
+    }
+    .contact__wave .contact__orb {
+      left: -55%;
+      width: clamp(110px, 30vw, 150px);
+    }
+    .contact__grid {
+      grid-template-columns: 1fr;
+    }
+    .footer__cols {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .footer__col--end {
+      align-items: flex-start;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .contact__row {
+      grid-template-columns: 1fr;
     }
   }
 </style>
@@ -371,26 +535,41 @@ const primaryLinks = [
   const status = document.getElementById('cf-status');
 
   if (form && status) {
+    const fallback = form.querySelector<HTMLInputElement>('[name="subject"]')?.value ?? '';
+    const email = document.querySelector<HTMLAnchorElement>('.contact__mail')?.textContent?.trim();
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const btn = form.querySelector<HTMLButtonElement>('.contact__submit');
-      status.className = 'contact__status';
+      status.className = 'contact__status mono';
       status.textContent = 'Sending…';
       if (btn) btn.disabled = true;
 
+      const data = Object.fromEntries(new FormData(form)) as Record<string, string>;
+      if (data.name) data.subject = `Portfolio — new message from ${data.name}`;
+      else data.subject = fallback;
+
       try {
-        const data = new FormData(form);
-        await fetch('/', {
+        const res = await fetch(form.action, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: new URLSearchParams(data as unknown as Record<string, string>).toString(),
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(data),
         });
-        status.textContent = '✓ Thanks — I’ll get back to you soon.';
+        const json = await res.json().catch(() => ({}));
+        // Only report success when Web3Forms actually accepted the message.
+        if (!res.ok || !json.success) throw new Error(json.message || `HTTP ${res.status}`);
+
+        status.textContent = '✓ Message sent — I’ll get back to you soon.';
         status.classList.add('is-ok');
         form.reset();
+        // Team-radio toast (EasterEggs.astro listens for this).
+        window.dispatchEvent(
+          new CustomEvent('team-radio', {
+            detail: { quote: { text: 'Simply lovely.', by: 'Max Verstappen' }, cap: 'Message received' },
+          })
+        );
       } catch {
-        status.textContent =
-          '✕ Something went wrong — email me directly instead.';
+        status.textContent = `✕ Couldn’t send that — please email me${email ? ` at ${email}` : ''} instead.`;
         status.classList.add('is-err');
       } finally {
         if (btn) btn.disabled = false;

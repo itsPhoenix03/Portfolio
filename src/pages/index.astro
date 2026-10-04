@@ -3,12 +3,15 @@ import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import CustomCursor from '../components/CustomCursor.astro';
 import Hero from '../components/Hero.astro';
+import Tapes from '../components/Tapes.astro';
 import About from '../components/About.astro';
 import Skills from '../components/Skills.astro';
 import Experience from '../components/Experience.astro';
 import Projects from '../components/Projects.astro';
 import Certifications from '../components/Certifications.astro';
 import Contact from '../components/Contact.astro';
+import EasterEggs from '../components/EasterEggs.astro';
+import { marqueeWords } from '../data/content';
 ---
 
 <Layout>
@@ -16,6 +19,7 @@ import Contact from '../components/Contact.astro';
   <CustomCursor />
   <main>
     <Hero />
+    <Tapes items={marqueeWords} />
     <About />
     <Skills />
     <Experience />
@@ -23,6 +27,7 @@ import Contact from '../components/Contact.astro';
     <Certifications />
     <Contact />
   </main>
+  <EasterEggs />
 </Layout>
 
 <script>

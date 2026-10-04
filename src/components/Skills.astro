@@ -1,97 +1,124 @@
 ---
 import { skillGroups } from '../data/content';
+import Marquee from './Marquee.astro';
 ---
 
-<section class="section section--skills" id="skills">
-  <span class="ghost-title" data-parallax="0.45" aria-hidden="true">SKILLS</span>
-  <div class="container skills">
-    <header class="skills__head" data-parallax="0.12">
-      <span class="skills__eyebrow" data-reveal="up">02 — Skills</span>
-      <h2 class="skills__title" data-reveal="up" data-reveal-delay="0.05">
-        Tools of the <span class="accent">trade</span>
+<section class="section skills" id="skills">
+  <div class="wrap">
+    <header class="sec-head">
+      <div class="sec-label" data-reveal>
+        <span class="sec-label__idx">(02)</span>
+        <span class="sec-label__rule" data-line></span>
+        <span data-scramble>Skills &amp; stack</span>
+      </div>
+      <h2 class="sec-title display" data-split>
+        Tools of the <span class="serif">trade</span>
       </h2>
     </header>
-
-    <div class="skills__grid" data-stagger data-parallax="-0.08">
-      {
-        skillGroups.map((group) => (
-          <article class="skills__card card tilt stagger-item">
-            <h3 class="skills__cat">{group.category}</h3>
-            <ul class="skills__items">
-              {group.items.map((skill) => (
-                <li class="skills__item">{skill.name}</li>
-              ))}
-            </ul>
-          </article>
-        ))
-      }
-    </div>
   </div>
+
+  <ul class="skills__rows">
+    {
+      skillGroups.map((group, i) => (
+        <li class="skills__row" data-reveal>
+          <div class="skills__meta wrap mono">
+            <span class="skills__idx">0{i + 1}</span>
+            <span class="skills__cat">{group.category}</span>
+            <span class="skills__count">{String(group.items.length).padStart(2, '0')} items</span>
+          </div>
+          <Marquee
+            class="skills__marquee"
+            items={group.items.map((s) => s.name)}
+            direction={i % 2 === 0 ? -1 : 1}
+            speed={24 + group.items.length * 3}
+            separator="/"
+          />
+          <p class="sr-only">
+            {group.category}: {group.items.map((s) => s.name).join(', ')}
+          </p>
+        </li>
+      ))
+    }
+  </ul>
 </section>
 
 <style>
   .skills {
-    width: 100%;
+    padding-left: 0;
+    padding-right: 0;
   }
 
-  .skills__head {
-    margin-bottom: clamp(2rem, 4vw, 3.5rem);
+  .skills > .wrap {
+    padding: 0 var(--gutter);
   }
 
-  .skills__eyebrow {
-    display: inline-block;
-    font-family: var(--font-heading);
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.2em;
-    color: var(--accent);
-    margin-bottom: 0.75rem;
+  .skills__rows {
+    border-top: 1px solid var(--line-strong);
   }
 
-  .skills__title {
-    color: var(--text-primary);
+  .skills__row {
+    position: relative;
+    padding: 1.4rem 0 1.1rem;
+    border-bottom: 1px solid var(--line-strong);
+    overflow: hidden;
+    transition: color 0.5s var(--ease-out);
   }
 
-  .skills__grid {
+  /* Accent fill wipes up behind the row on hover. */
+  .skills__row::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--accent);
+    transform: scaleY(0);
+    transform-origin: bottom center;
+    transition: transform 0.6s var(--ease-out);
+  }
+
+  .skills__row:hover {
+    color: var(--on-accent);
+  }
+
+  .skills__row:hover::before {
+    transform: scaleY(1);
+  }
+
+  .skills__meta {
+    position: relative;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
-    gap: 1.25rem;
+    grid-template-columns: 3rem 1fr auto;
+    gap: 1rem;
+    padding: 0 var(--gutter);
+    margin-bottom: 0.6rem;
+    color: var(--ink-2);
+    transition: color 0.5s var(--ease-out);
   }
 
-  .skills__card {
-    transform-style: preserve-3d;
-    will-change: transform;
+  .skills__row:hover .skills__meta {
+    color: var(--on-accent);
   }
 
-  .skills__cat {
-    font-size: 0.95rem;
-    color: var(--accent);
-    margin-bottom: 1rem;
-    padding-bottom: 0.6rem;
-    border-bottom: 1px solid var(--border);
+  .skills__idx {
+    color: var(--accent-text);
   }
 
-  .skills__items {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
+  .skills__row:hover .skills__idx {
+    color: var(--on-accent);
   }
 
-  .skills__item {
-    font-family: var(--font-heading);
-    font-size: 0.72rem;
-    letter-spacing: 0.03em;
-    padding: 0.35rem 0.7rem;
-    border-radius: 5px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid var(--border);
-    color: var(--text-muted);
-    transition: color 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+  .skills__row :global(.skills__marquee) {
+    position: relative;
+    font-size: clamp(2.6rem, 7.5vw, 7.5rem);
   }
 
-  .skills__item:hover {
-    color: var(--accent);
-    border-color: var(--border-accent);
-    background: var(--accent-dim);
+  .skills__row :global(.skills__marquee .marquee__sep) {
+    color: var(--accent-text);
+    font-size: 0.6em;
+    font-family: var(--font-serif);
+    font-style: italic;
+  }
+
+  .skills__row:hover :global(.skills__marquee .marquee__sep) {
+    color: var(--on-accent);
   }
 </style>

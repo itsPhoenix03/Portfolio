@@ -1,0 +1,47 @@
+---
+// Two crossing marquee "tapes" — a racing-livery style band between sections.
+import Marquee from './Marquee.astro';
+
+export interface Props {
+  items: string[];
+}
+const { items } = Astro.props;
+const reversed = [...items].reverse();
+---
+
+<div class="tapes" aria-hidden="true">
+  <div class="tapes__tape tapes__tape--a">
+    <Marquee items={items} variant="accent" direction={-1} speed={34} />
+  </div>
+  <div class="tapes__tape tapes__tape--b">
+    <Marquee items={reversed} variant="outline" direction={1} speed={40} />
+  </div>
+</div>
+
+<style>
+  .tapes {
+    position: relative;
+    height: clamp(12rem, 34vw, 26rem);
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    background: var(--veil);
+  }
+
+  .tapes__tape {
+    position: absolute;
+    left: -5%;
+    width: 110%;
+  }
+
+  .tapes__tape--a {
+    transform: rotate(-4deg);
+    z-index: 2;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+  }
+
+  .tapes__tape--b {
+    transform: rotate(3deg);
+    z-index: 1;
+  }
+</style>

@@ -1,0 +1,113 @@
+---
+// Infinite ticker. Speed + direction react to scroll velocity (see
+// scroll-animations.ts → initMarquees). Content is duplicated once so the
+// track can loop seamlessly at xPercent -50.
+export interface Props {
+  items: string[];
+  variant?: 'accent' | 'outline' | 'plain';
+  direction?: 1 | -1;
+  speed?: number;
+  separator?: string;
+  class?: string;
+}
+
+const {
+  items,
+  variant = 'plain',
+  direction = 1,
+  speed = 28,
+  separator = '✦',
+  class: className = '',
+} = Astro.props;
+---
+
+<div
+  class={`marquee marquee--${variant} ${className}`}
+  data-marquee
+  data-dir={direction}
+  data-marquee-speed={speed}
+>
+  <div class="marquee__track">
+    {
+      [0, 1].map((copy) => (
+        <div class="marquee__group" aria-hidden={copy === 1 ? 'true' : undefined}>
+          {items.map((item) => (
+            <>
+              <span class="marquee__item">{item}</span>
+              <span class="marquee__sep" aria-hidden="true">
+                {separator}
+              </span>
+            </>
+          ))}
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .marquee {
+    position: relative;
+    overflow: hidden;
+    white-space: nowrap;
+    user-select: none;
+  }
+
+  .marquee__track {
+    display: flex;
+    width: max-content;
+    will-change: transform;
+  }
+
+  .marquee__group {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .marquee__item {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-stretch: 72%;
+    text-transform: uppercase;
+    line-height: 1;
+    padding: 0 0.35em;
+  }
+
+  .marquee__sep {
+    font-size: 0.5em;
+    padding: 0 0.35em;
+  }
+
+  .marquee--accent {
+    background: var(--accent);
+    color: var(--on-accent);
+    padding: 0.9rem 0;
+    font-size: clamp(2.2rem, 6vw, 5.5rem);
+  }
+
+  .marquee--accent .marquee__sep {
+    color: var(--accent-2);
+  }
+
+  .marquee--outline {
+    background: var(--bg);
+    color: var(--ink);
+    border-block: 1px solid var(--line-strong);
+    padding: 0.9rem 0;
+    font-size: clamp(2.2rem, 6vw, 5.5rem);
+  }
+
+  .marquee--outline .marquee__item {
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--ink);
+  }
+
+  .marquee--outline .marquee__sep {
+    color: var(--accent-text);
+  }
+
+  .marquee--plain {
+    font-size: inherit;
+  }
+</style>
