@@ -1,3 +1,5 @@
+# Everything is public — crawl it all, including the CSS/JS search engines
+# need to render the page properly.
 User-agent: *
 Allow: /
 

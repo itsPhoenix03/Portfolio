@@ -1,45 +1,116 @@
 ---
 import '../styles/global.css';
-import { siteMeta, socialLinks } from '../data/content';
+import { siteMeta, socialLinks, education, experience } from '../data/content';
 
 export interface Props {
   title?: string;
   description?: string;
 }
 
+// Title ≈ 60 chars and description ≈ 155, so neither gets cut off in results.
 const {
-  title = 'Shreyas Misra — Software Engineer',
-  description = 'Shreyas Misra is a software engineer building scalable, dependable web applications with React, Next.js, Node.js and TypeScript.',
+  title = 'Shreyas Misra — Software Engineer | Full-Stack & AI Products',
+  description = 'Shreyas Misra is a full-stack software engineer in India building AI-powered products for healthcare and regulatory teams with React, Node.js and Go.',
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const ogImage = new URL('/og-image.png', Astro.site);
-const keywords =
-  'Shreyas Misra, software engineer, full stack developer, full-stack software engineer, React developer, Next.js developer, Node.js, TypeScript, web developer, frontend developer, backend developer';
+// Google ignores meta keywords, but Bing and others still read them.
+const keywords = [
+  'Shreyas Misra',
+  'Shreyas Misra software engineer',
+  'Shreyas Misra portfolio',
+  'software engineer India',
+  'full stack developer',
+  'full-stack software engineer',
+  'AI product engineer',
+  'generative AI developer',
+  'React developer',
+  'Next.js developer',
+  'Node.js developer',
+  'TypeScript developer',
+  'Golang developer',
+  'system design',
+  'Nuvo AI',
+  'Meril',
+  'IIT Kanpur Technopark',
+].join(', ');
 
-// Person structured data helps search engines understand the site / name.
+// Structured data (schema.org JSON-LD): a profile page about one person,
+// with where they work and studied and their other profiles. This is what
+// lets Google connect searches for the name to this site and to LinkedIn /
+// GitHub, and build a richer result for it.
+const site = Astro.site!.toString();
+const personId = `${site}#person`;
 const socialUrls = socialLinks
   .map((s) => s.href)
   .filter((href) => href.startsWith('http'));
-const personSchema = {
+const current = experience.find((job) => job.current) ?? experience[0];
+
+const schema = {
   '@context': 'https://schema.org',
-  '@type': 'Person',
-  name: siteMeta.name,
-  jobTitle: 'Software Engineer',
-  description,
-  url: Astro.site?.toString(),
-  email: siteMeta.email,
-  sameAs: socialUrls,
-  knowsAbout: [
-    'Software Engineering',
-    'Full-Stack Development',
-    'TypeScript',
-    'JavaScript',
-    'React',
-    'Next.js',
-    'Node.js',
-    'MongoDB',
-    'System Design',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': `${site}#website`,
+      url: site,
+      name: siteMeta.name,
+      description,
+      inLanguage: 'en',
+      publisher: { '@id': personId },
+    },
+    {
+      '@type': 'ProfilePage',
+      '@id': `${canonicalURL}#profile`,
+      url: canonicalURL.toString(),
+      name: title,
+      description,
+      inLanguage: 'en',
+      isPartOf: { '@id': `${site}#website` },
+      about: { '@id': personId },
+      mainEntity: { '@id': personId },
+      primaryImageOfPage: ogImage.toString(),
+      dateModified: new Date().toISOString(),
+    },
+    {
+      '@type': 'Person',
+      '@id': personId,
+      name: siteMeta.name,
+      givenName: 'Shreyas',
+      familyName: 'Misra',
+      jobTitle: siteMeta.role,
+      description,
+      url: site,
+      image: new URL('/assets/contact-avatar.png', site).toString(),
+      email: `mailto:${siteMeta.email}`,
+      sameAs: socialUrls,
+      address: { '@type': 'PostalAddress', addressCountry: 'IN' },
+      nationality: { '@type': 'Country', name: 'India' },
+      worksFor: current && { '@type': 'Organization', name: current.company },
+      alumniOf: education.map((ed) => ({ '@type': 'CollegeOrUniversity', name: ed.institution })),
+      hasOccupation: {
+        '@type': 'Occupation',
+        name: siteMeta.role,
+        occupationLocation: { '@type': 'Country', name: 'India' },
+      },
+      knowsAbout: [
+        'Software Engineering',
+        'Full-Stack Development',
+        'Generative AI',
+        'AI Product Development',
+        'System Design',
+        'TypeScript',
+        'JavaScript',
+        'React',
+        'Next.js',
+        'Node.js',
+        'Go',
+        'WebSockets',
+        'MongoDB',
+        'PostgreSQL',
+        'AWS',
+      ],
+    },
   ],
 };
 ---
@@ -70,11 +141,14 @@ const personSchema = {
     <meta name="description" content={description} />
     <meta name="keywords" content={keywords} />
     <meta name="author" content={siteMeta.name} />
-    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <meta name="generator" content={Astro.generator} />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
     <link rel="canonical" href={canonicalURL} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
@@ -83,7 +157,7 @@ const personSchema = {
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={siteMeta.name} />
-    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale" content="en_IN" />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -96,6 +170,7 @@ const personSchema = {
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={`${siteMeta.name} — ${siteMeta.role}`} />
 
     <meta name="theme-color" content="#0b1426" />
     <meta name="msapplication-TileColor" content="#0b1426" />
@@ -103,7 +178,7 @@ const personSchema = {
     <title>{title}</title>
     <script
       type="application/ld+json"
-      set:html={JSON.stringify(personSchema)}
+      set:html={JSON.stringify(schema)}
     />
   </head>
   <body>
