@@ -1,0 +1,13 @@
+---
+// Inline SVG arrow — see src/scripts/icons.ts for why we don't use ↗ / → glyphs.
+import { arrowSvg, type ArrowDir } from '../scripts/icons';
+
+export interface Props {
+  dir?: ArrowDir;
+  class?: string;
+}
+
+const { dir = 'up-right', class: className = '' } = Astro.props;
+---
+
+<Fragment set:html={arrowSvg(dir, className)} />

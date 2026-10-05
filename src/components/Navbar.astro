@@ -1,5 +1,6 @@
 ---
 import { navSections, siteMeta, socialLinks } from '../data/content';
+import Arrow from './Arrow.astro';
 ---
 
 <header class="hdr" id="hdr">
@@ -72,14 +73,14 @@ import { navSections, siteMeta, socialLinks } from '../data/content';
               .map((s) => (
                 <li>
                   <a href={s.href} target="_blank" rel="noopener noreferrer" tabindex="-1">
-                    <span class="roll"><span data-text={s.label}>{s.label}</span></span> ↗
+                    <span class="roll"><span data-text={s.label}>{s.label}</span></span> <Arrow />
                   </a>
                 </li>
               ))
           }
           <li>
             <a href="/Resume.pdf" target="_blank" rel="noopener noreferrer" tabindex="-1">
-              <span class="roll"><span data-text="Résumé">Résumé</span></span> ↗
+              <span class="roll"><span data-text="Résumé">Résumé</span></span> <Arrow />
             </a>
           </li>
         </ul>
@@ -341,7 +342,14 @@ import { navSections, siteMeta, socialLinks } from '../data/content';
   }
 
   .menu__link.is-active .menu__num::before {
-    content: '● ';
+    content: '';
+    display: inline-block;
+    width: 0.5em;
+    height: 0.5em;
+    margin-right: 0.45em;
+    border-radius: 50%;
+    background: currentColor;
+    vertical-align: 0.08em;
   }
 
   .menu__aside {

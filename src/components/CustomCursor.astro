@@ -1,105 +1,77 @@
 ---
+// Cursor: a native custom pointer (an arrowhead, no stem) drawn by the browser
+// itself, so it tracks the mouse 1:1 with no lag or trailing ring. It turns red
+// over anything clickable. The intent label ("Visit ↗") is the only JS-driven
+// piece and sits right beside the pointer.
 ---
 
-<div class="cursor" id="cursor" aria-hidden="true">
-  <div class="cursor__ring" id="cursor-ring">
-    <span class="cursor__label" id="cursor-label"></span>
-  </div>
-  <div class="cursor__dot" id="cursor-dot"></div>
-</div>
+<span class="cursor-label" id="cursor-label" aria-hidden="true"></span>
 
 <style>
-  .cursor {
+  /* Fine pointers only — touch devices keep their default behaviour. The SVG
+     is preferred; the PNG is a fallback for browsers without SVG cursors. */
+  @media (hover: hover) and (pointer: fine) {
+    :global(html) {
+      cursor:
+        url('/cursors/pointer-dark.svg') 4 3,
+        url('/cursors/pointer-dark.png') 4 3,
+        auto;
+    }
+
+    :global([data-theme='light']) {
+      cursor:
+        url('/cursors/pointer-light.svg') 4 3,
+        url('/cursors/pointer-light.png') 4 3,
+        auto;
+    }
+
+    :global(:is(a, button, summary, label, select, [role='button'], [data-close], .magnetic, [data-cursor])),
+    :global(:is(a, button, summary, label, select, [role='button'], [data-close], .magnetic, [data-cursor]) *) {
+      cursor:
+        url('/cursors/pointer-active.svg') 4 3,
+        url('/cursors/pointer-active.png') 4 3,
+        pointer;
+    }
+
+    /* Text fields keep the I-beam so typing feels normal. */
+    :global(:is(input, textarea)) {
+      cursor: text;
+    }
+  }
+
+  .cursor-label {
     position: fixed;
     top: 0;
     left: 0;
     z-index: 9999;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-
-  :global(body.cursor-ready) .cursor {
-    opacity: 1;
-  }
-
-  .cursor__dot,
-  .cursor__ring {
-    position: absolute;
-    top: 0;
-    left: 0;
-    border-radius: 50%;
-    will-change: transform;
-  }
-
-  .cursor__dot {
-    width: 6px;
-    height: 6px;
-    margin: -3px 0 0 -3px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.4rem 0.7rem;
+    border-radius: 999px;
     background: var(--accent);
-  }
-
-  .cursor__ring {
-    width: 40px;
-    height: 40px;
-    margin: -20px 0 0 -20px;
-    display: grid;
-    place-items: center;
-    border: 1px solid var(--line-strong);
-    transition:
-      width 0.45s var(--ease-out),
-      height 0.45s var(--ease-out),
-      margin 0.45s var(--ease-out),
-      background 0.35s ease,
-      border-color 0.35s ease;
-  }
-
-  :global(body.cursor-hover) .cursor__ring {
-    width: 64px;
-    height: 64px;
-    margin: -32px 0 0 -32px;
-    border-color: var(--accent-text);
-  }
-
-  /* Intent label ("View ↗") — ring becomes a solid accent disc. */
-  :global(body.cursor-label-on) .cursor__ring {
-    width: 96px;
-    height: 96px;
-    margin: -48px 0 0 -48px;
-    background: var(--accent);
-    border-color: var(--accent);
-  }
-
-  :global(body.cursor-label-on) .cursor__dot {
-    opacity: 0;
-  }
-
-  .cursor__label {
+    color: var(--on-accent);
     font-family: var(--font-mono);
     font-size: 0.62rem;
     font-weight: 500;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     white-space: nowrap;
-    color: var(--on-accent);
+    pointer-events: none;
     opacity: 0;
-    transform: scale(0.6);
-    transition: opacity 0.25s ease, transform 0.35s var(--ease-out);
+    scale: 0.7;
+    transform-origin: left top;
+    transition: opacity 0.2s ease, scale 0.3s var(--ease-out);
+    will-change: transform;
   }
 
-  :global(body.cursor-label-on) .cursor__label {
+  :global(body.cursor-label-on) .cursor-label {
     opacity: 1;
-    transform: scale(1);
-  }
-
-  /* Hide the native cursor everywhere when the custom one is active. */
-  :global(body.cursor-ready),
-  :global(body.cursor-ready) :global(*) {
-    cursor: none !important;
+    scale: 1;
   }
 
   @media (hover: none), (pointer: coarse) {
-    .cursor {
+    .cursor-label {
       display: none;
     }
   }

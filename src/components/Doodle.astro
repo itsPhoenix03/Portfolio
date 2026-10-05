@@ -1,0 +1,274 @@
+---
+// Hand-drawn margin note: a block word scribbled out, a cursive correction
+// written above it, an optional cursive note and a curly arrow. Used sparingly;
+// most of them double as puzzle-style hints for the easter eggs.
+// Everything is inline SVG + the site's own fonts — no device glyphs.
+
+import { scribble } from '../scripts/scribble';
+
+export interface Props {
+  /** Block text before the struck word. */
+  before?: string;
+  /** The word that gets scribbled out. */
+  struck: string;
+  /** Cursive correction written above the struck word. */
+  fix: string;
+  /** Block text after the struck word. */
+  after?: string;
+  /** Cursive note under the line. */
+  note?: string;
+  /** under: curls up from the note to the struck word. up-left: off the left
+   *  edge, pointing up-left. down: off the right edge, pointing down. */
+  arrow?: 'under' | 'up-left' | 'down';
+  /** Loop a hand-drawn circle around the correction. */
+  circle?: boolean;
+  /** The hint needs a keyboard: hide it all (or just the note) on touch. */
+  keyboard?: 'all' | 'note';
+  /** Pin into a corner of the nearest positioned parent (desktop only). */
+  pin?: 'top-right' | 'bottom-right';
+  class?: string;
+}
+
+const {
+  before,
+  struck,
+  fix,
+  after,
+  note,
+  arrow,
+  circle = false,
+  keyboard,
+  pin,
+  class: className,
+} = Astro.props;
+
+const cross = scribble(struck);
+---
+
+<div
+  class:list={[
+    'doodle',
+    arrow && `doodle--arrow-${arrow}`,
+    keyboard && `doodle--kbd-${keyboard}`,
+    pin && `doodle--pin-${pin}`,
+    className,
+  ]}
+  data-doodle
+  aria-hidden="true"
+>
+  <p class="doodle__line">
+    {before && <span>{before}&nbsp;</span>}
+    <span class="doodle__struck">
+      {struck}
+      <svg class="doodle__scribble" viewBox={`0 0 ${cross.width} 40`} preserveAspectRatio="none">
+        {cross.paths.map((p) => <path d={p.d} style={`stroke-width:${p.weight}`} />)}
+      </svg>
+      <span class="doodle__fix">
+        {fix}
+        {
+          circle && (
+            <svg class="doodle__circle" viewBox="0 0 100 50" preserveAspectRatio="none">
+              <path d="M62 5C32 1 3 12 5 27c2 16 66 22 88 4C105 19 82 3 50 6 39 7 31 9 25 13" />
+            </svg>
+          )
+        }
+      </span>
+    </span>
+    {after && <span>&nbsp;{after}</span>}
+  </p>
+  {note && <p class="doodle__note">{note}</p>}
+  {
+    arrow && (
+      <svg class="doodle__arrow" viewBox="0 0 80 90">
+        <path d="M8 84C30 87 47 71 39 57 31 43 11 55 22 67 34 79 58 60 62 11" />
+        <path d="M50 22 62 9 71 25" />
+      </svg>
+    )
+  }
+</div>
+
+<style>
+  .doodle {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+    width: fit-content;
+    padding-top: 2.6rem; /* room for the correction above the line */
+    rotate: -2deg;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  /* Block line — the display face, like the section titles. */
+  .doodle__line {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-stretch: 72%;
+    text-transform: uppercase;
+    font-size: clamp(1.5rem, 2.2vw, 2.3rem);
+    line-height: 1;
+    letter-spacing: 0.01em;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+
+  .doodle__struck {
+    position: relative;
+    display: inline-block;
+  }
+
+  .doodle__scribble {
+    position: absolute;
+    left: 0;
+    /* Cover the capitals, not the whole line box: in Archivo at line-height 1
+       the caps sit low, from ~17% to ~96% of it. */
+    top: 17%;
+    width: 100%;
+    height: 79%;
+    overflow: visible;
+  }
+
+  .doodle__scribble path,
+  .doodle__circle path,
+  .doodle__arrow path {
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .doodle__scribble path {
+    stroke: var(--scribble);
+  }
+
+  /* Cursive correction, scrawled above the struck word at a slight tilt. */
+  .doodle__fix {
+    position: absolute;
+    left: 50%;
+    bottom: 96%;
+    translate: -50% 0;
+    rotate: -6deg;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    font-stretch: 100%;
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 1.3em;
+    line-height: 1;
+    color: var(--doodle);
+    white-space: nowrap;
+  }
+
+  .doodle__circle {
+    position: absolute;
+    left: -32%;
+    top: -16%;
+    width: 164%;
+    height: 136%;
+    overflow: visible;
+  }
+
+  .doodle__circle path {
+    stroke: var(--doodle);
+    stroke-width: 1.6;
+  }
+
+  .doodle__note {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: clamp(1.15rem, 1.45vw, 1.5rem);
+    line-height: 1.1;
+    color: var(--doodle);
+    max-width: 22ch;
+    text-wrap: balance;
+  }
+
+  .doodle__arrow {
+    position: absolute;
+    width: 3.8rem;
+    height: 4.3rem;
+    overflow: visible;
+  }
+
+  .doodle__arrow path {
+    stroke: var(--doodle);
+    stroke-width: 1.8;
+  }
+
+  /* Curls up from the start of the note to the struck word. */
+  .doodle--arrow-under .doodle__note {
+    margin-top: 0.2rem;
+    padding-left: 4.4rem;
+    max-width: 32ch;
+  }
+
+  .doodle--arrow-under .doodle__arrow {
+    left: -0.2rem;
+    bottom: -0.4rem;
+  }
+
+  /* Off the left edge, heading up and away (toward the header). */
+  .doodle--arrow-up-left .doodle__arrow {
+    right: calc(100% + 0.6rem);
+    top: 0;
+    transform: scaleX(-1);
+  }
+
+  /* Off the right edge, dropping down into what follows. */
+  .doodle--arrow-down .doodle__arrow {
+    right: -0.6rem;
+    top: calc(100% + 0.3rem);
+    transform: scaleY(-1);
+  }
+
+  @media (min-width: 901px) {
+    .doodle--pin-top-right,
+    .doodle--pin-bottom-right {
+      position: absolute;
+      right: 0;
+      align-items: flex-end;
+      text-align: right;
+    }
+    .doodle--pin-top-right {
+      top: -3.6rem;
+    }
+    .doodle--pin-bottom-right {
+      bottom: 0.4rem;
+    }
+  }
+
+  /* Right-aligned notes: keep the correction inside the page edge. */
+  .doodle--pin-top-right .doodle__fix,
+  .doodle--pin-bottom-right .doodle__fix {
+    left: auto;
+    right: 0;
+    translate: none;
+  }
+
+  @media (max-width: 900px) {
+    .doodle--pin-top-right,
+    .doodle--pin-bottom-right {
+      margin-left: auto;
+      align-items: flex-end;
+      text-align: right;
+    }
+  }
+
+  /* Keyboard-only hints make no sense on touch screens. */
+  @media (hover: none), (pointer: coarse) {
+    .doodle--kbd-all {
+      display: none;
+    }
+    .doodle--kbd-note .doodle__note,
+    .doodle--kbd-note .doodle__arrow {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  import '@/scripts/doodles';
+</script>

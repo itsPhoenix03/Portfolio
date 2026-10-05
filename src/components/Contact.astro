@@ -1,7 +1,24 @@
 ---
 import { siteMeta, socialLinks, navSections, contactForm } from '../data/content';
+import Arrow from './Arrow.astro';
+import { STAR_PATH } from '../scripts/icons';
 
 const year = new Date().getFullYear();
+
+// "Say hello" ring: four phrases around the circle with a star between each.
+// The path starts at the left (t = 0) and runs clockwise; phrases are centred
+// on each quarter and stars sit on the quarter boundaries, just outside the
+// path so they line up with the middle of the text.
+const ringPhrases = ['Say hello', "Let's talk", 'Say hello', "Let's talk"];
+const ringStars = [0, 0.25, 0.5, 0.75].map((t) => {
+  const a = Math.PI + t * Math.PI * 2;
+  const r = 85;
+  return {
+    x: +(100 + r * Math.cos(a)).toFixed(2),
+    y: +(100 + r * Math.sin(a)).toFixed(2),
+    rot: +((a * 180) / Math.PI + 90).toFixed(1),
+  };
+});
 const links = [
   ...socialLinks.filter((s) => s.href.startsWith('http')),
   { label: 'Résumé', href: '/Resume.pdf', icon: '' },
@@ -42,13 +59,24 @@ const links = [
           <defs>
             <path id="orb-circle" d="M100,100 m-80,0 a80,80 0 1,1 160,0 a80,80 0 1,1 -160,0"></path>
           </defs>
-          <text>
-            <textPath href="#orb-circle">
-              Say hello ✦ Let's talk ✦ Say hello ✦ Let's talk ✦
-            </textPath>
-          </text>
+          {
+            ringPhrases.map((phrase, i) => (
+              <text text-anchor="middle" textLength="100" lengthAdjust="spacing">
+                <textPath href="#orb-circle" startOffset={`${12.5 + i * 25}%`}>{phrase}</textPath>
+              </text>
+            ))
+          }
+          {
+            ringStars.map((s) => (
+              <path
+                class="contact__orb-star"
+                d={STAR_PATH}
+                transform={`translate(${s.x} ${s.y}) rotate(${s.rot}) scale(0.4) translate(-12 -12)`}
+              />
+            ))
+          }
         </svg>
-        <span class="contact__orb-arrow" aria-hidden="true">↗</span>
+        <span class="contact__orb-arrow" aria-hidden="true"><Arrow /></span>
         </a>
       </div>
     </div>
@@ -94,7 +122,7 @@ const links = [
         <div class="contact__submit-row">
           <button type="submit" class="pill pill--solid contact__submit magnetic" data-cursor="Send ↗">
             <span class="roll"><span data-text="Send message">Send message</span></span>
-            <span class="pill__arrow" aria-hidden="true">↗</span>
+            <span class="pill__arrow" aria-hidden="true"><Arrow /></span>
           </button>
           <p class="contact__status mono" id="cf-status" role="status" aria-live="polite"></p>
         </div>
@@ -113,7 +141,7 @@ const links = [
                     <span class="roll">
                       <span data-text={l.label}>{l.label}</span>
                     </span>{' '}
-                    ↗
+                    <Arrow />
                   </a>
                 </li>
               ))
@@ -144,7 +172,7 @@ const links = [
         <div class="footer__col footer__col--end">
           <a href="#hero" data-nav="hero" class="pill magnetic" data-cursor="Top ↑">
             <span class="roll"><span data-text="Back to top">Back to top</span></span>
-            <span aria-hidden="true">↑</span>
+            <span aria-hidden="true"><Arrow dir="up" /></span>
           </a>
         </div>
       </div>
@@ -243,6 +271,10 @@ const links = [
     width: 88%;
     height: 88%;
     animation: orbSpin 14s linear infinite;
+  }
+
+  .contact__orb-star {
+    fill: currentColor;
   }
 
   .contact__orb-ring text {
@@ -385,7 +417,7 @@ const links = [
 
   .contact__submit:disabled {
     opacity: 0.6;
-    cursor: default;
+    cursor: progress;
   }
 
   .contact__status {
@@ -531,6 +563,8 @@ const links = [
 </style>
 
 <script>
+  import { checkSvg, closeSvg } from '@/scripts/icons';
+
   const form = document.getElementById('contact-form') as HTMLFormElement | null;
   const status = document.getElementById('cf-status');
 
@@ -559,7 +593,8 @@ const links = [
         // Only report success when Web3Forms actually accepted the message.
         if (!res.ok || !json.success) throw new Error(json.message || `HTTP ${res.status}`);
 
-        status.textContent = '✓ Message sent — I’ll get back to you soon.';
+        status.textContent = ' Message sent — I’ll get back to you soon.';
+        status.insertAdjacentHTML('afterbegin', checkSvg());
         status.classList.add('is-ok');
         form.reset();
         // Team-radio toast (EasterEggs.astro listens for this).
@@ -569,7 +604,8 @@ const links = [
           })
         );
       } catch {
-        status.textContent = `✕ Couldn’t send that — please email me${email ? ` at ${email}` : ''} instead.`;
+        status.textContent = ` Couldn’t send that — please email me${email ? ` at ${email}` : ''} instead.`;
+        status.insertAdjacentHTML('afterbegin', closeSvg());
         status.classList.add('is-err');
       } finally {
         if (btn) btn.disabled = false;

@@ -1,5 +1,7 @@
 ---
 import { projects, socialLinks } from '../data/content';
+import Arrow from './Arrow.astro';
+import { closeSvg } from '../scripts/icons';
 
 const github = socialLinks.find((s) => s.label === 'GitHub')?.href ?? '#';
 const initials = (t: string) =>
@@ -85,7 +87,7 @@ const initials = (t: string) =>
                           {project.linkLabel ?? 'Visit'}
                         </span>
                       </span>
-                      <span class="pill__arrow" aria-hidden="true">↗</span>
+                      <span class="pill__arrow" aria-hidden="true"><Arrow /></span>
                     </a>
                   )}
                   <span class="pcard__more mono">Click for details +</span>
@@ -105,7 +107,7 @@ const initials = (t: string) =>
           <span class="pcard__end-title display">
             See it all <span class="serif">on</span> GitHub
           </span>
-          <span class="pcard__end-arrow" aria-hidden="true">↗</span>
+          <span class="pcard__end-arrow" aria-hidden="true"><Arrow /></span>
         </a>
       </div>
     </div>
@@ -114,7 +116,7 @@ const initials = (t: string) =>
   <div class="pmodal" id="pmodal" aria-hidden="true">
     <div class="pmodal__backdrop" data-close></div>
     <article class="pmodal__panel" role="dialog" aria-modal="true" aria-labelledby="pmodal-title">
-      <button class="pmodal__close" data-close aria-label="Close">&times;</button>
+      <button class="pmodal__close" data-close aria-label="Close"><Fragment set:html={closeSvg()} /></button>
       <span class="pmodal__index mono" id="pmodal-index"></span>
       <h3 class="pmodal__title display" id="pmodal-title"></h3>
       <p class="pmodal__desc" id="pmodal-desc"></p>
@@ -207,7 +209,6 @@ const initials = (t: string) =>
     overflow: hidden;
     background: var(--surface);
     border: 1px solid var(--line);
-    cursor: pointer;
   }
 
   .pcard__cover {
@@ -409,7 +410,6 @@ const initials = (t: string) =>
     background: rgba(5, 10, 20, 0.74);
     backdrop-filter: blur(6px);
     opacity: 0;
-    cursor: pointer;
   }
 
   .pmodal__panel {
@@ -432,9 +432,11 @@ const initials = (t: string) =>
     width: 40px;
     height: 40px;
     border-radius: 50%;
+    display: grid;
+    place-items: center;
     border: 1px solid var(--line-strong);
     color: var(--ink);
-    font-size: 1.4rem;
+    font-size: 1.15rem;
     line-height: 1;
     transition: background 0.3s ease, color 0.3s ease, transform 0.4s var(--ease-out);
   }
@@ -475,10 +477,15 @@ const initials = (t: string) =>
   }
 
   .pmodal__highlights :global(li)::before {
-    content: '✦';
+    content: '';
     position: absolute;
     left: 0;
-    color: var(--accent-text);
+    top: calc(0.8rem + 0.3em);
+    width: 0.8em;
+    height: 0.8em;
+    background-color: var(--accent-text);
+    -webkit-mask: url('/icons/star.svg') center / contain no-repeat;
+    mask: url('/icons/star.svg') center / contain no-repeat;
   }
 
   .pmodal__tags {
@@ -496,6 +503,7 @@ const initials = (t: string) =>
 <script>
   import gsap from 'gsap';
   import { lenisInstance } from '@/scripts/smooth-scroll';
+  import { setArrowLabel } from '@/scripts/icons';
 
   const modal = document.getElementById('pmodal');
   const panel = modal?.querySelector<HTMLElement>('.pmodal__panel');
@@ -541,7 +549,7 @@ const initials = (t: string) =>
       fillList(elTags, parse(d.tags), 'tag');
       if (d.link) {
         elCta.href = d.link;
-        elCta.textContent = `${d.linkLabel || 'Visit'} ↗`;
+        setArrowLabel(elCta, `${d.linkLabel || 'Visit'} ↗`);
         elCta.hidden = false;
       } else {
         elCta.hidden = true;

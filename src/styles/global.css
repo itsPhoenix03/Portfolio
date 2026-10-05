@@ -28,6 +28,10 @@
   --scene-bg: #0b1426;
   --scene-accent: #e8112d;
 
+  /* Hand-drawn margin notes (Doodle.astro): scribble-outs and cursive ink. */
+  --scribble: #e8112d;
+  --doodle: #ffc906;
+
   --font-display: 'Archivo', 'Arial Narrow', Impact, sans-serif;
   --font-body: 'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-serif: 'Instrument Serif', Georgia, serif;
@@ -60,6 +64,7 @@
   --danger: #c40e26;
   --scene-bg: #f2f0ea;
   --scene-accent: #1d3461;
+  --doodle: #a67c00; /* deeper gold of --accent-2 so it reads on the light background */
 }
 
 /* =============================================================================
@@ -116,7 +121,6 @@ img {
 button {
   font: inherit;
   color: inherit;
-  cursor: pointer;
   border: none;
   background: none;
 }
@@ -213,6 +217,7 @@ p {
 
 /* Section header: "(02) — Skills" label + giant title. */
 .sec-head {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 1.5rem;
@@ -350,6 +355,33 @@ p {
 a:hover .roll > span,
 button:hover .roll > span {
   transform: translateY(-100%);
+}
+
+/* Our own arrow icon (src/scripts/icons.ts) — sits on the text baseline like
+   the glyph it replaces. */
+.icon-arrow {
+  display: inline-block;
+  width: 0.9em;
+  height: 0.9em;
+  vertical-align: -0.08em;
+  flex-shrink: 0;
+  overflow: visible;
+}
+
+.icon-stroke {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.14em;
+  flex-shrink: 0;
+}
+
+.icon-star {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.12em;
+  flex-shrink: 0;
 }
 
 .tag {

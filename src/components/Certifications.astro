@@ -1,5 +1,6 @@
 ---
 import { certifications } from '../data/content';
+import Arrow from './Arrow.astro';
 ---
 
 <section class="section certs" id="certifications">
@@ -29,7 +30,7 @@ import { certifications } from '../data/content';
               <span class="cert__idx mono">0{i + 1}</span>
               <span class="cert__title">{cert.title}</span>
               <span class="cert__issuer mono">{cert.issuer}</span>
-              <span class="cert__arrow" aria-hidden="true">↗</span>
+              <span class="cert__arrow" aria-hidden="true"><Arrow /></span>
             </a>
           </li>
         ))

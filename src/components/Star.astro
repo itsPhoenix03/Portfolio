@@ -1,0 +1,12 @@
+---
+// Inline SVG star — see src/scripts/icons.ts for why we don't use the ✦ glyph.
+import { starSvg } from '../scripts/icons';
+
+export interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+---
+
+<Fragment set:html={starSvg(className)} />

@@ -1,4 +1,5 @@
 ---
+import Doodle from './Doodle.astro';
 import { experience } from '../data/content';
 
 // "May 2026 – Present" → { from: '2026', to: 'Now' }
@@ -22,6 +23,15 @@ const span = (period: string) => {
       <h2 class="sec-title display" data-split>
         Where I've <span class="serif">built</span>
       </h2>
+      <Doodle
+        before="Car"
+        struck="44"
+        fix="33"
+        circle
+        note="no clicks — just say the number, or the name."
+        keyboard="all"
+        pin="bottom-right"
+      />
     </header>
 
     <ol class="exp__list">

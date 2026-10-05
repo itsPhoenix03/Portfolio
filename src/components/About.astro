@@ -1,5 +1,7 @@
 ---
 import { siteMeta, education, certifications, projects } from '../data/content';
+import Arrow from './Arrow.astro';
+import Doodle from './Doodle.astro';
 
 // Years shipping production code, from the first full-time role.
 const years = Math.max(
@@ -23,6 +25,15 @@ const stats = [
       <span class="sec-label__rule" data-line></span>
       <span data-scramble>About me</span>
     </div>
+
+    <Doodle
+      before="Knock"
+      struck="once"
+      fix="five times"
+      note="on the badge up top — then wait for the dark."
+      arrow="up-left"
+      pin="top-right"
+    />
 
     <p class="about__statement" data-words>
       I'm {siteMeta.name.split(' ')[0]} — a software engineer who builds
@@ -78,13 +89,23 @@ const stats = [
             data-cursor="Open ↗"
           >
             <span class="roll"><span data-text="Download résumé">Download résumé</span></span>
-            <span class="pill__arrow" aria-hidden="true">↗</span>
+            <span class="pill__arrow" aria-hidden="true"><Arrow /></span>
           </a>
           <a class="pill magnetic" href="#contact" data-nav="contact">
             <span class="roll"><span data-text="Get in touch">Get in touch</span></span>
-            <span class="pill__arrow" aria-hidden="true">→</span>
+            <span class="pill__arrow" aria-hidden="true"><Arrow dir="right" /></span>
           </a>
         </div>
+
+        <Doodle
+          class="about__doodle"
+          struck="Tyre"
+          fix="code"
+          after="whisperer"
+          note="three letters call me in for fresh ones."
+          arrow="under"
+          keyboard="note"
+        />
       </div>
     </div>
 
@@ -118,6 +139,14 @@ const stats = [
 </section>
 
 <style>
+  .about > .wrap {
+    position: relative;
+  }
+
+  .about__doodle {
+    margin-top: 3.5rem;
+  }
+
   .about__statement {
     margin: clamp(2.5rem, 7vh, 5rem) 0 clamp(4rem, 10vh, 7rem);
     font-family: var(--font-display);

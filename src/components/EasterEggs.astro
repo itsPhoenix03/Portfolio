@@ -2,6 +2,7 @@
 // Hidden extras, never advertised in the UI:
 //  - Click the "SM" logo 5× quickly, or enter the Konami code → F1 start
 //    lights with a reaction-time test (click/press any key on lights out).
+//    Each knock on the logo gets a cryptic little reply under it.
 //  - Type "max" or "33" → team-radio toast. Type "box" → "Box, box."
 //  - Scroll really hard → "DRS enabled".
 //  - The devtools console has a little message too.
@@ -34,6 +35,14 @@
 </div>
 
 <div class="drs mono" id="drs" aria-hidden="true">DRS enabled</div>
+
+<div class="knock" id="knock" aria-hidden="true">
+  <svg class="knock__arrow" viewBox="0 0 40 46">
+    <path d="M30 42C22 41 15 34 17 25 19 15 12 11 7 5" />
+    <path d="M6 15 6 4 16 6" />
+  </svg>
+  <span class="knock__text" id="knock-text"></span>
+</div>
 
 <style>
   /* ----- Start lights ----- */
@@ -193,6 +202,46 @@
     opacity: 0.7;
   }
 
+  /* ----- Logo knock replies ----- */
+  .knock {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9400;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.3rem;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    rotate: -3deg;
+  }
+
+  .knock__arrow {
+    flex: 0 0 auto;
+    width: 1.6rem;
+    height: 1.85rem;
+    overflow: visible;
+  }
+
+  .knock__arrow path {
+    fill: none;
+    stroke: var(--doodle);
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .knock__text {
+    padding-top: 1.1rem;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 1.3rem;
+    line-height: 1;
+    color: var(--doodle);
+    white-space: nowrap;
+  }
+
   /* ----- DRS chip ----- */
   .drs {
     position: fixed;
@@ -346,15 +395,47 @@
 
   lights.addEventListener('pointerdown', reactLights);
 
-  // Logo: five quick clicks.
+  // Logo: five quick clicks. Each knock short of five gets a cryptic reply
+  // scrawled under the logo, so curious clickers know they're onto something.
+  const logo = document.querySelector<HTMLElement>('.hdr__logo');
+  const knock = document.getElementById('knock')!;
+  const knockText = document.getElementById('knock-text')!;
+  const knockReplies = ['Knock knock…', 'Someone’s listening.', 'Engines warming up…', 'One more — eyes up.'];
+  let knockTimer = 0;
+
+  function replyToKnock(n: number) {
+    if (!logo) return;
+    const r = logo.getBoundingClientRect();
+    gsap.set(knock, { x: r.left + 4, y: r.bottom + 6 });
+    knockText.textContent = knockReplies[Math.min(n, knockReplies.length) - 1];
+    window.clearTimeout(knockTimer);
+    gsap.killTweensOf([knock, knockText]);
+    gsap.to(knock, { autoAlpha: 1, duration: 0.25 });
+    if (!reduce) {
+      // "Written" in left to right, like the margin notes.
+      gsap.fromTo(knockText, { clipPath: 'inset(-40% 100% -40% -10%)' }, { clipPath: 'inset(-40% -10% -40% -10%)', duration: 0.5, ease: 'power2.out' });
+      gsap.fromTo(logo, { scale: 0.86 }, { scale: 1, duration: 0.6, ease: 'elastic.out(1, 0.4)' });
+    }
+    knockTimer = window.setTimeout(() => gsap.to(knock, { autoAlpha: 0, duration: 0.4 }), 1800);
+  }
+
+  function hideKnock() {
+    window.clearTimeout(knockTimer);
+    gsap.killTweensOf(knock);
+    gsap.set(knock, { autoAlpha: 0 });
+  }
+
   let clicks: number[] = [];
-  document.querySelector('.hdr__logo')?.addEventListener('click', () => {
+  logo?.addEventListener('click', () => {
     const now = performance.now();
-    clicks = clicks.filter((t) => now - t < 2500);
+    clicks = clicks.filter((t) => now - t < 3000);
     clicks.push(now);
     if (clicks.length >= 5) {
       clicks = [];
+      hideKnock();
       startLights();
+    } else {
+      replyToKnock(clicks.length);
     }
   });
 

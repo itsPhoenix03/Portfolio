@@ -1,4 +1,5 @@
 ---
+import Doodle from './Doodle.astro';
 import { skillGroups } from '../data/content';
 import Marquee from './Marquee.astro';
 ---
@@ -14,6 +15,14 @@ import Marquee from './Marquee.astro';
       <h2 class="sec-title display" data-split>
         Tools of the <span class="serif">trade</span>
       </h2>
+      <Doodle
+        before="Full"
+        struck="brakes"
+        fix="throttle"
+        note="push hard enough and the flap opens."
+        arrow="down"
+        pin="top-right"
+      />
     </header>
   </div>
 
