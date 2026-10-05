@@ -29,7 +29,11 @@ import Marquee from './Marquee.astro';
   <ul class="skills__rows">
     {
       skillGroups.map((group, i) => (
-        <li class="skills__row" data-reveal>
+        <li
+          class="skills__row"
+          data-reveal
+          data-sd-origin={group.category.startsWith('Backend') ? '' : undefined}
+        >
           <div class="skills__meta wrap mono">
             <span class="skills__idx">0{i + 1}</span>
             <span class="skills__cat">{group.category}</span>

@@ -327,3 +327,147 @@ export const navSections = [
   { id: 'certifications', label: 'Certifications' },
   { id: 'contact', label: 'Contact' },
 ];
+
+// System design section that opens out of the "Backend & Databases" skills
+// strip. Big stops are general "this or that" questions — no single verdict,
+// just where each option shines, what it costs, and what the call hinges on.
+// Between them, smaller notes show which way one real system went and why.
+// *word* is set in the italic serif.
+export interface DesignOption {
+  name: string;
+  shines: string;
+  costs: string;
+}
+
+export interface DesignStop {
+  title: string;
+  options: DesignOption[];
+  hinge: string;
+}
+
+export interface DesignNote {
+  text: string;
+}
+
+export const systemDesign: {
+  label: string;
+  intro: string;
+  outro: string;
+  stops: DesignStop[];
+  notes: DesignNote[];
+} = {
+  label: 'System design',
+  intro: 'How I think in systems',
+  outro: 'Back to the stack',
+  stops: [
+    {
+      title: 'Sync *or* async?',
+      options: [
+        {
+          name: 'Sync',
+          shines: 'Fast work the user needs right now. Simple to build, trace and debug.',
+          costs: 'Holds a connection for the whole job; slow calls pile up into timeouts.',
+        },
+        {
+          name: 'Async',
+          shines: 'Slow, bursty or retryable work. A queue soaks up spikes.',
+          costs: 'Job state, results that arrive later, more moving parts.',
+        },
+      ],
+      hinge: 'How long the work takes — and whether someone is waiting on it.',
+    },
+    {
+      title: 'Kafka *or* a plain queue?',
+      options: [
+        {
+          name: 'Plain queue',
+          shines: 'Handing out jobs: each done once, by one worker. SQS, RabbitMQ, Redis.',
+          costs: 'Once a message is consumed it’s gone — no replay.',
+        },
+        {
+          name: 'Kafka',
+          shines: 'Event streams with many readers, replay and per-key ordering at high throughput.',
+          costs: 'Partitions, retention and brokers to run and plan for.',
+        },
+      ],
+      hinge: 'Is it a task to finish, or an event others will want to read again?',
+    },
+    {
+      title: 'Polling, sockets *or* SSE?',
+      options: [
+        {
+          name: 'Polling',
+          shines: 'Rare updates, any client, any proxy. The simplest thing that works.',
+          costs: 'Wasted requests; latency is only as good as the interval.',
+        },
+        {
+          name: 'WebSockets',
+          shines: 'Two-way, real-time: chat, cursors, multiplayer.',
+          costs: 'Stateful connections that make scaling and deploys harder.',
+        },
+        {
+          name: 'SSE',
+          shines: 'One-way server push over plain HTTP, with reconnects built in.',
+          costs: 'Server-to-client only; connection limits on old HTTP/1.1.',
+        },
+      ],
+      hinge: 'Who talks, how often, and through what infrastructure.',
+    },
+    {
+      title: 'Retry *or* fail fast?',
+      options: [
+        {
+          name: 'Retry',
+          shines: 'Transient blips — timeouts, rate limits — with backoff and jitter.',
+          costs: 'Needs idempotency, and careless retries turn into a storm.',
+        },
+        {
+          name: 'Fail fast',
+          shines: 'A dependency that’s down, or a user who shouldn’t wait. Circuit breakers.',
+          costs: 'More errors reach the user; needs a graceful fallback.',
+        },
+      ],
+      hinge: 'Is the failure temporary, and is the operation safe to repeat?',
+    },
+    {
+      title: 'Scale up *or* scale out?',
+      options: [
+        {
+          name: 'Scale up',
+          shines: 'Stateful things like databases. One bigger box, zero coordination.',
+          costs: 'A hard ceiling, and a single point of failure.',
+        },
+        {
+          name: 'Scale out',
+          shines: 'Stateless services. Redundancy, and elastic capacity on demand.',
+          costs: 'Load balancing, shared state and consistency to think about.',
+        },
+      ],
+      hinge: 'Where the state lives — and how much downtime you can stomach.',
+    },
+    {
+      title: 'SQL *or* NoSQL?',
+      options: [
+        {
+          name: 'SQL',
+          shines: 'Relational data, transactions, joins and questions you haven’t thought of yet.',
+          costs: 'Migrations, and write scaling that takes real work.',
+        },
+        {
+          name: 'NoSQL',
+          shines: 'Known access patterns at huge scale, flexible documents, key-value speed.',
+          costs: 'No joins — you model for each query, often with weaker consistency.',
+        },
+      ],
+      hinge: 'How well you know your queries today, and how much they’ll change.',
+    },
+  ],
+  notes: [
+    { text: 'Documents take ~40 s and a thousand people hit Generate at once — so this one went *async*: a job ID back in ~12 ms.' },
+    { text: 'Each job runs once, on one worker, with nothing to replay — *a plain queue* was plenty.' },
+    { text: 'Progress only flows from server to user, so it streams over *SSE* and gets through every proxy.' },
+    { text: 'Model calls fail transiently, so they *retry with backoff* — and a job key stops a double-click generating twice.' },
+    { text: 'Workers are stateless, so they *scale out* on queue depth and p99 stays flat through the spike.' },
+    { text: 'Jobs, users and documents are relational — *Postgres*, with JSONB for the model’s output.' },
+  ],
+};

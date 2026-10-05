@@ -16,6 +16,15 @@ import Arrow from './Arrow.astro';
 
   <div class="hdr__actions">
     <button
+      class="hdr__icon hdr__sound magnetic"
+      id="sound-toggle"
+      aria-pressed="false"
+      aria-label="Play music"
+      data-cursor="Sound on"
+    >
+      <span class="hdr__eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+    </button>
+    <button
       class="hdr__icon magnetic"
       id="theme-toggle"
       aria-label="Toggle light and dark theme"
@@ -40,6 +49,13 @@ import Arrow from './Arrow.astro';
     </button>
   </div>
 </header>
+
+<!-- Soundtrack: nothing loads until the toggle is pressed (see music.ts).
+     Opus first; the MP3 is only fetched by browsers that can't play Ogg Opus. -->
+<audio id="soundtrack" loop preload="none">
+  <source src="/audio/soundtrack.opus" type="audio/ogg; codecs=opus" />
+  <source src="/audio/soundtrack.mp3" type="audio/mpeg" />
+</audio>
 
 <div class="menu" id="menu" aria-hidden="true">
   <div class="menu__panel">
@@ -209,6 +225,47 @@ import Arrow from './Arrow.astro';
 
   .hdr__moon {
     display: none;
+  }
+
+  /* Sound toggle: four bars — flat when muted, bouncing when playing. */
+  .hdr__eq {
+    display: flex;
+    align-items: center;
+    gap: 2.5px;
+    height: 16px;
+  }
+
+  .hdr__eq i {
+    width: 2.5px;
+    height: 100%;
+    border-radius: 2px;
+    background: currentColor;
+    transform: scaleY(0.2);
+    transition: transform 0.4s var(--ease-out);
+  }
+
+  .hdr__sound.is-on .hdr__eq i {
+    background: var(--accent-text);
+    animation: hdrEq 0.9s ease-in-out infinite;
+  }
+
+  .hdr__sound.is-on .hdr__eq i:nth-child(1) { animation-duration: 0.78s; animation-delay: -0.2s; }
+  .hdr__sound.is-on .hdr__eq i:nth-child(2) { animation-duration: 0.56s; animation-delay: -0.45s; }
+  .hdr__sound.is-on .hdr__eq i:nth-child(3) { animation-duration: 0.92s; animation-delay: -0.1s; }
+  .hdr__sound.is-on .hdr__eq i:nth-child(4) { animation-duration: 0.64s; animation-delay: -0.6s; }
+
+  @keyframes hdrEq {
+    0%, 100% { transform: scaleY(0.3); }
+    30% { transform: scaleY(1); }
+    55% { transform: scaleY(0.45); }
+    75% { transform: scaleY(0.85); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hdr__sound.is-on .hdr__eq i {
+      animation: none;
+      transform: scaleY(0.7);
+    }
   }
 
   :global([data-theme='light']) .hdr__sun {
@@ -501,6 +558,8 @@ import Arrow from './Arrow.astro';
   import gsap from 'gsap';
   import { lenisInstance } from '@/scripts/smooth-scroll';
   import { siteMeta, navSections } from '@/data/content';
+  import { duckMusic } from '@/scripts/duck';
+  import '@/scripts/music';
 
   const hdr = document.getElementById('hdr')!;
   const menu = document.getElementById('menu')!;
@@ -545,6 +604,7 @@ import Arrow from './Arrow.astro';
     menuLinks.forEach((a) => (a.tabIndex = open ? 0 : -1));
     btnLabel.textContent = open ? 'Close' : 'Menu';
     btnLabel.dataset.text = open ? 'Close' : 'Menu';
+    duckMusic('menu', open ? 0.6 : null);
     if (open) {
       menu.classList.add('is-open');
       document.body.classList.add('menu-open');

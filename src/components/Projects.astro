@@ -504,6 +504,7 @@ const initials = (t: string) =>
   import gsap from 'gsap';
   import { lenisInstance } from '@/scripts/smooth-scroll';
   import { setArrowLabel } from '@/scripts/icons';
+  import { duckMusic } from '@/scripts/duck';
 
   const modal = document.getElementById('pmodal');
   const panel = modal?.querySelector<HTMLElement>('.pmodal__panel');
@@ -558,6 +559,7 @@ const initials = (t: string) =>
       modal!.classList.add('is-open');
       modal!.setAttribute('aria-hidden', 'false');
       lenisInstance.stop();
+      duckMusic('modal', 0.5);
       isOpen = true;
 
       const cr = card.getBoundingClientRect();
@@ -606,6 +608,7 @@ const initials = (t: string) =>
           modal!.classList.remove('is-open');
           modal!.setAttribute('aria-hidden', 'true');
           lenisInstance.start();
+          duckMusic('modal', null);
           activeCard?.focus({ preventScroll: true });
         },
       });

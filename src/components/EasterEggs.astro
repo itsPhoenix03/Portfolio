@@ -266,6 +266,8 @@
   import gsap from 'gsap';
   import { lenisInstance } from '@/scripts/smooth-scroll';
   import { radioQuotes, type RadioQuote } from '@/data/content';
+  import { duckMusic } from '@/scripts/duck';
+  import { sfx } from '@/scripts/sfx';
 
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const pick = <T,>(arr: T[]) => arr[Math.floor(Math.random() * arr.length)];
@@ -301,7 +303,15 @@
     // take to say the line, then falls flat.
     radioWave.classList.add('is-talking');
     const talkMs = Math.min(3600, 700 + quote.text.length * 45);
-    talkTimer = window.setTimeout(() => radioWave.classList.remove('is-talking'), talkMs);
+    // The soundtrack dips under the "voice", like a real radio call.
+    duckMusic('radio', 0.3, 0.25);
+    sfx.radioIn();
+    sfx.radioBed(talkMs);
+    talkTimer = window.setTimeout(() => {
+      radioWave.classList.remove('is-talking');
+      sfx.radioOut();
+      duckMusic('radio', null, 1.5);
+    }, talkMs);
     radioTimer = window.setTimeout(
       () => gsap.to(radio, { autoAlpha: 0, y: 20, duration: 0.5, ease: 'power3.in' }),
       5200
@@ -338,6 +348,7 @@
           lights.classList.remove('is-on');
           gsap.set(lights, { clearProps: 'all' });
           lenisInstance.start();
+          duckMusic('lights', null, 1.2);
           running = false;
           phase = 'idle';
           if (quote) window.setTimeout(() => showRadio(quote), 250);
@@ -356,10 +367,17 @@
     sub.textContent = 'Click or press any key when the lights go out';
     lights.classList.add('is-on');
     lenisInstance.stop();
+    // Near-silence on the grid: the tension is the point.
+    duckMusic('lights', 0.25, 0.8);
     gsap.fromTo(lights, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.3 });
 
     const step = reduce ? 300 : 900;
-    pods.forEach((p, i) => later(() => p.classList.add('is-lit'), 500 + i * step));
+    pods.forEach((p, i) =>
+      later(() => {
+        p.classList.add('is-lit');
+        sfx.light();
+      }, 500 + i * step)
+    );
     // Random hold after all five are lit, like the real thing.
     const hold = 500 + 4 * step + 600 + Math.random() * 2200;
     later(() => {
@@ -381,6 +399,7 @@
       timers.splice(0).forEach(window.clearTimeout);
       pods.forEach((p) => p.classList.add('is-lit'));
       msg.textContent = 'Jump start';
+      sfx.jumpStart();
       sub.textContent = '5-second time penalty.';
       endLights(2200, { text: 'Leave me alone, I know what I’m doing.', by: 'Kimi Räikkönen' });
     } else if (phase === 'go') {
@@ -430,6 +449,7 @@
     const now = performance.now();
     clicks = clicks.filter((t) => now - t < 3000);
     clicks.push(now);
+    sfx.knock(clicks.length);
     if (clicks.length >= 5) {
       clicks = [];
       hideKnock();
@@ -492,6 +512,7 @@
   lenisInstance.on('scroll', (e: { velocity: number }) => {
     if (!drsReady || Math.abs(e.velocity) < 60) return;
     drsReady = false;
+    sfx.drs();
     gsap
       .timeline({ onComplete: () => window.setTimeout(() => (drsReady = true), 20000) })
       .to(drs, { opacity: 1, y: 0, duration: 0.3, ease: 'power3.out' })

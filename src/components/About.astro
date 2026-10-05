@@ -2,16 +2,16 @@
 import { siteMeta, education, certifications, projects } from '../data/content';
 import Arrow from './Arrow.astro';
 import Doodle from './Doodle.astro';
+import { experienceYears } from '../scripts/experience';
 
-// Years shipping production code, from the first full-time role.
-const years = Math.max(
-  1,
-  Math.floor((Date.now() - new Date(siteMeta.careerStart).getTime()) / (365.25 * 864e5))
-);
+// Years shipping production code, from the first full-time role. Worked out
+// at build time as a fallback, then again in the browser (see the script
+// below) so it stays current without a rebuild.
+const years = experienceYears(siteMeta.careerStart);
 const mcaGrade = education[0]?.grade.match(/[\d.]+/)?.[0] ?? '9.2';
 
 const stats = [
-  { value: years, decimals: 0, suffix: '+', label: 'Years shipping production software' },
+  { value: years, decimals: 1, suffix: '+', label: 'Years shipping production software', since: siteMeta.careerStart },
   { value: Number(mcaGrade), decimals: 1, suffix: '', label: 'CGPA — Master of Computer Applications' },
   { value: projects.length, decimals: 0, suffix: '+', label: 'Featured products shipped' },
   { value: certifications.length, decimals: 0, suffix: '', label: 'Verified certifications' },
@@ -38,27 +38,74 @@ const stats = [
     <p class="about__statement" data-words>
       I'm {siteMeta.name.split(' ')[0]} — a software engineer who builds
       <em class="serif">scalable</em>, <em class="serif">dependable</em> systems end-to-end.
-      Today I work in R&amp;D at Meril (Nuvo AI) out of IIT Kanpur Technopark, wiring custom
-      fine-tuned AI models into medical and regulatory workflows that thousands of people can
-      rely on.
+      Today I work in R&amp;D at Meril (Nuvo AI) out of IIT Kanpur Technopark, building the
+      products thousands of people rely on in medical and regulatory work — and bringing AI into
+      them to make those processes faster and more efficient.
     </p>
 
     <div class="about__grid">
-      <figure class="about__portrait" data-clip>
-        <img
-          src="/assets/contact-avatar.png"
-          alt="Illustrated Shreyas Misra pointing at himself"
-          width="640"
-          height="1280"
-          loading="lazy"
-          decoding="async"
-          data-speed="0.85"
-        />
-        <figcaption class="mono about__caption">
-          <span>{siteMeta.name}</span>
-          <span>{siteMeta.role}</span>
-        </figcaption>
-      </figure>
+      <!-- Two-sided card: click (or Enter / Space) flips it over. -->
+      <div class="about__card-wrap">
+        <div
+          class="about__card"
+          id="about-card"
+          role="button"
+          tabindex="0"
+          aria-pressed="false"
+          aria-label="Flip the card to read a note"
+          data-cursor="Flip"
+        >
+          <div class="about__card-peek">
+            <div class="about__card-inner" id="about-card-inner">
+              <figure class="about__portrait about__face" data-clip>
+                <img
+                  src="/assets/contact-avatar.png"
+                  alt="Illustrated Shreyas Misra pointing at himself"
+                  width="640"
+                  height="1280"
+                  loading="lazy"
+                  decoding="async"
+                  data-speed="0.85"
+                />
+                <figcaption class="mono about__caption">
+                  <span>{siteMeta.name}</span>
+                  <span>{siteMeta.role}</span>
+                </figcaption>
+              </figure>
+
+              <div class="about__face about__back">
+                <span class="mono about__back-cap">Off the record</span>
+                <div class="about__back-note serif">
+                  <p>I’ve never been good at staying in one lane.</p>
+                  <p>
+                    A new stack, a new domain, a problem nobody has handed me yet — that’s where I’m
+                    happiest. Healthcare one month, generative AI the next, real-time game servers
+                    on the weekend.
+                  </p>
+                  <p>
+                    What stays the same is the discipline: show up every day, learn it properly,
+                    ship it well.
+                  </p>
+                  <p>
+                    Computer science isn’t just my job. It’s the thing I’d still be doing if nobody
+                    paid me — I love it from the bottom of my heart.
+                  </p>
+                </div>
+                <span class="about__back-sign serif">— {siteMeta.name.split(' ')[0]}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hand-drawn hint, sketched in on hover. -->
+        <div class="about__flip-hint" aria-hidden="true">
+          <span class="about__flip-text serif" id="about-flip-text">flip it</span>
+          <svg class="about__flip-arrow" viewBox="0 0 70 80">
+            <path pathLength="1" d="M58 6C62 30 50 44 36 40 22 36 26 20 38 26 52 33 40 62 12 72" />
+            <path pathLength="1" d="M24 64 11 73 25 78" />
+          </svg>
+        </div>
+      </div>
 
       <div class="about__body">
         <blockquote class="about__quote" data-reveal>
@@ -72,7 +119,7 @@ const stats = [
               <li class="about__stat" data-reveal>
                 <span class="rule" data-line />
                 <span class="about__stat-num display">
-                  <span data-count={s.value} data-decimals={s.decimals}>{s.value.toFixed(s.decimals)}</span><span class="about__stat-suffix">{s.suffix}</span>
+                  <span data-count={s.value} data-decimals={s.decimals} data-since={s.since}>{s.value.toFixed(s.decimals)}</span><span class="about__stat-suffix">{s.suffix}</span>
                 </span>
                 <span class="mono about__stat-label">{s.label}</span>
               </li>
@@ -138,6 +185,56 @@ const stats = [
   </div>
 </section>
 
+<script>
+  import gsap from 'gsap';
+  import { experienceYears } from '@/scripts/experience';
+
+  // ----- Flip card: lifts, turns over, and lands a little tilted -----
+  const card = document.getElementById('about-card');
+  const inner = document.getElementById('about-card-inner');
+  const hint = document.getElementById('about-flip-text');
+  if (card && inner) {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let flipped = false;
+
+    const flip = () => {
+      flipped = !flipped;
+      card.classList.toggle('is-flipped', flipped);
+      card.setAttribute('aria-pressed', String(flipped));
+      card.setAttribute('aria-label', flipped ? 'Flip the card back' : 'Flip the card to read a note');
+      if (hint) hint.textContent = flipped ? 'flip back' : 'flip it';
+
+      if (reduce) {
+        gsap.set(inner, { rotationY: flipped ? 180 : 0 });
+        gsap.set(card, { rotation: flipped ? -3 : 0 });
+        return;
+      }
+      gsap.killTweensOf([inner, card]);
+      gsap.to(inner, { rotationY: flipped ? 180 : 0, duration: 1, ease: 'power3.inOut' });
+      gsap
+        .timeline()
+        .to(card, { y: -26, scale: 1.04, duration: 0.45, ease: 'power2.out' })
+        .to(card, { y: 0, scale: 1, rotation: flipped ? -3.5 : 1.5, duration: 0.55, ease: 'back.out(2.2)' })
+        .to(card, { rotation: flipped ? -3 : 0, duration: 0.5, ease: 'power2.out' });
+    };
+
+    card.addEventListener('click', flip);
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        flip();
+      }
+    });
+  }
+
+  // Refresh the experience stat from today's date before the count-up runs.
+  document.querySelectorAll<HTMLElement>('[data-since]').forEach((el) => {
+    const years = experienceYears(el.dataset.since!);
+    el.dataset.count = String(years);
+    el.textContent = years.toFixed(1);
+  });
+</script>
+
 <style>
   .about > .wrap {
     position: relative;
@@ -170,14 +267,177 @@ const stats = [
     align-items: start;
   }
 
-  .about__portrait {
+  /* ----- Flip card ----- */
+  .about__card-wrap {
     position: relative;
     aspect-ratio: 4 / 5;
+  }
+
+  .about__card,
+  .about__card-peek,
+  .about__card-inner {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+  }
+
+  .about__card {
+    perspective: 1800px;
+    border-radius: var(--radius);
+    outline-offset: 6px;
+  }
+
+  /* A small turn toward the visitor on hover — hints that it flips. */
+  .about__card-peek {
+    transition: transform 0.6s var(--ease-out);
+  }
+
+  @media (hover: hover) {
+    .about__card:hover .about__card-peek {
+      transform: rotateY(-9deg) rotateX(3deg);
+    }
+    .about__card.is-flipped:hover .about__card-peek {
+      transform: rotateY(9deg) rotateX(3deg);
+    }
+  }
+
+  .about__face {
+    position: absolute;
+    inset: 0;
+    margin: 0;
     border-radius: var(--radius);
     overflow: hidden;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+
+  .about__portrait {
     background:
       radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.18), transparent 60%),
       var(--accent);
+  }
+
+  /* Back: a ruled note card in the page's ink colour (cream on dark, navy on
+     light), written in the cursive face, with a red margin line. */
+  .about__back {
+    --margin: clamp(1.6rem, 3vw, 2.5rem);
+    --rule: 1.55em;
+    transform: rotateY(180deg);
+    display: flex;
+    flex-direction: column;
+    padding: clamp(1.4rem, 3vw, 2.4rem) clamp(1.4rem, 3vw, 2.4rem) clamp(1.2rem, 2.5vw, 2rem)
+      calc(var(--margin) + clamp(0.8rem, 1.5vw, 1.2rem));
+    background:
+      linear-gradient(
+        90deg,
+        transparent calc(var(--margin) - 1px),
+        color-mix(in srgb, var(--accent) 55%, transparent) calc(var(--margin) - 1px) var(--margin),
+        transparent var(--margin)
+      ),
+      repeating-linear-gradient(
+        180deg,
+        transparent 0 calc(var(--rule) - 1px),
+        color-mix(in srgb, var(--bg) 12%, transparent) calc(var(--rule) - 1px) var(--rule)
+      ),
+      var(--ink);
+    color: var(--bg);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+  }
+
+  .about__back-cap {
+    font-size: 0.62rem;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+
+  .about__back-note {
+    display: grid;
+    gap: 0.7em;
+    font-size: clamp(1.05rem, 1.55vw, 1.45rem);
+    line-height: 1.32;
+  }
+
+  .about__back-note p {
+    color: inherit; /* the site's default paragraph grey is far too faint here */
+  }
+
+  .about__back-note p:first-child {
+    font-size: 1.25em;
+    line-height: 1.15;
+    color: var(--accent);
+  }
+
+  .about__back-sign {
+    margin-top: auto;
+    align-self: flex-end;
+    font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+    rotate: -4deg;
+  }
+
+  /* "flip it" — hand-drawn note beside the card, drawn on hover. */
+  .about__flip-hint {
+    position: absolute;
+    top: -2.6rem;
+    right: -1.2rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.2rem;
+    pointer-events: none;
+    rotate: 6deg;
+    z-index: 2;
+  }
+
+  .about__flip-text {
+    font-size: clamp(1.4rem, 2vw, 1.9rem);
+    line-height: 1;
+    color: var(--doodle);
+    white-space: nowrap;
+    clip-path: inset(-30% 100% -30% -10%);
+    transition: clip-path 0.5s var(--ease-out);
+  }
+
+  .about__flip-arrow {
+    width: 3.2rem;
+    height: 3.6rem;
+    margin-top: 0.6rem;
+    overflow: visible;
+  }
+
+  .about__flip-arrow path {
+    fill: none;
+    stroke: var(--doodle);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset 0.45s ease;
+  }
+
+  .about__card-wrap:hover .about__flip-text,
+  .about__card:focus-visible ~ .about__flip-hint .about__flip-text {
+    clip-path: inset(-30% -10% -30% -10%);
+  }
+
+  .about__card-wrap:hover .about__flip-arrow path,
+  .about__card:focus-visible ~ .about__flip-hint .about__flip-arrow path {
+    stroke-dashoffset: 0;
+    transition-delay: 0.25s;
+  }
+
+  .about__card-wrap:hover .about__flip-arrow path + path,
+  .about__card:focus-visible ~ .about__flip-hint .about__flip-arrow path + path {
+    transition-delay: 0.6s;
+  }
+
+  /* Touch screens can't hover: keep the hint drawn. */
+  @media (hover: none) {
+    .about__flip-text {
+      clip-path: none;
+    }
+    .about__flip-arrow path {
+      stroke-dashoffset: 0;
+    }
   }
 
   .about__portrait img {
@@ -317,8 +577,11 @@ const stats = [
     .about__grid {
       grid-template-columns: 1fr;
     }
-    .about__portrait {
+    .about__card-wrap {
       max-width: 420px;
+    }
+    .about__flip-hint {
+      right: -0.4rem;
     }
     .edu__grid {
       grid-template-columns: 2.5rem minmax(0, 1fr);

@@ -5,7 +5,7 @@
 // seeded from the word, so the same word always gets the same scribble.
 
 // Mulberry32 — tiny deterministic PRNG.
-function rng(seedText: string) {
+export function rng(seedText: string) {
   let a = 0;
   for (const ch of seedText) a = (Math.imul(a ^ ch.charCodeAt(0), 2654435761) + 0x9e3779b9) | 0;
   return () => {

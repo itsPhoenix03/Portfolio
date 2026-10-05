@@ -564,9 +564,18 @@ const links = [
 
 <script>
   import { checkSvg, closeSvg } from '@/scripts/icons';
+  import { duckMusic } from '@/scripts/duck';
 
   const form = document.getElementById('contact-form') as HTMLFormElement | null;
   const status = document.getElementById('cf-status');
+
+  if (form) {
+    // Quieter while someone is writing.
+    form.addEventListener('focusin', () => duckMusic('form', 0.45));
+    form.addEventListener('focusout', (e) => {
+      if (!form.contains((e as FocusEvent).relatedTarget as Node)) duckMusic('form', null);
+    });
+  }
 
   if (form && status) {
     const fallback = form.querySelector<HTMLInputElement>('[name="subject"]')?.value ?? '';
