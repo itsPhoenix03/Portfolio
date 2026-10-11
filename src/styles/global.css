@@ -481,10 +481,13 @@ button:hover .roll > span {
   gap: 2rem;
 }
 
-.preloader__bar {
-  position: relative;
+.preloader__left {
   flex: 1;
   max-width: 420px;
+}
+
+.preloader__bar {
+  position: relative;
   height: 2px;
   background: var(--line);
   overflow: hidden;
@@ -509,6 +512,84 @@ button:hover .roll > span {
 
 .preloader__count span {
   display: inline-block;
+}
+
+/* Until the preloader script starts counting (it adds .is-counting), the page
+   is still downloading. These run on CSS alone, from the very first paint, so
+   a slow connection never looks like a frozen site: a segment sweeps along the
+   bar, the "0" breathes, and after a few seconds a note says what's going on. */
+.preloader__bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 35%;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  animation: preSweep 1.4s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+.preloader:not(.is-counting) .preloader__count span {
+  animation: preBreathe 1.6s ease-in-out infinite;
+}
+
+.preloader__hint {
+  margin-bottom: 0.9rem;
+  font-size: 0.66rem;
+  color: var(--ink-2);
+  opacity: 0;
+  animation: preHint 0.5s ease 2.5s forwards;
+}
+
+.preloader__dots i {
+  font-style: normal;
+  animation: preDot 1.2s ease-in-out infinite;
+}
+
+.preloader__dots i:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.preloader__dots i:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+.preloader.is-counting .preloader__bar::after {
+  animation: none;
+  opacity: 0;
+}
+
+.preloader.is-counting .preloader__hint {
+  animation: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+@keyframes preSweep {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(290%); }
+}
+
+@keyframes preBreathe {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+@keyframes preHint {
+  to { opacity: 1; }
+}
+
+@keyframes preDot {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .preloader__bar::after,
+  .preloader:not(.is-counting) .preloader__count span,
+  .preloader__dots i {
+    animation: none;
+  }
 }
 
 /* =============================================================================

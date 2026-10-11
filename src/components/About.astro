@@ -10,6 +10,12 @@ import { experienceYears } from '../scripts/experience';
 const years = experienceYears(siteMeta.careerStart);
 const mcaGrade = education[0]?.grade.match(/[\d.]+/)?.[0] ?? '9.2';
 
+// "9.2 CGPA (3.65 GPA)" → mark the converted GPA with a footnote asterisk.
+const gradeParts = (grade: string) => {
+  const m = grade.match(/^(.*\(.*?GPA)(\).*)$/);
+  return m ? [{ text: m[1], note: true }, { text: m[2], note: false }] : [{ text: grade, note: false }];
+};
+
 const stats = [
   { value: years, decimals: 1, suffix: '+', label: 'Years shipping production software', since: siteMeta.careerStart },
   { value: Number(mcaGrade), decimals: 1, suffix: '', label: 'CGPA — Master of Computer Applications' },
@@ -173,7 +179,7 @@ const stats = [
                   <span class="mono edu__period">{ed.period}</span>
                 </div>
                 <div class="edu__side">
-                  <span class="edu__grade display">{ed.grade}</span>
+                  <span class="edu__grade display">{gradeParts(ed.grade).map((g) => g.note ? <>{g.text}<span class="edu__ast" aria-hidden="true">*</span></> : g.text)}</span>
                   <span class="edu__course">{ed.coursework}</span>
                 </div>
               </div>
@@ -181,6 +187,14 @@ const stats = [
           ))
         }
       </ol>
+      {
+        education.some((ed) => /GPA/.test(ed.grade)) && (
+          <p class="edu__note mono">
+            <span aria-hidden="true">*</span> GPA figures are approximate: there's no single standard for converting
+            Indian grades to a 4.0 scale.
+          </p>
+        )
+      }
     </div>
   </div>
 </section>
@@ -566,6 +580,21 @@ const stats = [
   .edu__grade {
     font-size: clamp(1.2rem, 1.8vw, 1.6rem);
     color: var(--accent-text);
+  }
+
+  .edu__ast {
+    font-size: 0.55em;
+    vertical-align: 0.6em;
+    margin-left: 0.05em;
+  }
+
+  .edu__note {
+    margin-top: 1rem;
+    font-size: 0.68rem;
+    line-height: 1.5;
+    letter-spacing: 0.01em;
+    text-transform: none;
+    color: var(--ink-3);
   }
 
   .edu__course {

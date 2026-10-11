@@ -191,7 +191,13 @@ const schema = {
         Engineering <span class="serif">systems</span><br />that scale.
       </div>
       <div class="preloader__bottom">
-        <div class="preloader__bar"><span class="preloader__fill" id="preloader-fill"></span></div>
+        <div class="preloader__left">
+          <!-- Shown by CSS alone if the scripts are slow to arrive. -->
+          <p class="preloader__hint mono" aria-live="polite">
+            Still loading on a slow connection<span class="preloader__dots" aria-hidden="true"><i>.</i><i>.</i><i>.</i></span>
+          </p>
+          <div class="preloader__bar"><span class="preloader__fill" id="preloader-fill"></span></div>
+        </div>
         <div class="preloader__count display"><span id="preloader-count">0</span></div>
       </div>
     </div>

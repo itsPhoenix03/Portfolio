@@ -217,8 +217,8 @@ export const projects: Project[] = [
     linkLabel: 'Visit Stanley',
   },
   {
-    title: 'Echoes of the Hearth',
-    cover: 'EH',
+    title: 'Wyldra',
+    cover: 'WY',
     description:
       'A web-based 2D isometric co-op survival RPG — gather, craft, build and defend together across four biomes, with real-time multiplayer powered by a Go WebSocket server.',
     tags: ['Golang', 'WebSockets', 'TypeScript', 'Vite'],
@@ -228,7 +228,7 @@ export const projects: Project[] = [
       'Crafting, base building, wildlife and escalating monster waves',
       'Persistent 1280×1280 world across sessions',
     ],
-    link: 'https://github.com/itsPhoenix03/echoes-of-the-hearth',
+    link: 'https://github.com/itsPhoenix03/wyldra',
     linkLabel: 'View code',
   },
   {

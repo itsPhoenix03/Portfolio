@@ -60,7 +60,7 @@ const mapD = wavePath(MAP_SCALE, MAP_SCALE);
         const a = doodleArt(d.art);
         return (
           <svg
-            class="sd__dd"
+            class:list={['sd__dd', d.bg && 'sd__dd--bg']}
             viewBox={`0 0 ${a.w} ${a.h}`}
             data-x={d.at[0]}
             data-y={d.at[1]}
@@ -279,6 +279,14 @@ const mapD = wavePath(MAP_SCALE, MAP_SCALE);
     overflow: visible;
     translate: -50% -50%;
     pointer-events: none;
+  }
+
+  /* Gap fillers sit back so they never compete with the stops. On phones the
+     stops fill the screen, so there's no room for them at all. */
+  @media (max-width: 700px) {
+    .is-overlay .sd__dd--bg {
+      display: none;
+    }
   }
 
   .sd__dd :global(path) {

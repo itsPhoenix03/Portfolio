@@ -60,6 +60,8 @@ if (!pre || !fill || !count) {
         delay: 0.1,
       });
     }
+    // Scripts have arrived: the CSS "still loading" signals hand over to the count.
+    pre.classList.add('is-counting');
     const state = { p: 0 };
     gsap.to(state, {
       p: 100,

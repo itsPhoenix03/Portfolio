@@ -45,6 +45,7 @@ function init(sd: HTMLElement, origin: HTMLElement, skills: HTMLElement) {
     y: Number(el.dataset.y),
     paths: Array.from(el.querySelectorAll<SVGPathElement>('path')),
     texts: Array.from(el.querySelectorAll<SVGTextElement>('text')),
+    base: el.classList.contains('sd__dd--bg') ? 0.5 : 1,
     drawn: -1,
   }));
   const at = (el: HTMLElement): Pt => [Number(el.dataset.x), Number(el.dataset.y)];
@@ -132,7 +133,7 @@ function init(sd: HTMLElement, origin: HTMLElement, skills: HTMLElement) {
     // On narrow screens the big stops fill the width, so sketches step aside.
     const sketchAlpha = vw < 700 ? String(1 - stopShown) : '1';
     sketches.forEach((d) => {
-      d.el.style.opacity = sketchAlpha;
+      d.el.style.opacity = String(Number(sketchAlpha) * d.base);
       // Finished just before the camera reaches it — or by the end of the
       // route, for sketches that sit past the last stop.
       const end = Math.min(d.x - 0.35, routeEnd);
