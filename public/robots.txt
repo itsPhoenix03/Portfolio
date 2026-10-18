@@ -3,4 +3,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://shreyas-misra.vercel.app/sitemap.xml
+Sitemap: https://shreyasmisra.vercel.app/sitemap.xml
