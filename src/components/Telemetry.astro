@@ -1,0 +1,490 @@
+---
+// Telemetry: recent GitHub activity (githubActivity.weeks, ~6 months), drawn like a race-car
+// speed trace instead of GitHub's grid. Personal and work accounts are merged;
+// private work shows up as counts only. Data is fetched at build time (see
+// src/scripts/contributions.ts), so visitors never call GitHub.
+import { githubActivity } from '../data/content';
+import { loadActivity } from '../scripts/contributions';
+
+const a = await loadActivity(githubActivity.accounts.map((acc) => acc.login), githubActivity.weeks);
+const months = Math.round(githubActivity.weeks / 4.345);
+
+// ---- Chart geometry (viewBox units; the SVG stretches to the box) ----
+const VW = 1000;
+const VH = 260;
+const TOP = 26;
+const BOTTOM = 10;
+const n = a.weeks.length;
+const max = Math.max(1, a.bestWeek.total) * 1.12;
+const xAt = (i: number) => (i / (n - 1)) * VW;
+const yAt = (v: number) => TOP + (1 - v / max) * (VH - TOP - BOTTOM);
+const pts = a.weeks.map((w, i) => [xAt(i), yAt(w.total)] as const);
+const f = (v: number) => +v.toFixed(1);
+
+// Smooth trace through the weekly points (Catmull-Rom as cubic Béziers),
+// with control points clamped so the curve never dips below zero.
+let trace = `M${f(pts[0][0])} ${f(pts[0][1])}`;
+for (let i = 0; i < n - 1; i++) {
+  const p0 = pts[i - 1] ?? pts[i];
+  const p1 = pts[i];
+  const p2 = pts[i + 1];
+  const p3 = pts[i + 2] ?? p2;
+  const floor = yAt(0);
+  const c1y = Math.min(floor, p1[1] + (p2[1] - p0[1]) / 6);
+  const c2y = Math.min(floor, p2[1] - (p3[1] - p1[1]) / 6);
+  trace += `C${f(p1[0] + (p2[0] - p0[0]) / 6)} ${f(c1y)} ${f(p2[0] - (p3[0] - p1[0]) / 6)} ${f(c2y)} ${f(p2[0])} ${f(p2[1])}`;
+}
+const area = `${trace}L${VW} ${VH}L0 ${VH}Z`;
+
+// Three "sectors", like an F1 lap, and month ticks along the bottom.
+const SECTORS = 3;
+const sectors = Array.from({ length: SECTORS - 1 }, (_, k) => (Math.round((n * (k + 1)) / SECTORS) / (n - 1)) * 100);
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const monthTicks: { left: number; label: string }[] = [];
+a.weeks.forEach((w, i) => {
+  const d = new Date(`${w.start}T00:00:00Z`);
+  const prev = i ? new Date(`${a.weeks[i - 1].start}T00:00:00Z`) : null;
+  if (i > 0 && prev && prev.getUTCMonth() !== d.getUTCMonth()) monthTicks.push({ left: (i / (n - 1)) * 100, label: MONTHS[d.getUTCMonth()] });
+});
+
+// Best week marker.
+const bestIdx = a.weeks.indexOf(a.bestWeek);
+const best = { left: (bestIdx / (n - 1)) * 100, top: (yAt(a.bestWeek.total) / VH) * 100 };
+
+// Daily rev strip: each day's intensity on a 0–4 scale, relative to the
+// busiest days (quartiles of the non-zero days, like GitHub's levels).
+const daily = a.weeks.flatMap((w) => w.days);
+const nz = daily.filter((v) => v > 0).sort((x, y) => x - y);
+const q = (p: number) => nz[Math.min(nz.length - 1, Math.floor(p * nz.length))] ?? 1;
+const cuts = [q(0.25), q(0.5), q(0.75)];
+const level = (v: number) => (v === 0 ? 0 : v <= cuts[0] ? 1 : v <= cuts[1] ? 2 : v <= cuts[2] ? 3 : 4);
+
+const fmtDate = (iso: string) =>
+  new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+const weekData = JSON.stringify(a.weeks.map((w) => [w.start, w.total]));
+
+const stats = [
+  { value: a.total, label: 'Contributions' },
+  { value: a.activeDays, label: 'Days on track' },
+  { value: a.longestStreak, label: 'Longest streak, days' },
+  { value: a.bestWeek.total, label: 'Fastest week' },
+];
+---
+
+<section class="section tele" id="telemetry" aria-labelledby="tele-title">
+  <div class="wrap">
+    <header class="tele__head">
+      <h2 class="tele__title mono" id="tele-title">
+        <span class="tele__live" aria-hidden="true"></span>Telemetry — last {months} months
+      </h2>
+      <span class="tele__accounts mono">
+        {githubActivity.accounts.map((acc, i) => (
+          <>
+            {i > 0 && ' + '}
+            <a href={`https://github.com/${acc.login}`} target="_blank" rel="noopener noreferrer" data-cursor="GitHub ↗">
+              {acc.label}
+            </a>
+          </>
+        ))}
+      </span>
+    </header>
+
+    <div class="tele__chart" id="tele-chart" data-weeks={weekData}>
+      <div class="tele__plot" id="tele-plot">
+        <svg viewBox={`0 0 ${VW} ${VH}`} preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="tele-fill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" class="tele__fill-top" />
+              <stop offset="1" class="tele__fill-bottom" />
+            </linearGradient>
+          </defs>
+          {[0.25, 0.5, 0.75].map((g) => (
+            <line class="tele__grid" x1="0" x2={VW} y1={f(TOP + g * (VH - TOP - BOTTOM))} y2={f(TOP + g * (VH - TOP - BOTTOM))} />
+          ))}
+          <path class="tele__area" d={area} fill="url(#tele-fill)" />
+          <path class="tele__trace" d={trace} />
+        </svg>
+
+        {sectors.map((left, i) => (
+          <span class="tele__sector" style={`left:${left}%`} aria-hidden="true">
+            <i class="mono">S{i + 2}</i>
+          </span>
+        ))}
+        <span class="tele__sector tele__sector--first" style="left:0%" aria-hidden="true"><i class="mono">S1</i></span>
+
+        <span class="tele__best" style={`left:${best.left}%;top:${best.top}%`} aria-hidden="true">
+          <i class="tele__best-dot"></i>
+          <span class="tele__best-label mono">Fastest week · {a.bestWeek.total}</span>
+        </span>
+
+        <span class="tele__cursor" id="tele-cursor" aria-hidden="true">
+          <i class="tele__cursor-dot"></i>
+          <span class="tele__cursor-label mono" id="tele-cursor-label"></span>
+        </span>
+      </div>
+
+      <div class="tele__months mono" aria-hidden="true">
+        {monthTicks.map((m) => <span style={`left:${m.left}%`}>{m.label}</span>)}
+      </div>
+
+      <div class="tele__rev" aria-hidden="true">
+        {daily.map((v) => <i class={`l${level(v)}`} />)}
+      </div>
+    </div>
+
+    <ul class="tele__stats">
+      {stats.map((s) => (
+        <li class="tele__stat" data-reveal>
+          <span class="tele__stat-num display" data-count={s.value} data-decimals="0">{s.value}</span>
+          <span class="tele__stat-label mono">{s.label}</span>
+        </li>
+      ))}
+    </ul>
+
+    <p class="tele__note mono">
+      Personal and work GitHub accounts combined. Private work is counted, never shown. Updated {fmtDate(a.asOf)}.
+    </p>
+
+    <p class="sr-only">
+      {a.total} GitHub contributions in the last {months} months across {a.activeDays} active days, with a longest streak of {a.longestStreak} days.
+    </p>
+  </div>
+</section>
+
+<style>
+  /* A slim band between Experience and Projects, so less padding than a section. */
+  .tele {
+    padding-top: clamp(3rem, 8vh, 5rem);
+    padding-bottom: clamp(3rem, 8vh, 5rem);
+  }
+
+  .tele__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: clamp(1.5rem, 4vh, 2.5rem);
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--line-strong);
+  }
+
+  .tele__title {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.72rem;
+    font-weight: 400;
+    color: var(--ink);
+  }
+
+  .tele__live {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent-2);
+    animation: telePulse 1.8s ease-in-out infinite;
+  }
+
+  @keyframes telePulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.25; }
+  }
+
+  .tele__accounts {
+    font-size: 0.66rem;
+    color: var(--ink-3);
+  }
+
+  .tele__accounts a {
+    color: var(--ink-2);
+    text-decoration: underline;
+    text-decoration-color: var(--line-strong);
+    text-underline-offset: 3px;
+    transition: color 0.3s ease;
+  }
+
+  .tele__accounts a:hover {
+    color: var(--accent-text);
+  }
+
+  /* ----- Chart ----- */
+  .tele__plot {
+    position: relative;
+    height: clamp(190px, 28vw, 340px);
+  }
+
+  .tele__plot svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .tele__grid {
+    stroke: var(--line);
+    stroke-width: 1;
+    stroke-dasharray: 2 6;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .tele__fill-top {
+    stop-color: var(--accent);
+    stop-opacity: 0.32;
+  }
+
+  .tele__fill-bottom {
+    stop-color: var(--accent);
+    stop-opacity: 0;
+  }
+
+  .tele__trace {
+    fill: none;
+    stroke: var(--accent-text);
+    stroke-width: 2.25;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .tele__sector {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    border-left: 1px dashed var(--line-strong);
+    pointer-events: none;
+  }
+
+  .tele__sector--first {
+    border-left-color: transparent;
+  }
+
+  .tele__sector i {
+    position: absolute;
+    top: -0.2rem;
+    left: 0.45rem;
+    font-style: normal;
+    font-size: 0.6rem;
+    color: var(--ink-3);
+  }
+
+  .tele__best {
+    position: absolute;
+    pointer-events: none;
+  }
+
+  .tele__best-dot,
+  .tele__cursor-dot {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 11px;
+    height: 11px;
+    margin: -5.5px 0 0 -5.5px;
+    border-radius: 50%;
+    background: var(--accent-2);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-2) 25%, transparent);
+  }
+
+  .tele__best-label,
+  .tele__cursor-label {
+    position: absolute;
+    left: 0;
+    bottom: 0.9rem;
+    translate: -50% 0;
+    padding: 0.3rem 0.55rem;
+    border-radius: 4px;
+    background: var(--accent-2);
+    color: var(--on-accent-2);
+    font-size: 0.6rem;
+    white-space: nowrap;
+  }
+
+  /* Hover read-out: a vertical gauge line with the week's numbers. */
+  .tele__cursor {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    border-left: 1px solid var(--ink-2);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .tele__cursor-dot {
+    background: var(--ink);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--ink) 20%, transparent);
+  }
+
+  .tele__cursor-label {
+    bottom: auto;
+    top: -0.4rem;
+    translate: -50% -100%;
+    background: var(--ink);
+    color: var(--bg);
+  }
+
+  .tele__chart.is-hover .tele__cursor {
+    opacity: 1;
+  }
+
+  .tele__chart.is-hover .tele__best {
+    opacity: 0.25;
+  }
+
+  .tele__months {
+    position: relative;
+    height: 1.4rem;
+    margin-top: 0.5rem;
+    font-size: 0.6rem;
+    color: var(--ink-3);
+  }
+
+  .tele__months span {
+    position: absolute;
+    top: 0;
+    translate: -50% 0;
+  }
+
+  /* Daily "rev strip": one tick per day, brighter for busier days. */
+  .tele__rev {
+    display: flex;
+    gap: 1px;
+    height: 14px;
+    margin-top: 0.4rem;
+  }
+
+  .tele__rev i {
+    flex: 1;
+    border-radius: 1px;
+    background: var(--line);
+  }
+
+  .tele__rev .l1 { background: color-mix(in srgb, var(--accent) 35%, transparent); }
+  .tele__rev .l2 { background: color-mix(in srgb, var(--accent) 60%, transparent); }
+  .tele__rev .l3 { background: color-mix(in srgb, var(--accent) 85%, transparent); }
+  .tele__rev .l4 { background: var(--accent-2); }
+
+  /* ----- Timing numbers ----- */
+  .tele__stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.5rem;
+    margin-top: clamp(2rem, 5vh, 3rem);
+  }
+
+  .tele__stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line-strong);
+  }
+
+  .tele__stat-num {
+    font-size: clamp(2.4rem, 5vw, 4.6rem);
+    line-height: 1;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .tele__stat:first-child .tele__stat-num {
+    color: var(--accent-text);
+  }
+
+  .tele__stat-label {
+    font-size: 0.64rem;
+    color: var(--ink-2);
+  }
+
+  .tele__note {
+    margin-top: 1.5rem;
+    font-size: 0.66rem;
+    letter-spacing: 0.01em;
+    text-transform: none;
+    color: var(--ink-3);
+  }
+
+  @media (max-width: 700px) {
+    .tele__stats {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .tele__rev {
+      gap: 0;
+    }
+    .tele__best-label {
+      translate: -80% 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tele__live {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const chart = document.getElementById('tele-chart');
+  const plot = document.getElementById('tele-plot');
+  const cursor = document.getElementById('tele-cursor');
+  const label = document.getElementById('tele-cursor-label');
+
+  if (chart && plot && cursor && label) {
+    const weeks: [string, number][] = JSON.parse(chart.dataset.weeks || '[]');
+    const svg = plot.querySelector('svg')!;
+    const trace = plot.querySelector<SVGPathElement>('.tele__trace')!;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // The trace sweeps in left to right as the section scrolls into view,
+    // like a lap being drawn on a telemetry screen.
+    if (!reduce) {
+      const marks = plot.querySelectorAll('.tele__best, .tele__sector i');
+      gsap.set(marks, { autoAlpha: 0 });
+      gsap
+        .timeline({ scrollTrigger: { trigger: chart, start: 'top 80%', end: 'top 30%', scrub: 0.6 } })
+        .fromTo(svg, { clipPath: 'inset(-10% 100% -10% 0%)' }, { clipPath: 'inset(-10% 0% -10% 0%)', ease: 'none', duration: 1 })
+        .fromTo(chart.querySelector('.tele__rev'), { clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)', ease: 'none', duration: 1 }, 0)
+        .to(marks, { autoAlpha: 1, duration: 0.2, stagger: 0.05 }, 0.8);
+    }
+
+    // Hover / touch: read out the week under the pointer.
+    const fmt = (iso: string) =>
+      new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' });
+    const len = trace.getTotalLength();
+
+    const show = (clientX: number) => {
+      const r = plot.getBoundingClientRect();
+      const t = Math.min(1, Math.max(0, (clientX - r.left) / r.width));
+      const i = Math.round(t * (weeks.length - 1));
+      const x = (i / (weeks.length - 1)) * r.width;
+      // Find the trace's height at this x (binary search along the path).
+      const target = (i / (weeks.length - 1)) * 1000;
+      let lo = 0;
+      let hi = len;
+      for (let k = 0; k < 18; k++) {
+        const mid = (lo + hi) / 2;
+        if (trace.getPointAtLength(mid).x < target) lo = mid;
+        else hi = mid;
+      }
+      const yView = trace.getPointAtLength(hi).y;
+      const y = (yView / 260) * r.height;
+      cursor.style.transform = `translateX(${x}px)`;
+      (cursor.firstElementChild as HTMLElement).style.top = `${y}px`;
+      const [start, total] = weeks[i];
+      label.textContent = `Week of ${fmt(start)} · ${total}`;
+      chart.classList.add('is-hover');
+    };
+
+    plot.addEventListener('pointermove', (e) => show(e.clientX));
+    plot.addEventListener('pointerdown', (e) => show(e.clientX));
+    plot.addEventListener('pointerleave', () => chart.classList.remove('is-hover'));
+  }
+</script>

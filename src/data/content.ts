@@ -232,6 +232,21 @@ export const projects: Project[] = [
     linkLabel: 'View code',
   },
   {
+    title: 'Ritam',
+    cover: 'RT',
+    description:
+      'A terminal-based orchestrator, written in Go, that gets several coding-agent CLIs (Claude Code, Codex) working on one task — each signed in with its own login, so no API keys sit in one place.',
+    tags: ['Golang', 'AI Agents', 'CLI', 'Bubble Tea'],
+    highlights: [
+      'One authority agent makes the final call; the rest investigate, implement, review and can push back',
+      'Roles and permissions enforced in code by the orchestrator, not by prompting the agents',
+      'Agents only talk through the orchestrator, each in its own isolated process',
+      'Every message, decision and violation kept in an append-only event log, shown live in a terminal UI',
+    ],
+    link: 'https://github.com/itsPhoenix03/Ritam',
+    linkLabel: 'View code',
+  },
+  {
     title: 'Social Scoop',
     description: 'Built Social Scoop to curate trending content, featuring a RESTful API and responsive UI for seamless user experience.',
     tags: ['React.js', 'Node.js', 'REST API', 'MongoDB'],
@@ -317,6 +332,18 @@ export const socialLinks: SocialLink[] = [
     icon: '/svg/email-svgrepo-com.svg',
   },
 ];
+
+// GitHub accounts merged into the Telemetry strip (see Telemetry.astro).
+// shreyasmisra02 shows private work as counts ("include private contributions"
+// is enabled on that profile).
+export const githubActivity = {
+  /** How far back the strip goes. */
+  weeks: 26,
+  accounts: [
+    { login: 'itsPhoenix03', label: 'Personal' },
+    { login: 'shreyasmisra02', label: 'Meril' },
+  ],
+};
 
 export const navSections = [
   { id: 'hero', label: 'Home' },

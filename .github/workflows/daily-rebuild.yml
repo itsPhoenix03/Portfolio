@@ -1,0 +1,27 @@
+# Rebuilds the site once a day so the Telemetry strip (GitHub activity) stays
+# current. It just pings a Vercel deploy hook; the build itself fetches the
+# data using the GITHUB_TOKEN set in Vercel's environment variables.
+#
+# Setup: Vercel → Project → Settings → Git → Deploy Hooks → create one for the
+# production branch, then add its URL to this repo as the Actions secret
+# VERCEL_DEPLOY_HOOK_URL (GitHub → Settings → Secrets and variables → Actions).
+name: Daily rebuild
+
+on:
+  schedule:
+    - cron: '30 0 * * *' # 06:00 IST
+  workflow_dispatch: # allow a manual run from the Actions tab
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Vercel deploy
+        env:
+          HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "VERCEL_DEPLOY_HOOK_URL is not set; skipping."
+            exit 0
+          fi
+          curl -fsS -X POST "$HOOK"
