@@ -27,6 +27,11 @@ export function arrowSvg(dir: ArrowDir = 'up-right', className = ''): string {
 // whatever system font they have. 24×24, centred on (12, 12).
 export const STAR_PATH = 'M12 0C12.9 7.2 16.8 11.1 24 12 16.8 12.9 12.9 16.8 12 24 11.1 16.8 7.2 12.9 0 12 7.2 11.1 11.1 7.2 12 0Z';
 
+// Spade (♠) for the Ace marks on the About card — drawn, not the glyph, for
+// the same reason as the star. 24×24.
+export const SPADE_PATH =
+  'M12 2C9 6 4 9.5 4 13.5 4 16 6 17.8 8.2 17.8 9.6 17.8 10.8 17.1 11.4 16L10 22H14L12.6 16C13.2 17.1 14.4 17.8 15.8 17.8 18 17.8 20 16 20 13.5 20 9.5 15 6 12 2Z';
+
 export function starSvg(className = ''): string {
   return (
     `<svg class="icon-star${className ? ` ${className}` : ''}" viewBox="0 0 24 24" ` +

@@ -65,7 +65,7 @@ export const siteMeta: SiteMeta = {
   title: 'Shreyas Misra — Software Engineer',
   description: 'Portfolio of Shreyas Misra — Software Engineer specializing in scalable, dependable systems.',
   role: 'Software Engineer',
-  objective: 'Becoming a High Value Agency and delivering Scalable and Dependable Systems which help Organizations Grow and have Success.',
+  objective: 'Becoming a high-value agency — delivering scalable, dependable systems that help organisations grow and succeed.',
   email: 'shreyas.misra03@gmail.com',
   location: 'India',
   timezone: 'Asia/Kolkata',
@@ -162,17 +162,6 @@ export const skillGroups: SkillGroup[] = [
       { name: 'AWS' },
     ],
   },
-  {
-    category: 'Soft Skills',
-    items: [
-      { name: 'Active Listener' },
-      { name: 'Collaborative' },
-      { name: 'Supportive' },
-      { name: 'Team Player' },
-      { name: 'Creative Thinker' },
-      { name: 'Communication' },
-    ],
-  },
 ];
 
 export const experience: Experience[] = [
@@ -183,9 +172,9 @@ export const experience: Experience[] = [
     period: 'May 2026 – Present',
     current: true,
     bullets: [
-      'Working at the Research and Development Department located at the IIT Kanpur Technopark.',
-      'Building application which integrate modern custom fine tuned AI models to help in improving the time consumed in the medical processes and regulatory compliance processes.',
-      'Designing solution which can scale to thousands of people while also being reliable.',
+      'Part of the Research and Development team at IIT Kanpur Technopark, building AI products for medical devices and regulatory compliance.',
+      'Building applications on custom fine-tuned AI models that cut the time medical and regulatory processes take — including Stanley AI, which drafts audit-ready submission documents.',
+      'Designed Stanley’s document pipeline for a thousand people hitting Generate at once: ~40 s jobs run on a queue, the user gets a job ID back in ~12 ms, and progress streams live over SSE.',
     ],
   },
   {
@@ -194,9 +183,9 @@ export const experience: Experience[] = [
     location: 'Lucknow, UP',
     period: 'May 2024 – May 2026',
     bullets: [
-      'Built and maintained scalable full-stack applications with React.js, Next.js, and Node.',
-      'Collaborated on RESTful API design and code reviews, boosting integration efficiency and code reliability.',
-      'Showcased adaptability by quickly adapting and delivering solutions across different languages and domains like PHP, N8n, Power Automate, SharePoint, and Power Apps.',
+      'Built and maintained scalable full-stack applications with React.js, Next.js and Node.js.',
+      'Collaborated on RESTful API design and code reviews, making integrations faster and code more reliable.',
+      'Picked up new languages and platforms quickly to ship across PHP, n8n, Power Automate, SharePoint and Power Apps.',
     ],
   },
 ];
@@ -273,20 +262,78 @@ export const projects: Project[] = [
 ];
 
 // "Team radio" lines surfaced by the hidden easter eggs (see EasterEggs.astro).
+// Each has a mood, and a moment only ever draws from its own mood — so a
+// joke never lands on a great start and a celebration never lands on a
+// jump start:
+//   win  — something went right: a quick getaway, a message sent
+//   calm — neutral spots: the footer line, the devtools console
+//   jump — the visitor jumped the start (own goals, penalties)
+//   slow — the visitor was slow off the line, or never reacted
+// The footer cycles through all of them.
+export type RadioMood = 'win' | 'calm' | 'jump' | 'slow';
+
 export interface RadioQuote {
   text: string;
   by: string;
+  mood: RadioMood;
 }
 
+const q = (text: string, by: string, mood: RadioMood): RadioQuote => ({ text, by, mood });
+
+const simplyLovely = q('Simply lovely.', 'Max Verstappen', 'win');
+const getInThere = q('Get in there, Lewis!', 'Peter Bonnington, to Lewis Hamilton', 'win');
+const bigNight = q('Tonight is going to be a big night!', 'Charles Leclerc, Monaco 2024', 'win');
+const onTheLimit = q('I was on the limit, but I was not riding over my limit.', 'Marc Márquez', 'win');
+
 export const radioQuotes: RadioQuote[] = [
-  { text: 'Simply lovely.', by: 'Max Verstappen' },
-  { text: 'If you no longer go for a gap that exists, you are no longer a racing driver.', by: 'Ayrton Senna' },
-  { text: "If everything seems under control, you're not going fast enough.", by: 'Mario Andretti' },
-  { text: 'If in doubt, flat out.', by: 'Colin McRae' },
-  { text: "Leave me alone, I know what I'm doing.", by: 'Kimi Räikkönen' },
-  { text: 'Riding a race bike is an art — a thing you do because you feel something inside.', by: 'Valentino Rossi' },
-  { text: 'To finish first, first you have to finish.', by: 'Racing proverb' },
-  { text: 'Lights out and away we go.', by: 'Race start' },
+  // win
+  simplyLovely,
+  getInThere,
+  bigNight,
+  onTheLimit,
+  q('Grazie ragazzi!', 'Sebastian Vettel', 'win'),
+  q('Not bad for a number two driver.', 'Mark Webber', 'win'),
+  q('The perfect rally!', 'Sébastien Loeb', 'win'),
+  // calm
+  q('Lights out and away we go.', 'Race start', 'calm'),
+  q('If you no longer go for a gap that exists, you are no longer a racing driver.', 'Ayrton Senna', 'calm'),
+  q("If everything seems under control, you're not going fast enough.", 'Mario Andretti', 'calm'),
+  q('If in doubt, flat out.', 'Colin McRae', 'calm'),
+  q('Riding a race bike is an art — a thing you do because you feel something inside.', 'Valentino Rossi', 'calm'),
+  q('To finish first, first you have to finish.', 'Racing proverb', 'calm'),
+  q('Still I rise.', 'Lewis Hamilton', 'calm'),
+  q("Rivals show you your level, and that's where we will try to continue growing.", 'Marc Márquez', 'calm'),
+  q('Good drivers have dead flies on the side windows!', 'Walter Röhrl', 'calm'),
+  q('You must always strive to be the best, but you must never believe that you are.', 'Juan Manuel Fangio', 'calm'),
+  q('Anything happens in Grand Prix racing, and it usually does.', 'Murray Walker', 'calm'),
+  // jump
+  q("Leave me alone, I know what I'm doing.", 'Kimi Räikkönen', 'jump'),
+  q('I am stupid, I am stupid.', 'Charles Leclerc', 'jump'),
+  q('No, Michael, no! That was so not right!', 'Toto Wolff', 'jump'),
+  q('Nobody is perfect.', 'Marc Márquez', 'jump'),
+  // slow
+  q('Fernando is faster than you.', 'Rob Smedley, to Felipe Massa', 'slow'),
+  q('GP2 engine! GP2!', 'Fernando Alonso', 'slow'),
+  q('Bono, my tyres are gone.', 'Lewis Hamilton', 'slow'),
+  q('Bwoah.', 'Kimi Räikkönen', 'slow'),
+  q('I hate this rally.', 'Marcus Grönholm', 'slow'),
+];
+
+export const quotesFor = (mood: RadioMood) => radioQuotes.filter((r) => r.mood === mood);
+
+// Type a driver's name or number (anywhere, outside the form) and they come
+// on the radio — always with a happy line, never a meme at their expense.
+export interface RadioCall {
+  words: string[];
+  cap: string;
+  quote: RadioQuote;
+}
+
+export const radioCalls: RadioCall[] = [
+  { words: ['max', '33', 'verstappen'], cap: 'Car 1 · Team radio', quote: simplyLovely },
+  { words: ['lewis', '44', 'hamilton'], cap: 'Car 44 · Team radio', quote: getInThere },
+  { words: ['charles', '16', 'leclerc'], cap: 'Car 16 · Team radio', quote: bigNight },
+  { words: ['marc', '93', 'marquez'], cap: 'Bike 93 · Pit board', quote: onTheLimit },
 ];
 
 export const certifications: Certification[] = [
@@ -307,11 +354,6 @@ export const certifications: Certification[] = [
     issuer: 'Google Cloud',
     credentialUrl:
       'https://www.cloudskillsboost.google/public_profiles/dd871fbc-1cb8-4367-b71d-d2bcb59b4e4a/badges/1466496',
-  },
-  {
-    title: 'React Training',
-    issuer: 'Internshala',
-    credentialUrl: 'https://trainings.internshala.com/s/v/139524/7a2f7b9b',
   },
 ];
 
@@ -345,13 +387,16 @@ export const githubActivity = {
   ],
 };
 
+// In page order. Telemetry (between Certifications and Projects) has no
+// entry of its own.
 export const navSections = [
   { id: 'hero', label: 'Home' },
   { id: 'about', label: 'About' },
-  { id: 'skills', label: 'Skills' },
   { id: 'experience', label: 'Experience' },
-  { id: 'projects', label: 'Projects' },
+  { id: 'skills', label: 'Skills' },
+  { id: 'education', label: 'Education' },
   { id: 'certifications', label: 'Certifications' },
+  { id: 'projects', label: 'Projects' },
   { id: 'contact', label: 'Contact' },
 ];
 

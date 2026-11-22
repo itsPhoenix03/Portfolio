@@ -16,7 +16,7 @@ const span = (period: string) => {
   <div class="wrap">
     <header class="sec-head">
       <div class="sec-label" data-reveal>
-        <span class="sec-label__idx">(03)</span>
+        <span class="sec-label__idx">(02)</span>
         <span class="sec-label__rule" data-line></span>
         <span data-scramble>Experience</span>
       </div>
@@ -25,7 +25,7 @@ const span = (period: string) => {
       </h2>
       <Doodle
         before="Car"
-        struck="44"
+        struck="00"
         fix="33"
         circle
         note="no clicks — just say the number, or the name."
@@ -165,16 +165,43 @@ const span = (period: string) => {
     color: var(--on-accent-2);
   }
 
+  /* Live dot: a smooth breathe plus a soft ring pulsing out of it. Only
+     opacity and transform animate, so it stays on the GPU. (It used to snap
+     on/off with steps(2), which read as a stutter rather than a blink.) */
   .job__live i {
+    position: relative;
     width: 6px;
     height: 6px;
     border-radius: 50%;
     background: var(--on-accent-2);
-    animation: blink 1.2s steps(2) infinite;
+    animation: liveBreathe 1.6s ease-in-out infinite;
   }
 
-  @keyframes blink {
-    50% { opacity: 0; }
+  .job__live i::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: var(--on-accent-2);
+    opacity: 0;
+    animation: livePulse 1.6s ease-out infinite;
+  }
+
+  @keyframes liveBreathe {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.35; }
+  }
+
+  @keyframes livePulse {
+    0% { transform: scale(1); opacity: 0.45; }
+    70%, 100% { transform: scale(2.6); opacity: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .job__live i,
+    .job__live i::after {
+      animation: none;
+    }
   }
 
   .job__company {

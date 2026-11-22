@@ -11,6 +11,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { WAVE_SIZE, waveSegments, segPoint, type Pt } from '@/scripts/wave';
 import { duckMusic } from '@/scripts/duck';
+import { lenisInstance } from '@/scripts/smooth-scroll';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -79,9 +80,10 @@ function init(sd: HTMLElement, origin: HTMLElement, skills: HTMLElement) {
   }
 
   // Each leg eases out of one point and into the next, holding still for a
-  // moment at each: longer at the big stops, a short read at the notes.
-  const HOLD_STOP = 0.2;
-  const HOLD_NOTE = 0.14;
+  // good while at each — longer at the big stops, a shorter read at the
+  // notes — so every item feels pinned in place while you scroll past it.
+  const HOLD_STOP = 0.34;
+  const HOLD_NOTE = 0.22;
   const legEase = (t: number, from: number, to: number) => {
     const a = isStop[from] ? HOLD_STOP : HOLD_NOTE;
     const b = isStop[to] ? HOLD_STOP : HOLD_NOTE;
@@ -169,15 +171,45 @@ function init(sd: HTMLElement, origin: HTMLElement, skills: HTMLElement) {
   };
   const fullClip = 'inset(0px 0px 0px 0px)';
 
-  // Timeline lengths, in screen heights of scrolling.
-  const EXPAND = 1;
-  const JOURNEY = segs.length * 0.6;
-  const COLLAPSE = 1;
-  const state = { p: 0 };
+  // Timeline lengths, in screen heights of scrolling: about seven in all.
+  // Each leg needs room for its holds *and* an unhurried move — squeezed
+  // shorter, one wheel notch threw the view to the next stop.
+  const EXPAND = 0.8;
+  const JOURNEY = segs.length * 0.48;
+  const COLLAPSE = 0.8;
   const inner = [canvas, deco, hud];
+
+  // Where the scroll says the camera is (state.p, scrubbed by the timeline)
+  // and where it's drawn (cam). The camera glides after the scroll instead of
+  // being yanked along by every notch of the wheel.
+  const state = { p: 0 };
+  let cam = 0;
+  const GLIDE = 4.5; // per second; ~0.6 s to settle on a new position
+  let lastTick = 0;
+  gsap.ticker.add((time) => {
+    const dt = lastTick ? Math.min(time - lastTick, 0.1) : 1 / 60;
+    lastTick = time;
+    if (cam === state.p) return;
+    // Closed (scrolled past, skipped, jumped by a menu link): no glide, so
+    // it's never caught half-way along the route when it opens again.
+    if (!sd.classList.contains('is-live')) cam = state.p;
+    else cam += (state.p - cam) * (1 - Math.exp(-dt * GLIDE));
+    if (Math.abs(state.p - cam) < 1e-4) cam = state.p;
+    render(cam);
+  });
 
   layout();
   render(0);
+
+  // Skip: jump past the whole journey — forward to where the panel has shut
+  // again, or back to before it opened if the visitor came in from below.
+  const skip = sd.querySelector<HTMLButtonElement>('#sd-skip');
+  let skipBack = false;
+  const setSkipDir = (back: boolean) => {
+    skipBack = back;
+    skip?.classList.toggle('is-back', back);
+    skip?.setAttribute('aria-label', back ? 'Skip back above the system design section' : 'Skip the system design section');
+  };
 
   const tl = gsap.timeline({
     defaults: { ease: 'none' },
@@ -189,15 +221,19 @@ function init(sd: HTMLElement, origin: HTMLElement, skills: HTMLElement) {
       scrub: true,
       anticipatePin: 1,
       invalidateOnRefresh: true,
-      // Sits above the projects pin, so it must measure first.
-      refreshPriority: 1,
+      // The highest pin on the page (above Projects, priority 1), so it must
+      // measure first, before everything further down (priority 0).
+      refreshPriority: 2,
       onToggle: (self) => {
         sd.classList.toggle('is-live', self.isActive);
+        document.body.classList.toggle('sd-live', self.isActive);
         duckMusic('system-design', self.isActive ? 0.65 : null);
+        if (self.isActive) setSkipDir(self.direction < 0);
       },
       onRefresh: () => {
         layout();
-        render(state.p);
+        cam = state.p;
+        render(cam);
       },
     },
   });
@@ -209,12 +245,65 @@ function init(sd: HTMLElement, origin: HTMLElement, skills: HTMLElement) {
     .fromTo(bandIn, { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.35 }, 0.3)
     .fromTo(inner, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.45 }, 0.55)
     // Travel the wave.
-    .to(state, { p: 1, duration: JOURNEY, onUpdate: () => render(state.p) }, EXPAND)
+    .to(state, { p: 1, duration: JOURNEY }, EXPAND)
     // Close: back down to a band over the strip, then let the page through.
     .to(inner, { autoAlpha: 0, duration: 0.4 }, EXPAND + JOURNEY)
     .fromTo(bandOut, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.35 }, EXPAND + JOURNEY + 0.3)
     .to(sd, { clipPath: bandClip, duration: COLLAPSE, ease: 'power2.inOut' }, EXPAND + JOURNEY)
     .to(sd, { opacity: 0, duration: 0.12 }, EXPAND + JOURNEY + COLLAPSE - 0.12);
+
+  skip?.addEventListener('click', () => {
+    const st = tl.scrollTrigger;
+    if (!st) return;
+    settlingUntil = performance.now() + 1600;
+    lenisInstance.scrollTo(skipBack ? st.start - 2 : st.end + 2, { duration: 1.4 });
+  });
+
+  // Settle: once you've scrolled out of an item's hold, carry on to the next
+  // item in the direction you were going, so the view never rests half-way
+  // with two items faded — and a single wheel notch is enough to move on.
+  // It kicks in as soon as the scroll slows, not after the smooth-scroll's
+  // long tail has died away.
+  let settleTimer = 0;
+  let settlingUntil = 0;
+  let lastY = window.scrollY;
+  let dir = 1;
+  lenisInstance.on('scroll', () => {
+    const y = window.scrollY;
+    if (y !== lastY) dir = y > lastY ? 1 : -1;
+    lastY = y;
+    if (performance.now() < settlingUntil) return;
+    window.clearTimeout(settleTimer);
+    if (Math.abs(lenisInstance.velocity) < 1.5) settle();
+    else settleTimer = window.setTimeout(settle, 150);
+  });
+
+  function settle() {
+    const st = tl.scrollTrigger;
+    if (!st?.isActive) return;
+    const vhPx = window.innerHeight;
+    const from = st.start + EXPAND * vhPx;
+    const len = JOURNEY * vhPx;
+    const p = (window.scrollY - from) / len;
+    if (p <= 0 || p >= 1) return; // opening or closing: leave it be
+    const n = segs.length;
+    const x = p * n;
+    const i = Math.min(n - 1, Math.floor(x));
+    const t = x - i;
+    const a = isStop[i] ? HOLD_STOP : HOLD_NOTE;
+    const b = isStop[i + 1] ? HOLD_STOP : HOLD_NOTE;
+    if (t <= a || t >= 1 - b) return; // still resting on an item
+    // Item k sits exactly at x = k on the route, in the middle of its hold.
+    const k = dir > 0 ? i + 1 : i;
+    settlingUntil = performance.now() + 1400;
+    // Ease in and out: Lenis's default easing starts at full speed, which is
+    // exactly the jump this is meant to remove.
+    lenisInstance.scrollTo(from + (k / n) * len, { duration: 1.3, easing: easeInOutCubic });
+  }
+
+  function easeInOutCubic(t: number) {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  }
 
   ScrollTrigger.refresh();
 }

@@ -28,7 +28,7 @@ const links = [
 <section class="section contact" id="contact">
   <div class="wrap">
     <div class="sec-label" data-reveal>
-      <span class="sec-label__idx">(06)</span>
+      <span class="sec-label__idx">(07)</span>
       <span class="sec-label__rule" data-line></span>
       <span data-scramble>Contact</span>
     </div>
@@ -510,17 +510,26 @@ const links = [
   .footer__radio {
     font-family: var(--font-serif);
     font-style: italic;
-    font-size: 0.95rem;
+    font-size: 1.05rem;
     text-transform: none;
     letter-spacing: 0;
-    color: var(--ink-3);
     text-align: center;
     max-width: 52ch;
+  }
+
+  /* The quote picks up the theme's accent (brighter red on dark, deeper red
+     on light); the author sits a step quieter. Hover swaps to plain ink. */
+  .footer__radio :global(.footer__radio-text) {
+    color: var(--accent-text);
     transition: color 0.3s ease;
   }
 
-  .footer__radio:hover {
-    color: var(--accent-text);
+  .footer__radio :global(.footer__radio-by) {
+    color: var(--ink-2);
+  }
+
+  .footer__radio:hover :global(.footer__radio-text) {
+    color: var(--ink);
   }
 
   @media (max-width: 900px) {
@@ -609,7 +618,7 @@ const links = [
         // Team-radio toast (EasterEggs.astro listens for this).
         window.dispatchEvent(
           new CustomEvent('team-radio', {
-            detail: { quote: { text: 'Simply lovely.', by: 'Max Verstappen' }, cap: 'Message received' },
+            detail: { quote: { text: 'Simply lovely.', by: 'Max Verstappen', mood: 'win' }, cap: 'Message received' },
           })
         );
       } catch {

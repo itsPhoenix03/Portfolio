@@ -260,7 +260,23 @@ function initReveals() {
 // Marquees: loop forever; scrolling boosts speed and flips direction.
 // -----------------------------------------------------------------------------
 function initMarquees() {
-  const tweens = $$('[data-marquee]').map((el) => {
+  // Off-screen marquees stop moving. Each one rewrites its transform every
+  // frame, and that alone kept the browser re-laying out its layers 60 times
+  // a second while you sat on the hero.
+  const tweenOf = new Map<Element, gsap.core.Tween>();
+  const offscreen = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        const t = tweenOf.get(e.target);
+        if (t) e.isIntersecting ? t.resume() : t.pause();
+      }
+    },
+    // No margin: the tapes sit right under the hero's bottom edge, and they
+    // should rest until they're actually showing.
+    { rootMargin: '0px' }
+  );
+
+  const marquees = $$('[data-marquee]').map((el) => {
     const track = $('.marquee__track', el)!;
     const dir = Number(el.dataset.dir || 1);
     const speed = Number(el.dataset.marqueeSpeed || 28);
@@ -271,9 +287,20 @@ function initMarquees() {
     );
     // Start deep into the loop so a negative timeScale never hits time 0.
     tween.totalTime(speed * 500);
-    return tween;
+    tweenOf.set(el, tween);
+
+    // Rows inside [data-marquee-hover] ease to a stop while hovered, so the
+    // words can actually be read (the skills rows).
+    const m = { tween, hold: 1, target: 1 };
+    const host = el.closest<HTMLElement>('[data-marquee-hover]');
+    if (host && !isTouch) {
+      host.addEventListener('mouseenter', () => (m.target = 0));
+      host.addEventListener('mouseleave', () => (m.target = 1));
+    }
+    offscreen.observe(el);
+    return m;
   });
-  if (!tweens.length) return;
+  if (!marquees.length) return;
 
   let boost = 1;
   let sign = 1;
@@ -288,7 +315,11 @@ function initMarquees() {
   gsap.ticker.add(() => {
     boost += (1 - boost) * 0.05;
     const ts = sign * boost;
-    for (const t of tweens) t.timeScale(ts);
+    for (const m of marquees) {
+      m.hold += (m.target - m.hold) * 0.1;
+      if (m.hold < 0.002) m.hold = 0;
+      m.tween.timeScale(ts * m.hold);
+    }
   });
 }
 
@@ -318,6 +349,9 @@ function initProjects() {
         scrub: 1,
         anticipatePin: 1,
         invalidateOnRefresh: true,
+        // Below the System Design pin (priority 2), above everything else
+        // that measures (0), so it goes second.
+        refreshPriority: 1,
         onUpdate: (self) => {
           if (bar) bar.style.transform = `scaleX(${self.progress})`;
           if (count) {
@@ -419,6 +453,10 @@ fontsReady.then(() => {
   fitAll();
   revealed.then(playHero);
   ScrollTrigger.refresh();
+
+  // Heavy start-up work is done: the preloader can start its count.
+  document.documentElement.dataset.ready = '1';
+  window.dispatchEvent(new Event('app:ready'));
 });
 
 let resizeTimer = 0;

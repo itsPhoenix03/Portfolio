@@ -50,27 +50,49 @@ if (!pre || !fill || !count) {
     pre.style.display = 'none';
     lenisInstance.start();
   } else {
+    // Hold the tagline and the count until the page's heavy start-up work is
+    // done: the first layout, splitting the headings (scroll-animations.ts
+    // fires app:ready) and the re-measure on `load`. That's about a second
+    // of blocked main thread; started earlier, the count froze and jumped
+    // through it. Meanwhile the CSS-only signals run — they keep moving even
+    // while scripts are busy.
+    const root = document.documentElement;
+    const booted = new Promise<void>((r) => {
+      if (root.dataset.ready) r();
+      else window.addEventListener('app:ready', () => r(), { once: true });
+    });
+    const loaded = new Promise<void>((r) => {
+      if (document.readyState === 'complete') r();
+      else window.addEventListener('load', () => r(), { once: true });
+    });
+    // Never hold forever (and stay inside scroll-animations' 6 s fallback).
+    const cap = new Promise<void>((r) => window.setTimeout(r, 3500));
+    // The frame after: lets the `load` handlers (the re-measure) finish first.
+    Promise.race([Promise.all([booted, loaded]), cap]).then(() => requestAnimationFrame(start));
+  }
+
+  function start() {
     if (name) {
       SplitText.create(name, { type: 'lines', mask: 'lines', linesClass: 'pre-line' });
+      gsap.set(name, { visibility: 'visible' });
       gsap.from(name.querySelectorAll('.pre-line'), {
         yPercent: 110,
         duration: 1.1,
         stagger: 0.08,
         ease: 'expo.out',
-        delay: 0.1,
       });
     }
     // Scripts have arrived: the CSS "still loading" signals hand over to the count.
-    pre.classList.add('is-counting');
+    pre!.classList.add('is-counting');
     const state = { p: 0 };
     gsap.to(state, {
       p: 100,
-      duration: 2.1,
+      duration: 1.6,
       ease: 'power3.inOut',
       onUpdate: () => {
         const v = Math.round(state.p);
-        count.textContent = String(v);
-        fill.style.transform = `scaleX(${state.p / 100})`;
+        count!.textContent = String(v);
+        fill!.style.transform = `scaleX(${state.p / 100})`;
       },
       onComplete: finish,
     });

@@ -3,7 +3,12 @@
 //  - Click the "SM" logo 5× quickly, or enter the Konami code → F1 start
 //    lights with a reaction-time test (click/press any key on lights out).
 //    Each knock on the logo gets a cryptic little reply under it.
-//  - Type "max" or "33" → team-radio toast. Type "box" → "Box, box."
+//  - Type a driver's name or number ("max"/"33", "lewis"/"44", "charles"/"16",
+//    "marc"/"93" — see radioCalls in content.ts) → team-radio toast.
+//    Type "win" or "p1" → a celebration line. Type "box" → "Box, box."
+//  - Team-radio lines are picked by mood (content.ts), so each moment only
+//    gets lines that suit it: a great start never gets a meme, and a jump
+//    start never gets a celebration.
 //  - Scroll really hard → "DRS enabled".
 //  - The devtools console has a little message too.
 ---
@@ -265,7 +270,7 @@
 <script>
   import gsap from 'gsap';
   import { lenisInstance } from '@/scripts/smooth-scroll';
-  import { radioQuotes, type RadioQuote } from '@/data/content';
+  import { radioQuotes, quotesFor, radioCalls, type RadioQuote, type RadioMood } from '@/data/content';
   import { duckMusic } from '@/scripts/duck';
   import { sfx } from '@/scripts/sfx';
 
@@ -273,7 +278,7 @@
   const pick = <T,>(arr: T[]) => arr[Math.floor(Math.random() * arr.length)];
 
   // ----- Console hello -----
-  const q = pick(radioQuotes);
+  const q = pick(quotesFor('calm'));
   console.log(
     '%c🏁 Lights out and away we go.',
     'font: 700 16px system-ui; color:#ffc906; background:#0b1426; padding:6px 10px; border-radius:4px'
@@ -318,10 +323,12 @@
     );
   }
 
-  // Other components can trigger the toast, e.g. the contact form on success.
+  // Other components can trigger the toast, e.g. the contact form on success
+  // — with a specific quote, or a mood to pick one from.
   window.addEventListener('team-radio', (e) => {
-    const { quote, cap } = (e as CustomEvent<{ quote: RadioQuote; cap?: string }>).detail;
-    showRadio(quote, cap);
+    const { quote, mood, cap } = (e as CustomEvent<{ quote?: RadioQuote; mood?: RadioMood; cap?: string }>).detail;
+    const line = quote ?? (mood ? pick(quotesFor(mood)) : null);
+    if (line) showRadio(line, cap);
   });
 
   // ----- Start lights + reaction test -----
@@ -389,7 +396,7 @@
       later(() => {
         if (phase !== 'go') return;
         sub.textContent = 'Too slow — still on the grid.';
-        endLights(1800, { text: 'Lights out and away we go.', by: 'Race start' });
+        endLights(1800, pick(quotesFor('slow')));
       }, 2500);
     }, hold);
   }
@@ -401,14 +408,15 @@
       msg.textContent = 'Jump start';
       sfx.jumpStart();
       sub.textContent = '5-second time penalty.';
-      endLights(2200, { text: 'Leave me alone, I know what I’m doing.', by: 'Kimi Räikkönen' });
+      endLights(2200, pick(quotesFor('jump')));
     } else if (phase === 'go') {
       const ms = Math.round(performance.now() - goAt);
       timers.splice(0).forEach(window.clearTimeout);
       msg.textContent = `${(ms / 1000).toFixed(3)}s`;
       sub.textContent =
         ms < 200 ? 'Pole position reflexes.' : ms < 300 ? 'Clean getaway.' : 'Lost a couple of places into turn one.';
-      endLights(2400, ms < 250 ? radioQuotes[0] : pick(radioQuotes));
+      // A good start gets a celebration; a slow one gets a (friendly) meme.
+      endLights(2400, pick(quotesFor(ms < 300 ? 'win' : 'slow')));
     }
   }
 
@@ -481,13 +489,17 @@
     }
 
     if (k.length !== 1) return;
-    typed = (typed + k).slice(-6);
-    if (typed.endsWith('max') || typed.endsWith('33')) {
+    typed = (typed + k).slice(-12); // long enough for "verstappen"
+    const call = radioCalls.find((c) => c.words.some((w) => typed.endsWith(w)));
+    if (call) {
       typed = '';
-      showRadio(radioQuotes[0], 'Car 1 · Team radio');
+      showRadio(call.quote, call.cap);
+    } else if (typed.endsWith('win') || typed.endsWith('p1')) {
+      typed = '';
+      showRadio(pick(quotesFor('win')), 'P1 · Team radio');
     } else if (typed.endsWith('box')) {
       typed = '';
-      showRadio({ text: 'Box, box.', by: 'Pit wall' });
+      showRadio({ text: 'Box, box.', by: 'Pit wall', mood: 'calm' });
     }
   });
 
@@ -495,9 +507,15 @@
   const footerRadio = document.getElementById('footer-radio');
   if (footerRadio) {
     let i = Math.floor(Math.random() * radioQuotes.length);
+    const quoteEl = document.createElement('span');
+    const byEl = document.createElement('span');
+    quoteEl.className = 'footer__radio-text';
+    byEl.className = 'footer__radio-by';
+    footerRadio.append(quoteEl, ' ', byEl);
     const render = () => {
       const fq = radioQuotes[i % radioQuotes.length];
-      footerRadio.textContent = `“${fq.text}” — ${fq.by}`;
+      quoteEl.textContent = `“${fq.text}”`;
+      byEl.textContent = `— ${fq.by}`;
     };
     render();
     footerRadio.addEventListener('click', () => {
