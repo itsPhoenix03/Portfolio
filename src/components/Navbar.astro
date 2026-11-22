@@ -173,6 +173,39 @@ import Arrow from './Arrow.astro';
     transform: none;
   }
 
+  /* On the red panels (open menu, System Design) the whole header goes
+     white, in both themes: navy ink and accent-coloured bits disappear
+     into the red. */
+  :global(body.sd-live) .hdr {
+    color: var(--on-accent);
+  }
+
+  :global(body.menu-open) .hdr__meta,
+  :global(body.sd-live) .hdr__meta {
+    opacity: 1;
+  }
+
+  :global(body.menu-open) .hdr__icon,
+  :global(body.sd-live) .hdr__icon {
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+
+  :global(body.menu-open) .hdr__icon:hover,
+  :global(body.sd-live) .hdr__icon:hover {
+    border-color: var(--on-accent);
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  :global(body.menu-open) .hdr__sound.is-on .hdr__eq i,
+  :global(body.sd-live) .hdr__sound.is-on .hdr__eq i {
+    background: currentColor;
+  }
+
+  :global(body.sd-live) .hdr__menu {
+    background: var(--on-accent);
+    color: var(--accent);
+  }
+
   .hdr__logo {
     display: inline-flex;
     align-items: flex-start;
@@ -556,12 +589,14 @@ import Arrow from './Arrow.astro';
       justify-self: end;
     }
     .menu__panel {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 1fr);
       align-content: start;
       gap: 2rem;
     }
+    /* Height-based so the list fits a short screen, but capped by width so
+       the longest word ("Experience") never runs off a narrow phone. */
     .menu__text {
-      font-size: clamp(2.4rem, 7.5vh, 4.6rem);
+      font-size: clamp(2.2rem, min(7.5vh, 14vw), 4.6rem);
     }
     .menu__aside {
       justify-content: flex-start;
