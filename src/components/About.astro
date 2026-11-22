@@ -3,6 +3,7 @@ import { siteMeta, education, certifications, projects } from '../data/content';
 import Arrow from './Arrow.astro';
 import Doodle from './Doodle.astro';
 import { experienceYears } from '../scripts/experience';
+import { SPADE_PATH } from '../scripts/icons';
 
 // Years shipping production code, from the first full-time role. Worked out
 // at build time as a fallback, then again in the browser (see the script
@@ -67,10 +68,16 @@ const stats = [
                   decoding="async"
                   data-speed="0.85"
                 />
-                <figcaption class="mono about__caption">
-                  <span>{siteMeta.name}</span>
-                  <span>{siteMeta.role}</span>
-                </figcaption>
+                <!-- Ace of spades indices, like a playing card: top-left, and
+                     upside down in the bottom-right corner. -->
+                {['tl', 'br'].map((corner) => (
+                  <span class={`about__ace about__ace--${corner}`} aria-hidden="true">
+                    <span class="about__ace-rank display">A</span>
+                    <svg viewBox="0 0 24 24"><path d={SPADE_PATH} /></svg>
+                  </span>
+                ))}
+                <span class="mono about__role">{siteMeta.role}</span>
+                <figcaption class="mono about__caption">{siteMeta.name}</figcaption>
               </figure>
 
               <div class="about__face about__back">
@@ -423,15 +430,58 @@ const stats = [
     object-position: center top;
   }
 
-  .about__caption {
+  /* Name bottom-left, role top-right; the Ace indices take the other two
+     corners. */
+  .about__caption,
+  .about__role {
     position: absolute;
-    left: 1rem;
-    right: 1rem;
-    bottom: 1rem;
-    display: flex;
-    justify-content: space-between;
+    z-index: 1;
     color: var(--on-accent);
     font-size: 0.66rem;
+  }
+
+  .about__caption {
+    left: 1rem;
+    bottom: 1rem;
+  }
+
+  .about__role {
+    top: 1.1rem;
+    right: 1rem;
+  }
+
+  .about__ace {
+    position: absolute;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    color: var(--accent-2);
+    pointer-events: none;
+  }
+
+  .about__ace--tl {
+    top: 0.9rem;
+    left: 1rem;
+  }
+
+  .about__ace--br {
+    right: 1rem;
+    bottom: 0.9rem;
+    rotate: 180deg;
+  }
+
+  .about__ace-rank {
+    font-size: clamp(1.7rem, 2.6vw, 2.4rem);
+    font-weight: 900;
+    line-height: 0.8;
+  }
+
+  .about__ace svg {
+    width: clamp(1rem, 1.5vw, 1.4rem);
+    height: auto;
+    fill: currentColor;
   }
 
   .about__quote {

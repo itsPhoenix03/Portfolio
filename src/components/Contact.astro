@@ -609,7 +609,7 @@ const links = [
         // Team-radio toast (EasterEggs.astro listens for this).
         window.dispatchEvent(
           new CustomEvent('team-radio', {
-            detail: { quote: { text: 'Simply lovely.', by: 'Max Verstappen' }, cap: 'Message received' },
+            detail: { mood: 'win', cap: 'Message received' },
           })
         );
       } catch {

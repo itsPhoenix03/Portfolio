@@ -262,20 +262,78 @@ export const projects: Project[] = [
 ];
 
 // "Team radio" lines surfaced by the hidden easter eggs (see EasterEggs.astro).
+// Each has a mood, and a moment only ever draws from its own mood — so a
+// joke never lands on a great start and a celebration never lands on a
+// jump start:
+//   win  — something went right: a quick getaway, a message sent
+//   calm — neutral spots: the footer line, the devtools console
+//   jump — the visitor jumped the start (own goals, penalties)
+//   slow — the visitor was slow off the line, or never reacted
+// The footer cycles through all of them.
+export type RadioMood = 'win' | 'calm' | 'jump' | 'slow';
+
 export interface RadioQuote {
   text: string;
   by: string;
+  mood: RadioMood;
 }
 
+const q = (text: string, by: string, mood: RadioMood): RadioQuote => ({ text, by, mood });
+
+const simplyLovely = q('Simply lovely.', 'Max Verstappen', 'win');
+const getInThere = q('Get in there, Lewis!', 'Peter Bonnington, to Lewis Hamilton', 'win');
+const bigNight = q('Tonight is going to be a big night!', 'Charles Leclerc, Monaco 2024', 'win');
+const onTheLimit = q('I was on the limit, but I was not riding over my limit.', 'Marc Márquez', 'win');
+
 export const radioQuotes: RadioQuote[] = [
-  { text: 'Simply lovely.', by: 'Max Verstappen' },
-  { text: 'If you no longer go for a gap that exists, you are no longer a racing driver.', by: 'Ayrton Senna' },
-  { text: "If everything seems under control, you're not going fast enough.", by: 'Mario Andretti' },
-  { text: 'If in doubt, flat out.', by: 'Colin McRae' },
-  { text: "Leave me alone, I know what I'm doing.", by: 'Kimi Räikkönen' },
-  { text: 'Riding a race bike is an art — a thing you do because you feel something inside.', by: 'Valentino Rossi' },
-  { text: 'To finish first, first you have to finish.', by: 'Racing proverb' },
-  { text: 'Lights out and away we go.', by: 'Race start' },
+  // win
+  simplyLovely,
+  getInThere,
+  bigNight,
+  onTheLimit,
+  q('Grazie ragazzi!', 'Sebastian Vettel', 'win'),
+  q('Not bad for a number two driver.', 'Mark Webber', 'win'),
+  q('The perfect rally!', 'Sébastien Loeb', 'win'),
+  // calm
+  q('Lights out and away we go.', 'Race start', 'calm'),
+  q('If you no longer go for a gap that exists, you are no longer a racing driver.', 'Ayrton Senna', 'calm'),
+  q("If everything seems under control, you're not going fast enough.", 'Mario Andretti', 'calm'),
+  q('If in doubt, flat out.', 'Colin McRae', 'calm'),
+  q('Riding a race bike is an art — a thing you do because you feel something inside.', 'Valentino Rossi', 'calm'),
+  q('To finish first, first you have to finish.', 'Racing proverb', 'calm'),
+  q('Still I rise.', 'Lewis Hamilton', 'calm'),
+  q("Rivals show you your level, and that's where we will try to continue growing.", 'Marc Márquez', 'calm'),
+  q('Good drivers have dead flies on the side windows!', 'Walter Röhrl', 'calm'),
+  q('You must always strive to be the best, but you must never believe that you are.', 'Juan Manuel Fangio', 'calm'),
+  q('Anything happens in Grand Prix racing, and it usually does.', 'Murray Walker', 'calm'),
+  // jump
+  q("Leave me alone, I know what I'm doing.", 'Kimi Räikkönen', 'jump'),
+  q('I am stupid, I am stupid.', 'Charles Leclerc', 'jump'),
+  q('No, Michael, no! That was so not right!', 'Toto Wolff', 'jump'),
+  q('Nobody is perfect.', 'Marc Márquez', 'jump'),
+  // slow
+  q('Fernando is faster than you.', 'Rob Smedley, to Felipe Massa', 'slow'),
+  q('GP2 engine! GP2!', 'Fernando Alonso', 'slow'),
+  q('Bono, my tyres are gone.', 'Lewis Hamilton', 'slow'),
+  q('Bwoah.', 'Kimi Räikkönen', 'slow'),
+  q('I hate this rally.', 'Marcus Grönholm', 'slow'),
+];
+
+export const quotesFor = (mood: RadioMood) => radioQuotes.filter((r) => r.mood === mood);
+
+// Type a driver's name or number (anywhere, outside the form) and they come
+// on the radio — always with a happy line, never a meme at their expense.
+export interface RadioCall {
+  words: string[];
+  cap: string;
+  quote: RadioQuote;
+}
+
+export const radioCalls: RadioCall[] = [
+  { words: ['max', '33', 'verstappen'], cap: 'Car 1 · Team radio', quote: simplyLovely },
+  { words: ['lewis', '44', 'hamilton'], cap: 'Car 44 · Team radio', quote: getInThere },
+  { words: ['charles', '16', 'leclerc'], cap: 'Car 16 · Team radio', quote: bigNight },
+  { words: ['marc', '93', 'marquez'], cap: 'Bike 93 · Pit board', quote: onTheLimit },
 ];
 
 export const certifications: Certification[] = [
