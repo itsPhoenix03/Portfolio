@@ -10,6 +10,7 @@
 import { systemDesign } from '../data/content';
 import { WAVE_POINTS, WAVE_SIZE, wavePath } from '../scripts/wave';
 import { doodles, doodleArt } from '../scripts/sd-doodles';
+import Arrow from './Arrow.astro';
 
 const { label, intro, outro, stops, notes } = systemDesign;
 const pad = (n: number) => String(n).padStart(2, '0');
@@ -132,11 +133,19 @@ const mapD = wavePath(MAP_SCALE, MAP_SCALE);
     </div>
     <span class="sd__hud-label">{label}</span>
     <span class="sd__count"><span id="sd-count">01</span> / {pad(stops.length)}</span>
+    <button type="button" class="sd__skip" id="sd-skip" aria-label="Skip the system design section" data-cursor="Skip">
+      <span>Skip</span>
+      <span class="sd__skip-arrow" aria-hidden="true"><Arrow dir="down" /></span>
+    </button>
   </div>
 </section>
 
 <style>
+  /* Text on the red panel: only full white is readable at small sizes
+     (about 4.6:1), so every small label is white. The yellow is lifted a
+     little (--sd-hi, about 3.3:1) and kept for large type only. */
   .sd {
+    --sd-hi: #ffd84d;
     position: relative;
     background: var(--accent);
     color: var(--on-accent);
@@ -166,7 +175,7 @@ const mapD = wavePath(MAP_SCALE, MAP_SCALE);
   .sd__kicker {
     display: block;
     margin-bottom: 1.1rem;
-    color: var(--accent-2);
+    color: #fff;
     font-size: 0.72rem;
   }
 
@@ -177,7 +186,7 @@ const mapD = wavePath(MAP_SCALE, MAP_SCALE);
   }
 
   .sd__title .serif {
-    color: var(--accent-2);
+    color: var(--sd-hi);
     font-size: 1.06em;
     padding-right: 0.05em;
   }
@@ -198,18 +207,14 @@ const mapD = wavePath(MAP_SCALE, MAP_SCALE);
   .sd__opt-name {
     font-size: clamp(1.3rem, 2vw, 1.9rem);
     line-height: 1;
-    color: var(--accent-2);
+    color: var(--sd-hi);
   }
 
   .sd__opt-row {
     margin-top: 0.7rem;
     font-size: clamp(0.88rem, 1.05vw, 1.02rem);
     line-height: 1.45;
-    color: rgba(255, 255, 255, 0.92);
-  }
-
-  .sd__opt-row--cost {
-    color: rgba(255, 255, 255, 0.72);
+    color: #fff;
   }
 
   .sd__opt-row .mono,
@@ -217,7 +222,7 @@ const mapD = wavePath(MAP_SCALE, MAP_SCALE);
     display: block;
     margin-bottom: 0.2rem;
     font-size: 0.62rem;
-    color: rgba(255, 255, 255, 0.6);
+    color: #fff;
   }
 
   .sd__hinge {
@@ -241,7 +246,7 @@ const mapD = wavePath(MAP_SCALE, MAP_SCALE);
     align-items: center;
     gap: 0.6rem;
     font-size: 0.66rem;
-    color: rgba(255, 255, 255, 0.8);
+    color: #fff;
   }
 
   .sd__note-kicker i {
@@ -259,7 +264,7 @@ const mapD = wavePath(MAP_SCALE, MAP_SCALE);
 
   .sd__note-text .serif {
     font-size: 1.12em;
-    color: var(--accent-2);
+    color: var(--sd-hi);
   }
 
   /* Overlay-only pieces stay out of the plain layout. */
@@ -346,7 +351,7 @@ const mapD = wavePath(MAP_SCALE, MAP_SCALE);
     z-index: 100;
     padding: 0;
     visibility: hidden;
-    pointer-events: none; /* nothing in it is clickable; never block the page */
+    pointer-events: none; /* never block the page; only the skip button takes clicks */
   }
 
   .sd.is-overlay.is-live {
@@ -422,7 +427,7 @@ const mapD = wavePath(MAP_SCALE, MAP_SCALE);
     align-items: flex-end;
     gap: 1.25rem;
     font-size: 0.68rem;
-    color: rgba(255, 255, 255, 0.8);
+    color: #fff;
   }
 
   .sd__map {
@@ -466,10 +471,52 @@ const mapD = wavePath(MAP_SCALE, MAP_SCALE);
   }
 
   .sd__count span {
-    color: var(--accent-2);
+    font-weight: 500;
+  }
+
+  /* Skip: the only clickable thing on the panel. */
+  .sd__skip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 0.9rem;
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    border-radius: 999px;
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    pointer-events: auto;
+    transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  }
+
+  .sd__skip:hover,
+  .sd__skip:focus-visible {
+    background: #fff;
+    border-color: #fff;
+    color: var(--accent);
+  }
+
+  .sd__skip:focus-visible {
+    outline-color: #fff;
+  }
+
+  .sd__skip-arrow {
+    display: inline-flex;
+    transition: transform 0.4s var(--ease-out);
+  }
+
+  .sd__skip.is-back .sd__skip-arrow {
+    transform: rotate(180deg);
   }
 
   @media (max-width: 700px) {
+    /* Room for the skip button next to the map and counter. */
+    .sd__hud-label {
+      display: none;
+    }
     /* Sketches would be thumbnail-sized at the desktop ratio. */
     .is-overlay .sd__dd {
       width: calc(var(--w) / 14.4 * 2.1vw);
@@ -492,6 +539,15 @@ const mapD = wavePath(MAP_SCALE, MAP_SCALE);
     }
     .sd__hinge {
       font-size: 1.05rem;
+    }
+    /* At this size the notes aren't large text, so the yellow can't carry
+       the emphasis on its own: white text, yellow underline. */
+    .sd__note-text .serif {
+      color: #fff;
+      text-decoration: underline;
+      text-decoration-color: var(--sd-hi);
+      text-decoration-thickness: 2px;
+      text-underline-offset: 0.18em;
     }
   }
 </style>

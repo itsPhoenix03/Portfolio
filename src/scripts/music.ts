@@ -19,7 +19,6 @@ const SECTION_LEVELS: Record<string, number> = {
   skills: 1,
   experience: 0.7,
   projects: 0.9,
-  certifications: 0.8,
   contact: 0.7,
 };
 

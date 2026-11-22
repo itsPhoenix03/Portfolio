@@ -137,6 +137,36 @@ import Arrow from './Arrow.astro';
     transform: translateY(-110%);
   }
 
+  /* Backing for when the header comes back over content (past the hero), so
+     the logo, status and clock never sit straight on top of text. */
+  .hdr::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: color-mix(in srgb, var(--bg) 80%, transparent);
+    -webkit-backdrop-filter: blur(14px) saturate(1.2);
+    backdrop-filter: blur(14px) saturate(1.2);
+    border-bottom: 1px solid var(--line);
+    opacity: 0;
+    transition: opacity 0.4s ease, background-color 0.4s ease;
+    pointer-events: none;
+  }
+
+  .hdr.is-solid::before {
+    opacity: 1;
+  }
+
+  /* Over the red System Design panel, a red backing instead of a navy bar. */
+  :global(body.sd-live) .hdr::before {
+    background: color-mix(in srgb, var(--accent) 82%, transparent);
+    border-bottom-color: rgba(255, 255, 255, 0.18);
+  }
+
+  :global(body.menu-open) .hdr::before {
+    opacity: 0;
+  }
+
   /* While the accent menu is open, header elements sit on lime. */
   :global(body.menu-open) .hdr {
     color: var(--on-accent);
@@ -668,20 +698,45 @@ import Arrow from './Arrow.astro';
 
   let activeId = '';
   let hudShown = false;
+  let lastScroll = window.scrollY;
+
+  // The HUD repeats the current section's name, so it steps aside while any
+  // section heading label is on screen — otherwise "(05) Contact" can sit
+  // right above a HUD still reading "04 Skills".
+  const labelsInView = new Set<Element>();
+  const labelIO = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (e.isIntersecting) labelsInView.add(e.target);
+      else labelsInView.delete(e.target);
+    }
+    syncHud(lastScroll);
+  });
+  document.querySelectorAll('.sec-label').forEach((el) => labelIO.observe(el));
+
+  function syncHud(scroll: number) {
+    const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+    const showHud =
+      scroll > window.innerHeight * 0.5 &&
+      max - scroll > window.innerHeight * 0.6 &&
+      labelsInView.size === 0;
+    if (showHud !== hudShown) {
+      hudShown = showHud;
+      gsap.to(hud, { opacity: showHud ? 1 : 0, duration: 0.4, overwrite: true });
+    }
+  }
 
   function onScroll(scroll: number, direction: number) {
     const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
     const p = Math.min(1, Math.max(0, scroll / max));
     progress.style.transform = `scaleX(${p})`;
     hudFill.style.transform = `scaleX(${p})`;
+    lastScroll = scroll;
 
-    if (!open) hdr.classList.toggle('is-hidden', direction > 0 && scroll > window.innerHeight * 0.6);
+    const pastHero = scroll > window.innerHeight * 0.6;
+    if (!open) hdr.classList.toggle('is-hidden', direction > 0 && pastHero);
+    hdr.classList.toggle('is-solid', pastHero);
 
-    const showHud = scroll > window.innerHeight * 0.5 && max - scroll > window.innerHeight * 0.6;
-    if (showHud !== hudShown) {
-      hudShown = showHud;
-      gsap.to(hud, { opacity: showHud ? 1 : 0, duration: 0.4 });
-    }
+    syncHud(scroll);
 
     const probe = window.innerHeight * 0.45;
     let current = sections[0];

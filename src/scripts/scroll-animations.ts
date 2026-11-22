@@ -260,7 +260,7 @@ function initReveals() {
 // Marquees: loop forever; scrolling boosts speed and flips direction.
 // -----------------------------------------------------------------------------
 function initMarquees() {
-  const tweens = $$('[data-marquee]').map((el) => {
+  const marquees = $$('[data-marquee]').map((el) => {
     const track = $('.marquee__track', el)!;
     const dir = Number(el.dataset.dir || 1);
     const speed = Number(el.dataset.marqueeSpeed || 28);
@@ -271,9 +271,18 @@ function initMarquees() {
     );
     // Start deep into the loop so a negative timeScale never hits time 0.
     tween.totalTime(speed * 500);
-    return tween;
+
+    // Rows inside [data-marquee-hover] ease to a stop while hovered, so the
+    // words can actually be read (the skills rows).
+    const m = { tween, hold: 1, target: 1 };
+    const host = el.closest<HTMLElement>('[data-marquee-hover]');
+    if (host && !isTouch) {
+      host.addEventListener('mouseenter', () => (m.target = 0));
+      host.addEventListener('mouseleave', () => (m.target = 1));
+    }
+    return m;
   });
-  if (!tweens.length) return;
+  if (!marquees.length) return;
 
   let boost = 1;
   let sign = 1;
@@ -288,7 +297,11 @@ function initMarquees() {
   gsap.ticker.add(() => {
     boost += (1 - boost) * 0.05;
     const ts = sign * boost;
-    for (const t of tweens) t.timeScale(ts);
+    for (const m of marquees) {
+      m.hold += (m.target - m.hold) * 0.1;
+      if (m.hold < 0.002) m.hold = 0;
+      m.tween.timeScale(ts * m.hold);
+    }
   });
 }
 
@@ -318,6 +331,9 @@ function initProjects() {
         scrub: 1,
         anticipatePin: 1,
         invalidateOnRefresh: true,
+        // The highest pin on the page: it must measure before the System
+        // Design pin below it (priority 1) and everything else (0).
+        refreshPriority: 2,
         onUpdate: (self) => {
           if (bar) bar.style.transform = `scaleX(${self.progress})`;
           if (count) {

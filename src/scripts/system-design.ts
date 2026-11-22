@@ -11,6 +11,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { WAVE_SIZE, waveSegments, segPoint, type Pt } from '@/scripts/wave';
 import { duckMusic } from '@/scripts/duck';
+import { lenisInstance } from '@/scripts/smooth-scroll';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -80,8 +81,10 @@ function init(sd: HTMLElement, origin: HTMLElement, skills: HTMLElement) {
 
   // Each leg eases out of one point and into the next, holding still for a
   // moment at each: longer at the big stops, a short read at the notes.
-  const HOLD_STOP = 0.2;
-  const HOLD_NOTE = 0.14;
+  // The legs are short (see JOURNEY), so the holds take a bigger share of
+  // each one — there's still a real pause at every stop.
+  const HOLD_STOP = 0.3;
+  const HOLD_NOTE = 0.2;
   const legEase = (t: number, from: number, to: number) => {
     const a = isStop[from] ? HOLD_STOP : HOLD_NOTE;
     const b = isStop[to] ? HOLD_STOP : HOLD_NOTE;
@@ -169,15 +172,26 @@ function init(sd: HTMLElement, origin: HTMLElement, skills: HTMLElement) {
   };
   const fullClip = 'inset(0px 0px 0px 0px)';
 
-  // Timeline lengths, in screen heights of scrolling.
-  const EXPAND = 1;
-  const JOURNEY = segs.length * 0.6;
-  const COLLAPSE = 1;
+  // Timeline lengths, in screen heights of scrolling. Kept short: about five
+  // screens in all, so the rest of the page isn't far away.
+  const EXPAND = 0.8;
+  const JOURNEY = segs.length * 0.3;
+  const COLLAPSE = 0.8;
   const state = { p: 0 };
   const inner = [canvas, deco, hud];
 
   layout();
   render(0);
+
+  // Skip: jump past the whole journey — forward to where the panel has shut
+  // again, or back to before it opened if the visitor came in from below.
+  const skip = sd.querySelector<HTMLButtonElement>('#sd-skip');
+  let skipBack = false;
+  const setSkipDir = (back: boolean) => {
+    skipBack = back;
+    skip?.classList.toggle('is-back', back);
+    skip?.setAttribute('aria-label', back ? 'Skip back above the system design section' : 'Skip the system design section');
+  };
 
   const tl = gsap.timeline({
     defaults: { ease: 'none' },
@@ -189,11 +203,14 @@ function init(sd: HTMLElement, origin: HTMLElement, skills: HTMLElement) {
       scrub: true,
       anticipatePin: 1,
       invalidateOnRefresh: true,
-      // Sits above the projects pin, so it must measure first.
+      // Sits below the projects pin (priority 2), so it measures after it,
+      // and before everything further down (priority 0).
       refreshPriority: 1,
       onToggle: (self) => {
         sd.classList.toggle('is-live', self.isActive);
+        document.body.classList.toggle('sd-live', self.isActive);
         duckMusic('system-design', self.isActive ? 0.65 : null);
+        if (self.isActive) setSkipDir(self.direction < 0);
       },
       onRefresh: () => {
         layout();
@@ -215,6 +232,12 @@ function init(sd: HTMLElement, origin: HTMLElement, skills: HTMLElement) {
     .fromTo(bandOut, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.35 }, EXPAND + JOURNEY + 0.3)
     .to(sd, { clipPath: bandClip, duration: COLLAPSE, ease: 'power2.inOut' }, EXPAND + JOURNEY)
     .to(sd, { opacity: 0, duration: 0.12 }, EXPAND + JOURNEY + COLLAPSE - 0.12);
+
+  skip?.addEventListener('click', () => {
+    const st = tl.scrollTrigger;
+    if (!st) return;
+    lenisInstance.scrollTo(skipBack ? st.start - 2 : st.end + 2, { duration: 1.4 });
+  });
 
   ScrollTrigger.refresh();
 }

@@ -65,7 +65,7 @@ export const siteMeta: SiteMeta = {
   title: 'Shreyas Misra — Software Engineer',
   description: 'Portfolio of Shreyas Misra — Software Engineer specializing in scalable, dependable systems.',
   role: 'Software Engineer',
-  objective: 'Becoming a High Value Agency and delivering Scalable and Dependable Systems which help Organizations Grow and have Success.',
+  objective: 'Becoming a high-value agency — delivering scalable, dependable systems that help organisations grow and succeed.',
   email: 'shreyas.misra03@gmail.com',
   location: 'India',
   timezone: 'Asia/Kolkata',
@@ -162,17 +162,6 @@ export const skillGroups: SkillGroup[] = [
       { name: 'AWS' },
     ],
   },
-  {
-    category: 'Soft Skills',
-    items: [
-      { name: 'Active Listener' },
-      { name: 'Collaborative' },
-      { name: 'Supportive' },
-      { name: 'Team Player' },
-      { name: 'Creative Thinker' },
-      { name: 'Communication' },
-    ],
-  },
 ];
 
 export const experience: Experience[] = [
@@ -183,9 +172,9 @@ export const experience: Experience[] = [
     period: 'May 2026 – Present',
     current: true,
     bullets: [
-      'Working at the Research and Development Department located at the IIT Kanpur Technopark.',
-      'Building application which integrate modern custom fine tuned AI models to help in improving the time consumed in the medical processes and regulatory compliance processes.',
-      'Designing solution which can scale to thousands of people while also being reliable.',
+      'Part of the Research and Development team at IIT Kanpur Technopark, building AI products for medical devices and regulatory compliance.',
+      'Building applications on custom fine-tuned AI models that cut the time medical and regulatory processes take — including Stanley AI, which drafts audit-ready submission documents.',
+      'Designed Stanley’s document pipeline for a thousand people hitting Generate at once: ~40 s jobs run on a queue, the user gets a job ID back in ~12 ms, and progress streams live over SSE.',
     ],
   },
   {
@@ -194,9 +183,9 @@ export const experience: Experience[] = [
     location: 'Lucknow, UP',
     period: 'May 2024 – May 2026',
     bullets: [
-      'Built and maintained scalable full-stack applications with React.js, Next.js, and Node.',
-      'Collaborated on RESTful API design and code reviews, boosting integration efficiency and code reliability.',
-      'Showcased adaptability by quickly adapting and delivering solutions across different languages and domains like PHP, N8n, Power Automate, SharePoint, and Power Apps.',
+      'Built and maintained scalable full-stack applications with React.js, Next.js and Node.js.',
+      'Collaborated on RESTful API design and code reviews, making integrations faster and code more reliable.',
+      'Picked up new languages and platforms quickly to ship across PHP, n8n, Power Automate, SharePoint and Power Apps.',
     ],
   },
 ];
@@ -308,11 +297,6 @@ export const certifications: Certification[] = [
     credentialUrl:
       'https://www.cloudskillsboost.google/public_profiles/dd871fbc-1cb8-4367-b71d-d2bcb59b4e4a/badges/1466496',
   },
-  {
-    title: 'React Training',
-    issuer: 'Internshala',
-    credentialUrl: 'https://trainings.internshala.com/s/v/139524/7a2f7b9b',
-  },
 ];
 
 export const socialLinks: SocialLink[] = [
@@ -345,13 +329,15 @@ export const githubActivity = {
   ],
 };
 
+// In page order: who I am, where I've worked, what I've shipped, then the
+// stack and how I think (the long System Design journey) before contact.
+// Certifications sit inside About.
 export const navSections = [
   { id: 'hero', label: 'Home' },
   { id: 'about', label: 'About' },
-  { id: 'skills', label: 'Skills' },
   { id: 'experience', label: 'Experience' },
   { id: 'projects', label: 'Projects' },
-  { id: 'certifications', label: 'Certifications' },
+  { id: 'skills', label: 'Skills' },
   { id: 'contact', label: 'Contact' },
 ];
 

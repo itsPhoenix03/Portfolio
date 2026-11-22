@@ -377,13 +377,13 @@ field.add(particles);
 
 // One camera stop per section: the camera flies between these as you scroll,
 // zooming and re-aiming so a different planet/region is the focus each time.
+// Must be in page order (the anchors are read top to bottom).
 const SECTION_IDS = [
   'hero',
   'about',
-  'skills',
   'experience',
   'projects',
-  'certifications',
+  'skills',
   'contact',
 ];
 
@@ -393,13 +393,12 @@ interface CamStop {
 }
 
 const camStops: CamStop[] = [
-  { pos: new THREE.Vector3(0, 0, 18), look: new THREE.Vector3(0, 0, 0) },
-  { pos: new THREE.Vector3(-6, 3, 8), look: new THREE.Vector3(-9, 4, -8) },
-  { pos: new THREE.Vector3(6, 1, 12), look: new THREE.Vector3(2, 0, -2) },
-  { pos: new THREE.Vector3(9, -3, 2), look: new THREE.Vector3(6, -6, -12) },
-  { pos: new THREE.Vector3(-2, 7, 12), look: new THREE.Vector3(0, 1, -4) },
-  { pos: new THREE.Vector3(-7, -3, 9), look: new THREE.Vector3(-3, -1, -5) },
-  { pos: new THREE.Vector3(0, 1.5, 13), look: new THREE.Vector3(0, 0, 0) },
+  { pos: new THREE.Vector3(0, 0, 18), look: new THREE.Vector3(0, 0, 0) }, // hero
+  { pos: new THREE.Vector3(-6, 3, 8), look: new THREE.Vector3(-9, 4, -8) }, // about
+  { pos: new THREE.Vector3(9, -3, 2), look: new THREE.Vector3(6, -6, -12) }, // experience
+  { pos: new THREE.Vector3(-2, 7, 12), look: new THREE.Vector3(0, 1, -4) }, // projects
+  { pos: new THREE.Vector3(6, 1, 12), look: new THREE.Vector3(2, 0, -2) }, // skills
+  { pos: new THREE.Vector3(0, 1.5, 13), look: new THREE.Vector3(0, 0, 0) }, // contact
 ];
 
 let anchors: number[] = [];
