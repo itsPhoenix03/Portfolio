@@ -474,17 +474,20 @@ const mapD = wavePath(MAP_SCALE, MAP_SCALE);
     font-weight: 500;
   }
 
-  /* Skip: the only clickable thing on the panel. */
+  /* Skip: the only clickable thing on the panel. The theme's yellow with navy
+     text, so it stands out from the red; white on hover. */
   .sd__skip {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
     padding: 0.55rem 0.9rem;
-    border: 1px solid rgba(255, 255, 255, 0.55);
+    border: 1px solid var(--accent-2);
     border-radius: 999px;
-    color: #fff;
+    background: var(--accent-2);
+    color: var(--on-accent-2);
     font-family: var(--font-mono);
     font-size: 0.66rem;
+    font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     cursor: pointer;
@@ -496,7 +499,7 @@ const mapD = wavePath(MAP_SCALE, MAP_SCALE);
   .sd__skip:focus-visible {
     background: #fff;
     border-color: #fff;
-    color: var(--accent);
+    color: var(--on-accent-2);
   }
 
   .sd__skip:focus-visible {

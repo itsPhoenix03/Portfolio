@@ -80,11 +80,10 @@ function init(sd: HTMLElement, origin: HTMLElement, skills: HTMLElement) {
   }
 
   // Each leg eases out of one point and into the next, holding still for a
-  // moment at each: longer at the big stops, a short read at the notes.
-  // The legs are short (see JOURNEY), so the holds take a bigger share of
-  // each one — there's still a real pause at every stop.
-  const HOLD_STOP = 0.3;
-  const HOLD_NOTE = 0.2;
+  // good while at each — longer at the big stops, a shorter read at the
+  // notes — so every item feels pinned in place while you scroll past it.
+  const HOLD_STOP = 0.34;
+  const HOLD_NOTE = 0.22;
   const legEase = (t: number, from: number, to: number) => {
     const a = isStop[from] ? HOLD_STOP : HOLD_NOTE;
     const b = isStop[to] ? HOLD_STOP : HOLD_NOTE;
@@ -172,13 +171,32 @@ function init(sd: HTMLElement, origin: HTMLElement, skills: HTMLElement) {
   };
   const fullClip = 'inset(0px 0px 0px 0px)';
 
-  // Timeline lengths, in screen heights of scrolling. Kept short: about five
-  // screens in all, so the rest of the page isn't far away.
+  // Timeline lengths, in screen heights of scrolling: about seven in all.
+  // Each leg needs room for its holds *and* an unhurried move — squeezed
+  // shorter, one wheel notch threw the view to the next stop.
   const EXPAND = 0.8;
-  const JOURNEY = segs.length * 0.3;
+  const JOURNEY = segs.length * 0.48;
   const COLLAPSE = 0.8;
-  const state = { p: 0 };
   const inner = [canvas, deco, hud];
+
+  // Where the scroll says the camera is (state.p, scrubbed by the timeline)
+  // and where it's drawn (cam). The camera glides after the scroll instead of
+  // being yanked along by every notch of the wheel.
+  const state = { p: 0 };
+  let cam = 0;
+  const GLIDE = 4.5; // per second; ~0.6 s to settle on a new position
+  let lastTick = 0;
+  gsap.ticker.add((time) => {
+    const dt = lastTick ? Math.min(time - lastTick, 0.1) : 1 / 60;
+    lastTick = time;
+    if (cam === state.p) return;
+    // Closed (scrolled past, skipped, jumped by a menu link): no glide, so
+    // it's never caught half-way along the route when it opens again.
+    if (!sd.classList.contains('is-live')) cam = state.p;
+    else cam += (state.p - cam) * (1 - Math.exp(-dt * GLIDE));
+    if (Math.abs(state.p - cam) < 1e-4) cam = state.p;
+    render(cam);
+  });
 
   layout();
   render(0);
@@ -214,7 +232,8 @@ function init(sd: HTMLElement, origin: HTMLElement, skills: HTMLElement) {
       },
       onRefresh: () => {
         layout();
-        render(state.p);
+        cam = state.p;
+        render(cam);
       },
     },
   });
@@ -226,7 +245,7 @@ function init(sd: HTMLElement, origin: HTMLElement, skills: HTMLElement) {
     .fromTo(bandIn, { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.35 }, 0.3)
     .fromTo(inner, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.45 }, 0.55)
     // Travel the wave.
-    .to(state, { p: 1, duration: JOURNEY, onUpdate: () => render(state.p) }, EXPAND)
+    .to(state, { p: 1, duration: JOURNEY }, EXPAND)
     // Close: back down to a band over the strip, then let the page through.
     .to(inner, { autoAlpha: 0, duration: 0.4 }, EXPAND + JOURNEY)
     .fromTo(bandOut, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.35 }, EXPAND + JOURNEY + 0.3)
@@ -236,8 +255,55 @@ function init(sd: HTMLElement, origin: HTMLElement, skills: HTMLElement) {
   skip?.addEventListener('click', () => {
     const st = tl.scrollTrigger;
     if (!st) return;
+    settlingUntil = performance.now() + 1600;
     lenisInstance.scrollTo(skipBack ? st.start - 2 : st.end + 2, { duration: 1.4 });
   });
+
+  // Settle: once you've scrolled out of an item's hold, carry on to the next
+  // item in the direction you were going, so the view never rests half-way
+  // with two items faded — and a single wheel notch is enough to move on.
+  // It kicks in as soon as the scroll slows, not after the smooth-scroll's
+  // long tail has died away.
+  let settleTimer = 0;
+  let settlingUntil = 0;
+  let lastY = window.scrollY;
+  let dir = 1;
+  lenisInstance.on('scroll', () => {
+    const y = window.scrollY;
+    if (y !== lastY) dir = y > lastY ? 1 : -1;
+    lastY = y;
+    if (performance.now() < settlingUntil) return;
+    window.clearTimeout(settleTimer);
+    if (Math.abs(lenisInstance.velocity) < 1.5) settle();
+    else settleTimer = window.setTimeout(settle, 150);
+  });
+
+  function settle() {
+    const st = tl.scrollTrigger;
+    if (!st?.isActive) return;
+    const vhPx = window.innerHeight;
+    const from = st.start + EXPAND * vhPx;
+    const len = JOURNEY * vhPx;
+    const p = (window.scrollY - from) / len;
+    if (p <= 0 || p >= 1) return; // opening or closing: leave it be
+    const n = segs.length;
+    const x = p * n;
+    const i = Math.min(n - 1, Math.floor(x));
+    const t = x - i;
+    const a = isStop[i] ? HOLD_STOP : HOLD_NOTE;
+    const b = isStop[i + 1] ? HOLD_STOP : HOLD_NOTE;
+    if (t <= a || t >= 1 - b) return; // still resting on an item
+    // Item k sits exactly at x = k on the route, in the middle of its hold.
+    const k = dir > 0 ? i + 1 : i;
+    settlingUntil = performance.now() + 1400;
+    // Ease in and out: Lenis's default easing starts at full speed, which is
+    // exactly the jump this is meant to remove.
+    lenisInstance.scrollTo(from + (k / n) * len, { duration: 1.3, easing: easeInOutCubic });
+  }
+
+  function easeInOutCubic(t: number) {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  }
 
   ScrollTrigger.refresh();
 }
