@@ -26,23 +26,32 @@ const renderer = new THREE.WebGLRenderer({
   powerPreference: 'high-performance',
 });
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, isSmall ? 1.5 : 2));
+// Capped at 1.5×: it's a full-screen canvas redrawn every frame, and on a 2×
+// screen that's ~44% fewer pixels for thin lines that look the same. It can
+// drop further to 1× if the GPU can't keep up (see the check in animate()).
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, isSmall ? 1.25 : 1.5));
 renderer.setClearColor(0x0b1426, 1);
 
 // Bloom post-processing makes the cyan wireframes/particles glow. Skipped on
-// small screens to stay light (plain render there).
+// small screens to stay light (plain render there). Built only when bloom is
+// actually switched on — its full-screen render targets cost memory even
+// when unused.
 let composer: EffectComposer | null = null;
-if (!isSmall) {
-  composer = new EffectComposer(renderer);
-  composer.addPass(new RenderPass(scene, camera));
-  composer.addPass(
-    new UnrealBloomPass(
-      new THREE.Vector2(window.innerWidth, window.innerHeight),
-      0.85, // strength
-      0.55, // radius
-      0.12 // threshold — only the brighter cyan blooms, not the dark bg
-    )
-  );
+function getComposer(): EffectComposer | null {
+  if (isSmall) return null;
+  if (!composer) {
+    composer = new EffectComposer(renderer);
+    composer.addPass(new RenderPass(scene, camera));
+    composer.addPass(
+      new UnrealBloomPass(
+        new THREE.Vector2(window.innerWidth, window.innerHeight),
+        0.85, // strength
+        0.55, // radius
+        0.12 // threshold — only the brighter cyan blooms, not the dark bg
+      )
+    );
+  }
+  return composer;
 }
 
 // Bloom only suits the dark theme (on a light background it would bloom the
@@ -382,8 +391,9 @@ const SECTION_IDS = [
   'hero',
   'about',
   'experience',
-  'projects',
   'skills',
+  'certifications',
+  'projects',
   'contact',
 ];
 
@@ -396,13 +406,14 @@ const camStops: CamStop[] = [
   { pos: new THREE.Vector3(0, 0, 18), look: new THREE.Vector3(0, 0, 0) }, // hero
   { pos: new THREE.Vector3(-6, 3, 8), look: new THREE.Vector3(-9, 4, -8) }, // about
   { pos: new THREE.Vector3(9, -3, 2), look: new THREE.Vector3(6, -6, -12) }, // experience
-  { pos: new THREE.Vector3(-2, 7, 12), look: new THREE.Vector3(0, 1, -4) }, // projects
   { pos: new THREE.Vector3(6, 1, 12), look: new THREE.Vector3(2, 0, -2) }, // skills
+  { pos: new THREE.Vector3(-7, -3, 9), look: new THREE.Vector3(-3, -1, -5) }, // certifications
+  { pos: new THREE.Vector3(-2, 7, 12), look: new THREE.Vector3(0, 1, -4) }, // projects
   { pos: new THREE.Vector3(0, 1.5, 13), look: new THREE.Vector3(0, 0, 0) }, // contact
 ];
 
 let anchors: number[] = [];
-let lastDocHeight = -1;
+let docHeight = document.documentElement.scrollHeight;
 
 function computeAnchors(): void {
   const max = Math.max(
@@ -599,6 +610,16 @@ let scrollVelSmooth = 0;
 let bhTime = 0;
 let visible = !document.hidden;
 
+// Adaptive resolution. Anti-aliased, full-screen and redrawn every frame, the
+// canvas is the GPU's biggest job; on high-density screens with integrated
+// graphics it was enough to halve the frame rate. Once the intro is over,
+// time a few seconds of frames and, if they're slow, render at 1× instead —
+// it's a background, so the softer lines are worth the smoothness.
+const SLOW_FRAME = 1 / 50;
+let sampleFrames = 0;
+let sampleTime = 0;
+let resolutionChecked = renderer.getPixelRatio() <= 1;
+
 document.addEventListener('visibilitychange', () => {
   visible = !document.hidden;
 });
@@ -615,16 +636,17 @@ function animate() {
   const dt = Math.min(elapsed - prevTime, 0.05);
   prevTime = elapsed;
 
-  // Refresh section anchors whenever the document height changes (e.g. after
-  // ScrollTrigger lays out, fonts load, or the window resizes).
-  const dh = document.documentElement.scrollHeight;
-  if (dh !== lastDocHeight) {
-    lastDocHeight = dh;
-    computeAnchors();
+  if (!resolutionChecked && !introActive && document.documentElement.dataset.revealed) {
+    sampleFrames++;
+    sampleTime += dt;
+    if (sampleFrames >= 180) {
+      resolutionChecked = true;
+      if (sampleTime / sampleFrames > SLOW_FRAME) renderer.setPixelRatio(1);
+    }
   }
 
   // Page scroll progress (drives the black-hole finale below).
-  const maxScroll = Math.max(1, dh - window.innerHeight);
+  const maxScroll = Math.max(1, docHeight - window.innerHeight);
   const pageP = Math.min(Math.max(window.scrollY / maxScroll, 0), 1);
 
   // Scroll-velocity "wake" — the field streaks faster the harder you scroll and
@@ -813,9 +835,19 @@ function animate() {
     blackHole.disk.rotation.z += dt * (0.15 + consume * 0.5);
   }
 
-  if (useBloom && composer) composer.render();
+  const fx = useBloom ? getComposer() : null;
+  if (fx) fx.render();
   else renderer.render(scene, camera);
 }
+
+// Refresh section anchors whenever the page's height changes (ScrollTrigger
+// pinning, fonts, images, resizes). This used to read scrollHeight on every
+// frame, which forces the browser to finish layout in the middle of the
+// render loop.
+new ResizeObserver(() => {
+  docHeight = document.documentElement.scrollHeight;
+  computeAnchors();
+}).observe(document.body);
 
 // Recolor the whole scene + background for the active theme.
 function applyTheme(theme: string): void {

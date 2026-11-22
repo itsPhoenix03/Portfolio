@@ -1,8 +1,6 @@
 ---
-// Education and certifications. Sits at the end of the Experience section, so
-// work history comes first and the résumé-style detail follows it.
+// Education: its own section, after Skills and before Certifications.
 import { education } from '../data/content';
-import Certifications from './Certifications.astro';
 
 // "9.2 CGPA (3.65 GPA)" → mark the converted GPA with a footnote asterisk.
 const gradeParts = (grade: string) => {
@@ -11,52 +9,50 @@ const gradeParts = (grade: string) => {
 };
 ---
 
-<div class="edu" id="education">
-  <div class="edu__head">
-    <span class="mono edu__cap" data-reveal>Education</span>
+<section class="section edu-sec" id="education">
+  <div class="wrap">
+    <div class="edu">
+      <div class="sec-label edu__label" data-reveal>
+        <span class="sec-label__idx">(04)</span>
+        <span class="sec-label__rule" data-line></span>
+        <span data-scramble>Education</span>
+      </div>
+      <ol class="edu__list">
+        {
+          education.map((ed, i) => (
+            <li class="edu__row" data-reveal>
+              <span class="rule" data-line />
+              <div class="edu__grid">
+                <span class="mono edu__idx">0{i + 1}</span>
+                <h3 class="edu__degree display">{ed.degree}</h3>
+                <div class="edu__meta">
+                  <span class="edu__inst">{ed.institution}</span>
+                  <span class="mono edu__period">{ed.period}</span>
+                </div>
+                <div class="edu__side">
+                  <span class="edu__grade display">{gradeParts(ed.grade).map((g) => g.note ? <>{g.text}<span class="edu__ast" aria-hidden="true">*</span></> : g.text)}</span>
+                  <span class="edu__course">{ed.coursework}</span>
+                </div>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+      {
+        education.some((ed) => /GPA/.test(ed.grade)) && (
+          <p class="edu__note mono">
+            <span aria-hidden="true">*</span> GPA figures are approximate: there's no single standard for converting
+            Indian grades to a 4.0 scale.
+          </p>
+        )
+      }
+    </div>
   </div>
-  <ol class="edu__list">
-    {
-      education.map((ed, i) => (
-        <li class="edu__row" data-reveal>
-          <span class="rule" data-line />
-          <div class="edu__grid">
-            <span class="mono edu__idx">0{i + 1}</span>
-            <h3 class="edu__degree display">{ed.degree}</h3>
-            <div class="edu__meta">
-              <span class="edu__inst">{ed.institution}</span>
-              <span class="mono edu__period">{ed.period}</span>
-            </div>
-            <div class="edu__side">
-              <span class="edu__grade display">{gradeParts(ed.grade).map((g) => g.note ? <>{g.text}<span class="edu__ast" aria-hidden="true">*</span></> : g.text)}</span>
-              <span class="edu__course">{ed.coursework}</span>
-            </div>
-          </div>
-        </li>
-      ))
-    }
-  </ol>
-  {
-    education.some((ed) => /GPA/.test(ed.grade)) && (
-      <p class="edu__note mono">
-        <span aria-hidden="true">*</span> GPA figures are approximate: there's no single standard for converting
-        Indian grades to a 4.0 scale.
-      </p>
-    )
-  }
-</div>
-
-<Certifications />
+</section>
 
 <style>
-  .edu {
-    margin-top: clamp(5rem, 14vh, 9rem);
-  }
-
-  .edu__cap {
-    display: block;
-    color: var(--ink-3);
-    margin-bottom: 1.5rem;
+  .edu__label {
+    margin-bottom: clamp(2.5rem, 6vh, 4rem);
   }
 
   .edu__row:last-child {

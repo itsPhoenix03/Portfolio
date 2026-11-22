@@ -9,6 +9,8 @@ import Skills from '../components/Skills.astro';
 import SystemDesign from '../components/SystemDesign.astro';
 import Experience from '../components/Experience.astro';
 import Projects from '../components/Projects.astro';
+import Education from '../components/Education.astro';
+import Certifications from '../components/Certifications.astro';
 import Telemetry from '../components/Telemetry.astro';
 import Contact from '../components/Contact.astro';
 import EasterEggs from '../components/EasterEggs.astro';
@@ -23,10 +25,12 @@ import { marqueeWords } from '../data/content';
     <Tapes items={marqueeWords} />
     <About />
     <Experience />
-    <Telemetry />
-    <Projects />
     <Skills />
     <SystemDesign />
+    <Education />
+    <Certifications />
+    <Telemetry />
+    <Projects />
     <Contact />
   </main>
   <EasterEggs />
@@ -38,4 +42,5 @@ import { marqueeWords } from '../data/content';
   import '@/scripts/theme';
   import '@/scripts/three-scene';
   import '@/scripts/scroll-animations';
+  import '@/scripts/offscreen';
 </script>

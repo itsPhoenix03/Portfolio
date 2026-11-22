@@ -239,21 +239,35 @@ import Arrow from './Arrow.astro';
   }
 
   .hdr__pulse {
+    position: relative;
     width: 7px;
     height: 7px;
     border-radius: 50%;
     background: var(--accent-2);
-    box-shadow: 0 0 0 0 var(--accent-2);
+  }
+
+  /* The pulse ring is a scaled copy of the dot, animating only transform and
+     opacity so it runs on the GPU. (A box-shadow pulse repainted the header
+     on every frame, on every page, forever.) */
+  .hdr__pulse::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: var(--accent-2);
+    opacity: 0;
     animation: hdrPulse 2s ease-out infinite;
   }
 
-  :global(body.menu-open) .hdr__pulse {
-    background: var(--accent-2);
+  @keyframes hdrPulse {
+    0% { transform: scale(1); opacity: 0.7; }
+    100% { transform: scale(3.85); opacity: 0; }
   }
 
-  @keyframes hdrPulse {
-    0% { box-shadow: 0 0 0 0 rgba(255, 201, 6, 0.7); }
-    100% { box-shadow: 0 0 0 10px rgba(255, 201, 6, 0); }
+  @media (prefers-reduced-motion: reduce) {
+    .hdr__pulse::after {
+      animation: none;
+    }
   }
 
   .hdr__clock {
@@ -594,9 +608,9 @@ import Arrow from './Arrow.astro';
       gap: 2rem;
     }
     /* Height-based so the list fits a short screen, but capped by width so
-       the longest word ("Experience") never runs off a narrow phone. */
+       the longest word ("Certifications") never runs off a narrow phone. */
     .menu__text {
-      font-size: clamp(2.2rem, min(7.5vh, 14vw), 4.6rem);
+      font-size: clamp(2.2rem, min(7.5vh, 11vw), 4.6rem);
     }
     .menu__aside {
       justify-content: flex-start;
@@ -748,8 +762,7 @@ import Arrow from './Arrow.astro';
   });
   document.querySelectorAll('.sec-label').forEach((el) => labelIO.observe(el));
 
-  function syncHud(scroll: number) {
-    const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+  function syncHud(scroll: number, max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight)) {
     const showHud =
       scroll > window.innerHeight * 0.5 &&
       max - scroll > window.innerHeight * 0.6 &&
@@ -771,7 +784,7 @@ import Arrow from './Arrow.astro';
     if (!open) hdr.classList.toggle('is-hidden', direction > 0 && pastHero);
     hdr.classList.toggle('is-solid', pastHero);
 
-    syncHud(scroll);
+    syncHud(scroll, max);
 
     const probe = window.innerHeight * 0.45;
     let current = sections[0];

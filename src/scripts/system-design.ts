@@ -203,9 +203,9 @@ function init(sd: HTMLElement, origin: HTMLElement, skills: HTMLElement) {
       scrub: true,
       anticipatePin: 1,
       invalidateOnRefresh: true,
-      // Sits below the projects pin (priority 2), so it measures after it,
-      // and before everything further down (priority 0).
-      refreshPriority: 1,
+      // The highest pin on the page (above Projects, priority 1), so it must
+      // measure first, before everything further down (priority 0).
+      refreshPriority: 2,
       onToggle: (self) => {
         sd.classList.toggle('is-live', self.isActive);
         document.body.classList.toggle('sd-live', self.isActive);

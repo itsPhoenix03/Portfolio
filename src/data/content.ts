@@ -329,15 +329,16 @@ export const githubActivity = {
   ],
 };
 
-// In page order: who I am, where I've worked, what I've shipped, then the
-// stack and how I think (the long System Design journey) before contact.
-// Certifications sit inside About.
+// In page order. Telemetry (between Certifications and Projects) has no
+// entry of its own.
 export const navSections = [
   { id: 'hero', label: 'Home' },
   { id: 'about', label: 'About' },
   { id: 'experience', label: 'Experience' },
-  { id: 'projects', label: 'Projects' },
   { id: 'skills', label: 'Skills' },
+  { id: 'education', label: 'Education' },
+  { id: 'certifications', label: 'Certifications' },
+  { id: 'projects', label: 'Projects' },
   { id: 'contact', label: 'Contact' },
 ];
 

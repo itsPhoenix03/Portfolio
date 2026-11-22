@@ -1,46 +1,47 @@
 ---
-// Compact certifications list, shown under Education at the end of the
-// Experience section (see Education.astro). It used to be its own full
-// section; for a handful of items a strip reads better and saves a screen.
+// Certifications: its own section (after Education) with its heading, and
+// compact rows — for a handful of items they read better than giant ones.
 import { certifications } from '../data/content';
 import Arrow from './Arrow.astro';
 ---
 
-<div class="certs" id="certifications">
-  <span class="mono certs__cap" data-reveal>Certifications</span>
-  <ol class="certs__list">
-    {
-      certifications.map((cert, i) => (
-        <li data-reveal>
-          <a
-            class="cert"
-            href={cert.credentialUrl ?? '#'}
-            target="_blank"
-            rel="noopener noreferrer"
-            data-cursor="Verify ↗"
-          >
-            <span class="cert__idx mono">0{i + 1}</span>
-            <span class="cert__title">{cert.title}</span>
-            <span class="cert__issuer mono">{cert.issuer}</span>
-            <span class="cert__arrow" aria-hidden="true"><Arrow /></span>
-          </a>
-        </li>
-      ))
-    }
-  </ol>
-</div>
+<section class="section certs" id="certifications">
+  <div class="wrap">
+    <header class="sec-head">
+      <div class="sec-label" data-reveal>
+        <span class="sec-label__idx">(05)</span>
+        <span class="sec-label__rule" data-line></span>
+        <span data-scramble>Certifications</span>
+      </div>
+      <h2 class="sec-title display" data-split>
+        Verified <span class="serif">credentials</span>
+      </h2>
+    </header>
+
+    <ol class="certs__list">
+      {
+        certifications.map((cert, i) => (
+          <li data-reveal>
+            <a
+              class="cert"
+              href={cert.credentialUrl ?? '#'}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-cursor="Verify ↗"
+            >
+              <span class="cert__idx mono">0{i + 1}</span>
+              <span class="cert__title">{cert.title}</span>
+              <span class="cert__issuer mono">{cert.issuer}</span>
+              <span class="cert__arrow" aria-hidden="true"><Arrow /></span>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
 
 <style>
-  .certs {
-    margin-top: clamp(3.5rem, 9vh, 6rem);
-  }
-
-  .certs__cap {
-    display: block;
-    color: var(--ink-3);
-    margin-bottom: 1.5rem;
-  }
-
   .certs__list {
     border-top: 1px solid var(--line-strong);
   }

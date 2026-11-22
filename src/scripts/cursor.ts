@@ -19,11 +19,21 @@ if (!isTouch) {
     // Offset from the pointer tip so the label sits just below-right of it.
     const OFFSET_X = 20;
     const OFFSET_Y = 22;
+    let shown = false;
+    let x = 0;
+    let y = 0;
+    const place = () => {
+      label.style.transform = `translate(${x + OFFSET_X}px, ${y + OFFSET_Y}px)`;
+    };
 
+    // Only moves the label while it's showing — writing its style on every
+    // mouse move restyled the page for an invisible element.
     window.addEventListener(
       'mousemove',
       (e) => {
-        label.style.transform = `translate(${e.clientX + OFFSET_X}px, ${e.clientY + OFFSET_Y}px)`;
+        x = e.clientX;
+        y = e.clientY;
+        if (shown) place();
       },
       { passive: true }
     );
@@ -34,12 +44,19 @@ if (!isTouch) {
       (e) => {
         const intent = (e.target as HTMLElement)?.closest<HTMLElement>('[data-cursor]');
         if (intent) setArrowLabel(label, intent.dataset.cursor || '');
-        document.body.classList.toggle('cursor-label-on', !!intent);
+        if (intent && !shown) {
+          x = (e as MouseEvent).clientX;
+          y = (e as MouseEvent).clientY;
+          place();
+        }
+        shown = !!intent;
+        document.body.classList.toggle('cursor-label-on', shown);
       },
       true
     );
 
     document.addEventListener('mouseleave', () => {
+      shown = false;
       document.body.classList.remove('cursor-label-on');
     });
   }
