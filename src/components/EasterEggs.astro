@@ -5,7 +5,7 @@
 //    Each knock on the logo gets a cryptic little reply under it.
 //  - Type a driver's name or number ("max"/"33", "lewis"/"44", "charles"/"16",
 //    "marc"/"93" — see radioCalls in content.ts) → team-radio toast.
-//    Type "box" → "Box, box."
+//    Type "win" or "p1" → a celebration line. Type "box" → "Box, box."
 //  - Team-radio lines are picked by mood (content.ts), so each moment only
 //    gets lines that suit it: a great start never gets a meme, and a jump
 //    start never gets a celebration.
@@ -494,6 +494,9 @@
     if (call) {
       typed = '';
       showRadio(call.quote, call.cap);
+    } else if (typed.endsWith('win') || typed.endsWith('p1')) {
+      typed = '';
+      showRadio(pick(quotesFor('win')), 'P1 · Team radio');
     } else if (typed.endsWith('box')) {
       typed = '';
       showRadio({ text: 'Box, box.', by: 'Pit wall', mood: 'calm' });
@@ -504,9 +507,15 @@
   const footerRadio = document.getElementById('footer-radio');
   if (footerRadio) {
     let i = Math.floor(Math.random() * radioQuotes.length);
+    const quoteEl = document.createElement('span');
+    const byEl = document.createElement('span');
+    quoteEl.className = 'footer__radio-text';
+    byEl.className = 'footer__radio-by';
+    footerRadio.append(quoteEl, ' ', byEl);
     const render = () => {
       const fq = radioQuotes[i % radioQuotes.length];
-      footerRadio.textContent = `“${fq.text}” — ${fq.by}`;
+      quoteEl.textContent = `“${fq.text}”`;
+      byEl.textContent = `— ${fq.by}`;
     };
     render();
     footerRadio.addEventListener('click', () => {

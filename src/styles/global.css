@@ -320,6 +320,13 @@ p {
   border-color: var(--ink);
 }
 
+/* Yellow solid pill (the About résumé button). Hovers like .pill--solid. */
+.pill--yellow {
+  background: var(--accent-2);
+  border-color: var(--accent-2);
+  color: var(--on-accent-2);
+}
+
 .pill__arrow {
   display: inline-block;
   transition: transform 0.45s var(--ease-out);

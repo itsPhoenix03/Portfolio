@@ -3,6 +3,7 @@
 // compact rows — for a handful of items they read better than giant ones.
 import { certifications } from '../data/content';
 import Arrow from './Arrow.astro';
+import Doodle from './Doodle.astro';
 ---
 
 <section class="section certs" id="certifications">
@@ -16,6 +17,15 @@ import Arrow from './Arrow.astro';
       <h2 class="sec-title display" data-split>
         Verified <span class="serif">credentials</span>
       </h2>
+      <!-- Hint for the "win" / "p1" team-radio code (EasterEggs.astro). -->
+      <Doodle
+        before="Finish"
+        struck="P2"
+        fix="P1"
+        note="type it — or the three letters that mean it."
+        keyboard="all"
+        pin="top-right"
+      />
     </header>
 
     <ol class="certs__list">
